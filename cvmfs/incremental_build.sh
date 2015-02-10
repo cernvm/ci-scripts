@@ -18,9 +18,7 @@ if [ ! -d "$CVMFS_BUILD_LOCATION" ] || [ x"$CVMFS_BUILD_CLEAN" = x"true" ]; then
 fi
 
 # run the build
+echo "switching to $CVMFS_BUILD_LOCATION and invoking build script..."
 cd "$CVMFS_BUILD_LOCATION"
-cmake -DBUILD_SERVER=yes       \
-      -DBUILD_SERVER_DEBUG=yes \
-      -DBUILD_UNITTESTS=yes    \
-      $CVMFS_SOURCE_LOCATION
-make -j $(get_number_of_cpu_cores)
+${CVMFS_SOURCE_LOCATION}/ci/multiplatform_build.sh "$CVMFS_SOURCE_LOCATION" \
+                                                   "$(get_number_of_cpu_cores)"
