@@ -27,7 +27,7 @@ get_package_type() {
 
 get_number_of_cpu_cores() {
   if is_linux; then
-    nproc
+    cat /proc/cpuinfo | grep -e '^processor' | wc -l
   elif is_macos; then
     sysctl -n hw.ncpu
   else
