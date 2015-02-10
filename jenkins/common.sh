@@ -10,6 +10,14 @@ die() {
   exit 1
 }
 
+is_linux() {
+  [ x"$(uname)" = x"Linux" ]
+}
+
+is_macos() {
+  [ x"$(uname)" = x"Darwin" ]
+}
+
 get_package_type() {
   which dpkg > /dev/null 2>&1 && echo "deb" && return 0
   which rpm  > /dev/null 2>&1 && echo "rpm" && return 0
