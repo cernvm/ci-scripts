@@ -4,6 +4,12 @@
 # Common functionality for builds steered by Jenkins
 #
 
+die() {
+  local msg="$1"
+  echo "$msg"
+  exit 1
+}
+
 get_package_type() {
   which dpkg > /dev/null 2>&1 && echo "deb" && return 0
   which rpm  > /dev/null 2>&1 && echo "rpm" && return 0
