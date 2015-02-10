@@ -25,6 +25,16 @@ get_package_type() {
   return 1
 }
 
+get_number_of_cpu_cores() {
+  if is_linux; then
+    nproc
+  elif is_macos; then
+    sysctl -n hw.ncpu
+  else
+    echo "1"
+  fi
+}
+
 BUILD_PACKAGE_TYPE="$(get_package_type)"
 
 echo
@@ -45,4 +55,5 @@ echo "~~~~~~"
 echo "System (uname -srn):   $(uname -srn)"
 echo "User:                  $(whoami)"
 echo "Package Type:          $BUILD_PACKAGE_TYPE"
+echo "CPU cores:             $(get_number_of_cpu_cores)"
 echo
