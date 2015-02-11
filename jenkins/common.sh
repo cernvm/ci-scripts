@@ -56,4 +56,5 @@ echo "System (uname -srn):   $(uname -srn)"
 echo "User:                  $(whoami)"
 echo "Package Type:          $BUILD_PACKAGE_TYPE"
 echo "CPU cores:             $(get_number_of_cpu_cores)"
+echo "PATH:                  $PATH"
 echo
