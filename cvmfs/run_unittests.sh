@@ -14,10 +14,10 @@ if [ ! -z $CVMFS_LIBRARY_PATH ]; then
   echo "using custom library path: '$CVMFS_LIBRARY_PATH'"
   if is_linux; then
     export LD_LIBRARY_PATH="$CVMFS_LIBRARY_PATH"
-  elif is_macosx; then
+  elif is_macos; then
     export DYLD_LIBRARY_PATH="$CVMFS_LIBRARY_PATH"
   else
-    die "who am i on? ($uname -a)"
+    die "who am i on? $(uname -a)"
   fi
 fi
 
