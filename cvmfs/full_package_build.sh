@@ -9,6 +9,8 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 # sanity checks
 [ ! -z $CVMFS_BUILD_LOCATION  ] || die "CVMFS_BUILD_LOCATION missing"
 [ ! -z $CVMFS_SOURCE_LOCATION ] || die "CVMFS_SOURCE_LOCATION missing"
+[ ! -z $CVMFS_NIGHTLY_NUMBER  ] || die "CVMFS_NIGHTLY_NUMBER missing"
+[ ! -z $CVMFS_NIGHTLY_BUILD   ] || die "CVMFS_NIGHTLY_BUILD missing"
 
 # setup a fresh build workspace on first execution or on request
 mkdir -p "$CVMFS_BUILD_LOCATION"
@@ -36,5 +38,12 @@ esac
 echo "using build script: '$build_script'"
 build_script="${CVMFS_SOURCE_LOCATION}/ci/$build_script"
 
+nightly_number=
+if [ x"$CVMFS_NIGHTLY_BUILD" = x"true" ]; then
+  nightly_number=$CVMFS_NIGHTLY_NUMBER
+  echo "building a nightly release with number '$nightly_number'"
+fi
+
 $build_script "$CVMFS_SOURCE_LOCATION" \
-              "$(get_number_of_cpu_cores)"
+              "$CVMFS_BUILD_LOCATION"  \
+              $nightly_number
