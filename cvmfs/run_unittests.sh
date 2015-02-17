@@ -30,7 +30,7 @@ if [ x"$CVMFS_UNITTESTS_QUICK" = x"true" ]; then
 fi
 
 # run the unit tests
-echo "running unit tests..."
+echo "running unit tests (with XML output $CVMFS_UNITTESTS_RESULT_LOCATION)..."
 $CVMFS_UNITTESTS_BINARY --gtest_shuffle                                     \
                         --gtest_output=xml:$CVMFS_UNITTESTS_RESULT_LOCATION \
                         --gtest_filter=$test_filter
