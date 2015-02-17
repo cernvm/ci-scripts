@@ -20,5 +20,5 @@ fi
 # run the build
 echo "switching to $CVMFS_BUILD_LOCATION and invoking build script..."
 cd "$CVMFS_BUILD_LOCATION"
-${CVMFS_SOURCE_LOCATION}/ci/multiplatform_build.sh "$CVMFS_SOURCE_LOCATION" \
-                                                   "$(get_number_of_cpu_cores)"
+${CVMFS_SOURCE_LOCATION}/ci/build_incremental_multi.sh "$CVMFS_SOURCE_LOCATION" \
+                                                       "$(get_number_of_cpu_cores)"
