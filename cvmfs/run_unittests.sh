@@ -22,7 +22,15 @@ if [ ! -z $CVMFS_LIBRARY_PATH ]; then
   fi
 fi
 
+# check if only a quick subset of the unittests should be run
+test_filter='-'
+if [ x"$CVMFS_UNITTESTS_QUICK" = x"true" ]; then
+  echo "running only quick tests (without suffix 'Slow')"
+  test_filter='-*Slow'
+fi
+
 # run the unit tests
 echo "running unit tests..."
-$CVMFS_UNITTESTS_BINARY --gtest_shuffle \
-                        --gtest_output=xml:$CVMFS_UNITTESTS_RESULT_LOCATION
+$CVMFS_UNITTESTS_BINARY --gtest_shuffle                                     \
+                        --gtest_output=xml:$CVMFS_UNITTESTS_RESULT_LOCATION \
+                        --gtest_filter=$test_filter
