@@ -7,8 +7,15 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 . ${BUILD_SCRIPT_LOCATION}/common.sh
 
 # sanity checks
+[ ! -z $CVMFS_RUN_UNITTESTS ]             || die "CVMFS_RUN_UNITTESTS missing"
 [ ! -z $CVMFS_UNITTESTS_BINARY ]          || die "CVMFS_UNITTESTS_BINARY missing"
 [ ! -z $CVMFS_UNITTESTS_RESULT_LOCATION ] || die "CVMFS_UNITTESTS_RESULT_LOCATION missing"
+
+# check if unittest actually should be run
+if [ x"$CVMFS_RUN_UNITTESTS" != x"true" ]; then
+  echo "Unit tests are disabled... skipping"
+  exit 0
+fi
 
 # configure manual library path if needed
 if [ ! -z $CVMFS_LIBRARY_PATH ]; then
