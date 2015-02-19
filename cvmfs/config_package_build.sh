@@ -11,6 +11,9 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 [ ! -z $CVMFS_SOURCE_LOCATION ] || die "CVMFS_SOURCE_LOCATION missing"
 
 # setup a fresh build workspace on first execution or on request
+if [ -d $CVMFS_BUILD_LOCATION ]; then
+  rm -fR $CVMFS_BUILD_LOCATION
+fi
 mkdir -p "$CVMFS_BUILD_LOCATION"
 
 # run the build
