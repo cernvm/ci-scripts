@@ -47,7 +47,7 @@ download_kmod_sources() {
   cd $previous_workdir
 }
 
-decompress_kernel_sources() {
+decompress_kernel_sources_tarxz() {
   local source_location="$1"
   local previous_workdir="$(pwd)"
 
@@ -62,7 +62,7 @@ decompress_kernel_sources() {
   cd $previous_workdir
 }
 
-compress_kernel_sources() {
+compress_kernel_sources_tarxz() {
   local source_location="$1"
   local previous_workdir="$(pwd)"
 

@@ -22,7 +22,7 @@ source_location="${rpmbuild_location}/SOURCES"
 download_kernel_sources $source_location $AUFS_KERNEL_VERSION
 
 echo "decompressing kernel sources..."
-decompress_kernel_sources $source_location
+decompress_kernel_sources_tarxz $source_location
 kernel_source_location="${source_location}/${kernel_id}"
 
 echo "applying AUFS patches..."
@@ -37,7 +37,7 @@ cp    ${AUFS_SOURCE_LOCATION}/aufs3-standalone/Documentation/ABI/testing/*     $
 cp    ${AUFS_SOURCE_LOCATION}/aufs3-standalone/include/uapi/linux/aufs_type.h  ${kernel_source_location}/include/uapi/linux/
 
 echo "compressing kernel sources..."
-compress_kernel_sources $source_location
+compress_kernel_sources_tarxz $source_location
 
 echo "writing kernel build configuration files..."
 echo '
