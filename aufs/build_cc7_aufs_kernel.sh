@@ -81,19 +81,19 @@ rpmbuild --define "%_topdir ${rpmbuild_location}"      \
 echo "cleaning up..."
 rm -fR ${rpmbuild_location}/BUILD/${kernel_id}
 
-aufs_kernel_version="${kernel_version}.aufs3.x86_64"
-echo "successfully built AUFS enabled kernel ${aufs_kernel_version}"
+aufs_kernel_version_tag="${AUFS_KERNEL_VERSION}.aufs3.x86_64"
+echo "successfully built AUFS enabled kernel ${aufs_kernel_version_tag}"
 
 echo "downloading OpenAFS kernel module sources..."
 download_kmod_sources $source_location kmod-openafs
 
 echo "installing just created kernel RPMs..."
-install_kernel_devel_rpm "$rpmbuild_location" "$aufs_kernel_version"
+install_kernel_devel_rpm "$rpmbuild_location" "$aufs_kernel_version_tag"
 
 echo "building the OpenAFS kernel module..."
 rpmbuild --define "%_topdir ${rpmbuild_location}"      \
          --define "%_tmppath ${rpmbuild_location}/TMP" \
          --define "build_modules 1"                    \
          --define "build_userspace 1"                  \
-         --define "kernvers $aufs_kernel_version"      \
+         --define "kernvers $aufs_kernel_version_tag"  \
          --rebuild openafs-*.rpm
