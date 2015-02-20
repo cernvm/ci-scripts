@@ -65,12 +65,12 @@ CONFIG_AUFS_XATTR=y
 CONFIG_CGROUP_PERF=n
 CONFIG_AUFS_DEBUG=y' >> ${source_location}/kernel-3.10.0-x86_64-debug.config
 
-echo "patch the kernel spec file..."
+echo "patching the kernel spec file..."
 sed -i -e '1 i %define buildid .aufs3'                                              ${source_location}/kernel.spec
 sed -i -e 's/^%define listnewconfig_fail 1/%define listnewconfig_fail 0/'           ${source_location}/kernel.spec
 sed -i -e 's/"${patch:0:8}" != "patch-3."/"${patch:0:8}" != "patch-3." -a 0 -eq 1/' ${source_location}/kernel.spec  # HACK, broken upstream?
 
-echo "switch to the build directory and build the kernel..."
+echo "switching to the build directory and build the kernel..."
 cd ${source_location}
 rpmbuild --define "%_topdir ${rpmbuild_location}"      \
          --define "%_tmppath ${rpmbuild_location}/TMP" \
@@ -84,7 +84,7 @@ rm -fR ${rpmbuild_location}/BUILD/${kernel_id}
 aufs_kernel_version="${kernel_version}.aufs3.x86_64"
 echo "successfully built AUFS enabled kernel ${aufs_kernel_version}"
 
-echo "download OpenAFS kernel module sources..."
+echo "downloading OpenAFS kernel module sources..."
 download_kmod_sources $source_location kmod-openafs
 
 echo "installing just created kernel RPMs..."
