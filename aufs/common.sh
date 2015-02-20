@@ -53,7 +53,7 @@ decompress_kernel_sources_tarxz() {
 
   cd $source_location
 
-  local kernel_tarball="$(ls *.tar.xz)"
+  local kernel_tarball="$(ls linux*.tar.xz)"
   [ $(echo "$kernel_tarball" | wc -l) -eq 1 ] || return 1
 
   tar xfJ $kernel_tarball
@@ -68,7 +68,7 @@ decompress_kernel_sources_tarbz2() {
 
   cd $source_location
 
-  local kernel_tarball="$(ls *.tar.bz2)"
+  local kernel_tarball="$(ls linux*.tar.bz2)"
   [ $(echo "$kernel_tarball" | wc -l) -eq 1 ] || return 1
 
   tar xfj $kernel_tarball
