@@ -84,16 +84,28 @@ rm -fR ${rpmbuild_location}/BUILD/${kernel_id}
 aufs_kernel_version_tag="${AUFS_KERNEL_VERSION}.aufs3.x86_64"
 echo "successfully built AUFS enabled kernel ${aufs_kernel_version_tag}"
 
-echo "downloading OpenAFS kernel module sources..."
-download_kmod_sources $source_location kmod-openafs
+# this is currently disabled because of reasons...
+#
+# TODO: Installing openafs-1.6.9-2.el7.cern.src.rpm
+#       warning: openafs-1.6.9-2.el7.cern.src.rpm: Header V4 DSA/SHA1 Signature, key ID 1d1e034b: NOKEY
+#       error: Failed build dependencies:
+#         kernel-devel-x86_64 = 3.10.0-123.20.1.el7.aufs3.x86_64 is needed by openafs-1.6.9-2.el7.centos.x86_64
+#       [centos@cvm-build18 test_build]$ yum list installed | grep kernel-devel
+#       kernel-devel.x86_64                   3.10.0-123.20.1.el7.aufs3        installed
+#
+#       The build dependency is kernel-devel-x86_64 while the package is called
+#                               kernel-devel.x86_64 (- vs. .)
 
-echo "installing just created kernel RPMs..."
-install_kernel_devel_rpm "$rpmbuild_location" "$aufs_kernel_version_tag"
+# echo "downloading OpenAFS kernel module sources..."
+# download_kmod_sources $source_location kmod-openafs
 
-echo "building the OpenAFS kernel module..."
-rpmbuild --define "%_topdir ${rpmbuild_location}"      \
-         --define "%_tmppath ${rpmbuild_location}/TMP" \
-         --define "build_modules 1"                    \
-         --define "build_userspace 1"                  \
-         --define "kernvers $aufs_kernel_version_tag"  \
-         --rebuild openafs-*.rpm
+# echo "installing just created kernel RPMs..."
+# install_kernel_devel_rpm "$rpmbuild_location" "$aufs_kernel_version_tag"
+
+# echo "building the OpenAFS kernel module..."
+# rpmbuild --define "%_topdir ${rpmbuild_location}"      \
+#          --define "%_tmppath ${rpmbuild_location}/TMP" \
+#          --define "build_modules 1"                    \
+#          --define "build_userspace 1"                  \
+#          --define "kernvers $aufs_kernel_version_tag"  \
+#          --rebuild openafs-*.rpm
