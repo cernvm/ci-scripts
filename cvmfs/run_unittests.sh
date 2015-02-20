@@ -36,6 +36,12 @@ if [ x"$CVMFS_UNITTESTS_QUICK" = x"true" ]; then
   test_filter='-*Slow'
 fi
 
+# check if there is already a result file and clean it up
+if [ -f $CVMFS_UNITTESTS_RESULT_LOCATION ]; then
+  echo "cleaning up old unittest results..."
+  rm -f $CVMFS_UNITTESTS_RESULT_LOCATION
+fi
+
 # run the unit tests
 echo "running unit tests (with XML output $CVMFS_UNITTESTS_RESULT_LOCATION)..."
 $CVMFS_UNITTESTS_BINARY --gtest_shuffle                                     \
