@@ -11,6 +11,12 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 [ ! -z $CVMFS_UNITTESTS_BINARY ]          || die "CVMFS_UNITTESTS_BINARY missing"
 [ ! -z $CVMFS_UNITTESTS_RESULT_LOCATION ] || die "CVMFS_UNITTESTS_RESULT_LOCATION missing"
 
+# check if there is already a result file and clean it up
+if [ -f $CVMFS_UNITTESTS_RESULT_LOCATION ]; then
+  echo "cleaning up old unittest results..."
+  rm -f $CVMFS_UNITTESTS_RESULT_LOCATION
+fi
+
 # check if unittest actually should be run
 if [ x"$CVMFS_RUN_UNITTESTS" != x"true" ]; then
   echo "Unit tests are disabled... skipping"
@@ -35,13 +41,6 @@ if [ x"$CVMFS_UNITTESTS_QUICK" = x"true" ]; then
   echo "running only quick tests (without suffix 'Slow')"
   test_filter='-*Slow'
 fi
-
-# check if there is already a result file and clean it up
-if [ -f $CVMFS_UNITTESTS_RESULT_LOCATION ]; then
-  echo "cleaning up old unittest results..."
-  rm -f $CVMFS_UNITTESTS_RESULT_LOCATION
-fi
-
 # run the unit tests
 echo "running unit tests (with XML output $CVMFS_UNITTESTS_RESULT_LOCATION)..."
 $CVMFS_UNITTESTS_BINARY --gtest_shuffle                                     \
