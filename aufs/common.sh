@@ -35,6 +35,18 @@ download_kernel_sources() {
   cd $previous_workdir
 }
 
+download_kmod_sources() {
+  local source_location="$1"
+  local kmod_name="$2"
+  local previous_workdir="$(pwd)"
+
+  cd $source_location
+
+  yumdownloader --source $kmod_name
+
+  cd $previous_workdir
+}
+
 decompress_kernel_sources() {
   local source_location="$1"
   local previous_workdir="$(pwd)"
@@ -76,6 +88,13 @@ apply_patch() {
   patch -p$strip_num < $patch_file
 
   cd $previous_workdir
+}
+
+install_kernel_devel_rpm() {
+  local build_location="$1"
+  local kernel_version="$2"
+  sudo rpm -vi --force ${build_location}/RPMS/x86_64/kernel-${kernel_version}.rpm \
+                       ${build_location}/RPMS/x86_64/kernel-devel-${kernel_version}.rpm
 }
 
 echo "print environment variables..."
