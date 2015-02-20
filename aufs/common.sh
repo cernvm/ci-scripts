@@ -62,6 +62,21 @@ decompress_kernel_sources_tarxz() {
   cd $previous_workdir
 }
 
+decompress_kernel_sources_tarbz2() {
+  local source_location="$1"
+  local previous_workdir="$(pwd)"
+
+  cd $source_location
+
+  local kernel_tarball="$(ls *.tar.bz2)"
+  [ $(echo "$kernel_tarball" | wc -l) -eq 1 ] || return 1
+
+  tar xfj $kernel_tarball
+  rm -f $kernel_tarball
+
+  cd $previous_workdir
+}
+
 compress_kernel_sources_tarxz() {
   local source_location="$1"
   local previous_workdir="$(pwd)"
@@ -72,6 +87,21 @@ compress_kernel_sources_tarxz() {
   [ $(echo "$kernel_id" | wc -l) -eq 1 ] || return 1
 
   tar cfJ ${kernel_id}.tar.xz ${kernel_id}
+  rm -fR ${kernel_id}
+
+  cd $previous_workdir
+}
+
+compress_kernel_sources_tarbz2() {
+  local source_location="$1"
+  local previous_workdir="$(pwd)"
+
+  cd $source_location
+
+  local kernel_id="$(find * -mindepth 0 -maxdepth 0 -type d)"
+  [ $(echo "$kernel_id" | wc -l) -eq 1 ] || return 1
+
+  tar cfj ${kernel_id}.tar.bz2 ${kernel_id}
   rm -fR ${kernel_id}
 
   cd $previous_workdir

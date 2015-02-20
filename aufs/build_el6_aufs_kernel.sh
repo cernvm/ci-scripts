@@ -26,7 +26,7 @@ apply_patch $source_location 1 ${AUFS_SOURCE_LOCATION}/aufs2-standalone/rhel6.3-
 apply_patch $source_location 1 ${AUFS_SOURCE_LOCATION}/aufs2-standalone/kernel-headers.patch
 
 echo "decompressing kernel sources..."
-decompress_kernel_sources $source_location
+decompress_kernel_sources_tarbz2 $source_location
 kernel_source_location="${source_location}/${kernel_id}"
 
 echo "patching kernel sources..."
@@ -43,7 +43,7 @@ echo "patching AUFS kernel sources..."
 apply_patch $kernel_source_location 0 ${AUFS_SOURCE_LOCATION}/aufs2-standalone/cvmfs-fix-deadlock.patch
 
 echo "compressing kernel sources..."
-compress_kernel_sources $source_location
+compress_kernel_sources_tarbz2 $source_location
 
 echo "patching the kernel spec file..."
 sed -i -e '1 i %define buildid .aufs21' ${source_location}/kernel.spec
