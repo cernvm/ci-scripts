@@ -93,8 +93,9 @@ apply_patch() {
 install_kernel_devel_rpm() {
   local build_location="$1"
   local kernel_version="$2"
-  sudo rpm -vi --force ${build_location}/RPMS/x86_64/kernel-${kernel_version}.rpm \
-                       ${build_location}/RPMS/x86_64/kernel-devel-${kernel_version}.rpm
+  sudo rpm -vi --force ${build_location}/RPMS/x86_64/kernel-${kernel_version}.rpm       \
+                       ${build_location}/RPMS/x86_64/kernel-devel-${kernel_version}.rpm \
+                       ${build_location}/RPMS/x86_64/kernel-firmware-${kernel_version}.rpm
 }
 
 echo "print environment variables..."
