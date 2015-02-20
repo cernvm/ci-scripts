@@ -56,7 +56,7 @@ compress_kernel_sources() {
 
   cd $source_location
 
-  local kernel_id="$(ls)"
+  local kernel_id="$(find * -mindepth 0 -maxdepth 0 -type d)"
   [ $(echo "$kernel_id" | wc -l) -eq 1 ] || return 1
 
   tar cfJ ${kernel_id}.tar.xz ${kernel_id}
