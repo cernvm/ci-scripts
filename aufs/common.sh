@@ -57,7 +57,7 @@ decompress_kernel_sources() {
   [ $(echo "$kernel_tarball" | wc -l) -eq 1 ] || return 1
 
   tar xfJ $kernel_tarball
-  rm $kernel_tarball
+  rm -f $kernel_tarball
 
   cd $previous_workdir
 }
@@ -85,7 +85,7 @@ apply_patch() {
 
   cd $source_location
 
-  patch -p$strip_num < $patch_file
+  patch -l -p$strip_num < $patch_file
 
   cd $previous_workdir
 }
