@@ -27,9 +27,9 @@ kernel_source_location="${source_location}/${kernel_id}"
 
 echo "applying AUFS patches..."
 apply_patch $kernel_source_location 1 ${AUFS_SOURCE_LOCATION}/aufs3-standalone/aufs3-kbuild.patch
-appky_patch $kernel_source_location 1 ${AUFS_SOURCE_LOCATION}/aufs3-standalone/aufs3-base.patch
-appky_patch $kernel_source_location 1 ${AUFS_SOURCE_LOCATION}/aufs3-standalone/aufs3-mmap.patch
-appky_patch $kernel_source_location 0 ${AUFS_SOURCE_LOCATION}/aufs3-standalone/aufs3-mmap-fremap.patch
+apply_patch $kernel_source_location 1 ${AUFS_SOURCE_LOCATION}/aufs3-standalone/aufs3-base.patch
+apply_patch $kernel_source_location 1 ${AUFS_SOURCE_LOCATION}/aufs3-standalone/aufs3-mmap.patch
+apply_patch $kernel_source_location 0 ${AUFS_SOURCE_LOCATION}/aufs3-standalone/aufs3-mmap-fremap.patch
 
 echo "adding additional files to kernel source tree..."
 cp -r ${AUFS_SOURCE_LOCATION}/aufs3-standalone/fs/aufs                         ${kernel_source_location}/fs/
