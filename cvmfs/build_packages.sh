@@ -10,6 +10,7 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 [ ! -z $CVMFS_BUILD_LOCATION    ] || die "CVMFS_BUILD_LOCATION missing"
 [ ! -z $CVMFS_SOURCE_LOCATION   ] || die "CVMFS_SOURCE_LOCATION missing"
 [ ! -z $CVMFS_BUILD_SCRIPT_BASE ] || die "CVMFS_BUILD_SCRIPT_BASE missing"
+[ ! -z $CVMFS_CI_PLATFORM_LABEL ] || die "CVMFS_CI_PLATFORM_LABEL missing"
 
 # setup a fresh build workspace
 if [ -d $CVMFS_BUILD_LOCATION ]; then
