@@ -13,3 +13,28 @@ echo "Build Location:          $CVMFS_BUILD_LOCATION"
 echo "Clean Build:             $CVMFS_BUILD_CLEAN"
 echo "CernVM-FS Git Revision:  $CVMFS_GIT_REVISION"
 echo
+
+get_platform_description() {
+  local dist="$1"
+  local cfg="$2"
+  jq --raw-output \
+    ".[] | select(.config == \"$cfg\" and .dist == \"$dist\")" $PLATFORMS
+}
+
+has_platform_parameter() {
+  local parameter="$1"
+  local vm_description="$2"
+  local result
+  result="$(echo -n "$vm_description" | jq --raw-output "has(\"$parameter\")")"
+  [ x"$result" = x"true" ]
+}
+
+get_platform_parameter() {
+  local parameter="$1"
+  local vm_description="$2"
+  if ! has_platform_parameter "$parameter" "$vm_description"; then
+    echo ""
+  else
+    echo -n "$vm_description" | jq --raw-output ".$parameter"
+  fi
+}
