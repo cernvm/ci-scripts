@@ -17,7 +17,10 @@ which jq > /dev/null 2>&1       || die "jq utility missing"
 vm_desc="$(get_platform_description $CVMFS_PLATFORM $CVMFS_PLATFORM_CONFIG)"
 [ ! -z "$vm_desc" ] || die "test platform not specified in $PLATFORMS"
 
-echo "Running cloud tests for $CVMFS_PLATFORM / $CVMFS_PLATFORM_CONFIG ..."
-echo "$vm_desc"
-
+# sanity checks for the platform description
+has_platform_parameter 'label' "$vm_desc" || die "VM parameter .label missing"
+has_platform_parameter 'setup' "$vm_desc" || die "VM parameter .setup missing"
+has_platform_parameter 'test'  "$vm_desc" || die "VM parameter .test missing"
+has_platform_parameter 'ami'   "$vm_desc" || die "VM parameter .ami missing"
+has_platform_parameter 'user'  "$vm_desc" || die "VM parameter .user missing"
 
