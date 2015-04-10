@@ -3,7 +3,7 @@
   {
     "dist"    : "el5",
     "config"  : "x86",
-    "ami"     : "ami-000001f0",
+    "ami"     : "ami-0000032c",
     "label"   : "el5.i386",
     "setup"   : "slc5_i386_setup.sh",
     "test"    : "slc5_i386_test.sh",
@@ -13,7 +13,7 @@
   {
     "dist"    : "el5",
     "config"  : "x86_64",
-    "ami"     : "ami-000001f1",
+    "ami"     : "ami-0000032d",
     "label"   : "el5.x86_64",
     "setup"   : "slc5_x86_64_setup.sh",
     "test"    : "slc5_x86_64_test.sh",
@@ -23,7 +23,7 @@
   {
     "dist"    : "el6",
     "config"  : "x86",
-    "ami"     : "ami-000002fd",
+    "ami"     : "ami-0000032b",
     "label"   : "el6.i686",
     "setup"   : "slc6_i386_setup.sh",
     "test"    : "slc6_i386_test.sh",
@@ -33,7 +33,7 @@
   {
     "dist"    : "el6",
     "config"  : "x86_64",
-    "ami"     : "ami-000002fe",
+    "ami"     : "ami-0000032a",
     "label"   : "el6.x86_64",
     "setup"   : "slc6_x86_64_setup.sh",
     "test"    : "slc6_x86_64_test.sh",
@@ -43,7 +43,7 @@
   {
     "dist"    : "el6",
     "config"  : "x86_64_nfs",
-    "ami"     : "ami-000002fe",
+    "ami"     : "ami-0000032a",
     "label"   : "el6.x86_64",
     "setup"   : "slc6_x86_64-NFS_setup.sh",
     "test"    : "slc6_x86_64-NFS_test.sh",
@@ -53,7 +53,7 @@
   {
     "dist"    : "el6",
     "config"  : "x86_64_exlcache",
-    "ami"     : "ami-000002fe",
+    "ami"     : "ami-0000032a",
     "label"   : "el6.x86_64",
     "setup"   : "slc6_x86_64-EXCLCACHE_setup.sh",
     "test"    : "slc6_x86_64-EXCLCACHE_test.sh",
@@ -63,7 +63,7 @@
   {
     "dist"    : "el6",
     "config"  : "x86_64_infoheader",
-    "ami"     : "ami-000002fe",
+    "ami"     : "ami-0000032a",
     "label"   : "el6.x86_64",
     "setup"   : "slc6_x86_64-INFOHEADER_setup.sh",
     "test"    : "slc6_x86_64-INFOHEADER_test.sh",
@@ -73,7 +73,7 @@
   {
     "dist"    : "el7",
     "config"  : "x86_64",
-    "ami"     : "ami-000002f7",
+    "ami"     : "ami-00000347",
     "label"   : "el7.x86_64",
     "setup"   : "centos7_x86_64_setup.sh",
     "test"    : "centos7_x86_64_test.sh",
