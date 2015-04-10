@@ -83,9 +83,9 @@
   },
 
   {
-    "dist"    : "ubuntu1310",
+    "dist"    : "ubuntu1204",
     "config"  : "x86_64",
-    "ami"     : "ami-000001c7",
+    "ami"     : "ami-000001c6",
     "label"   : "ubuntu.x86_64",
     "setup"   : "ubuntu_x86_64_setup.sh",
     "test"    : "ubuntu_x86_64_test.sh",
@@ -96,6 +96,16 @@
     "dist"    : "ubuntu1404",
     "config"  : "x86_64",
     "ami"     : "ami-000002da",
+    "label"   : "ubuntu.x86_64",
+    "setup"   : "ubuntu_x86_64_setup.sh",
+    "test"    : "ubuntu_x86_64_test.sh",
+    "user"    : "ubuntu"
+  },
+
+  {
+    "dist"    : "ubuntu1410",
+    "config"  : "x86_64",
+    "ami"     : "ami-00000348",
     "label"   : "ubuntu.x86_64",
     "setup"   : "ubuntu_x86_64_setup.sh",
     "test"    : "ubuntu_x86_64_test.sh",
