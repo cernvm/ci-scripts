@@ -88,7 +88,7 @@
     "ami"     : "ami-000001c6",
     "label"   : "ubuntu.x86_64",
     "setup"   : "ubuntu_x86_64_setup.sh",
-    "test"    : "ubuntu_x86_64_test.sh",
+    "test"    : "ubuntu1204_x86_64_test.sh",
     "user"    : "ubuntu"
   },
 
