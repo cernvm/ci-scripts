@@ -42,9 +42,11 @@ config_packages=""
 # from now on everything is logged to the logfile
 # Note: the only output of this script is the absolute path to the generated
 #       log files
-touch ${cvmfs_log_directory}/run.log
-sudo chmod a+w ${cvmfs_log_directory}/run.log
-exec &> ${cvmfs_log_directory}/run.log
+RUN_LOGFILE="${cvmfs_log_directory}/run.log"
+sudo touch                               $RUN_LOGFILE
+sudo chmod a+w                           $RUN_LOGFILE
+sudo chown $test_username:$test_username $RUN_LOGFILE
+exec &>                                  $RUN_LOGFILE
 
 # switch to working directory
 cd $cvmfs_workspace
