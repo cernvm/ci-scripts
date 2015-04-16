@@ -92,7 +92,7 @@ else
     timeout=$(( $timeout - 1 ))
     sleep 1
   done
-  [ $timeout -gt 0 ]] || exit 2
+  [ $timeout -gt 0 ] || exit 2
   if ! sudo cat /etc/sudoers | grep -q "$sudo_fix"; then
     echo "$sudo_fix" | sudo tee --append /etc/sudoers > /dev/null 2>&1
   fi
