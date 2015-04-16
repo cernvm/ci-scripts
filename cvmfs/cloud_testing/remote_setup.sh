@@ -76,8 +76,17 @@ unittest_package=""
 test_username="sftnight"
 
 # RHEL (SLC) requires a tty for sudo... work around that
-if ! cat /etc/sudoers | grep -q "Defaults:root !requiretty"; then
-  echo "Defaults:root !requiretty" | tee --append /etc/sudoers > /dev/null 2>&1
+sudo_fix="Defaults:root !requiretty"
+if [ $(id -u) -eq 0 ]; then
+  # if we are root, we can fix it right away
+  if ! cat /etc/sudoers | grep -q "$sudo_fix"; then
+    echo "$sudo_fix" | tee --append /etc/sudoers > /dev/null 2>&1
+  fi
+else
+  # if not, we need to hope that the current user is allowed to `sudo`
+  if ! sudo cat /etc/sudoers | grep -q "$sudo_fix"; then
+    echo "$sudo_fix" | sudo tee --append /etc/sudoers > /dev/null 2>&1
+  fi
 fi
 
 # create a workspace
