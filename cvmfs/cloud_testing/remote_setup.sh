@@ -84,6 +84,15 @@ if [ $(id -u) -eq 0 ]; then
   fi
 else
   # if not, we need to hope that the current user is allowed to `sudo`
+
+  # first wait until sudo doesn't complain about unresolvable hostname
+  # (probably waits until landb has been updated on Ubuntu)
+  timeout=1800
+  while sudo echo "f" 2>&1 | grep -q "unable to resol" && [ $timeout -gt 0 ]; do
+    timeout=$(( $timeout - 1 ))
+    sleep 1
+  done
+  [ $timeout -gt 0 ]] || exit 2
   if ! sudo cat /etc/sudoers | grep -q "$sudo_fix"; then
     echo "$sudo_fix" | sudo tee --append /etc/sudoers > /dev/null 2>&1
   fi
