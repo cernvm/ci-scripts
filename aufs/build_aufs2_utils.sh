@@ -7,8 +7,9 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 . ${BUILD_SCRIPT_LOCATION}/common.sh
 
 # sanity checks
-[ ! -z $AUFS_UTIL_BUILD_LOCATION  ] || die "AUFS_UTIL_BUILD_LOCATION missing"
-[ ! -z $AUFS_UTIL_SOURCE_LOCATION ] || die "AUFS_UTIL_SOURCE_LOCATION missing"
+[ ! -z $AUFS_UTIL_BUILD_LOCATION     ]                    || die "AUFS_UTIL_BUILD_LOCATION missing"
+[ ! -z $AUFS_UTIL_SOURCE_LOCATION    ]                    || die "AUFS_UTIL_SOURCE_LOCATION missing"
+[ "$(echo $AUFS_UTIL_SOURCE_LOCATION | head -c1)" = "/" ] || die "AUFS_UTIL_SOURCE_LOCATION must be absolute"
 
 echo "cleaning out previous build location..."
 rm -fR $AUFS_UTIL_BUILD_LOCATION
