@@ -22,25 +22,25 @@ source_location="${rpmbuild_location}/SOURCES"
 download_kernel_sources $source_location $AUFS_KERNEL_VERSION
 
 echo "applying patches to build configuration..."
-apply_patch $source_location 1 ${AUFS_SOURCE_LOCATION}/aufs2-standalone/rhel6.3-config-generic.patch
-apply_patch $source_location 1 ${AUFS_SOURCE_LOCATION}/aufs2-standalone/kernel-headers.patch
+apply_patch $source_location 1 ${AUFS_SOURCE_LOCATION}/rhel6.3-config-generic.patch
+apply_patch $source_location 1 ${AUFS_SOURCE_LOCATION}/kernel-headers.patch
 
 echo "decompressing kernel sources..."
 decompress_kernel_sources_tarbz2 $source_location
 kernel_source_location="${source_location}/${kernel_id}"
 
 echo "patching kernel sources..."
-apply_patch $kernel_source_location 1 ${AUFS_SOURCE_LOCATION}/aufs2-standalone/aufs2-base.patch
-apply_patch $kernel_source_location 1 ${AUFS_SOURCE_LOCATION}/aufs2-standalone/aufs2-kbuild.patch
-apply_patch $kernel_source_location 0 ${AUFS_SOURCE_LOCATION}/aufs2-standalone/rhel6.5-vfs-update.patch
+apply_patch $kernel_source_location 1 ${AUFS_SOURCE_LOCATION}/aufs2-base.patch
+apply_patch $kernel_source_location 1 ${AUFS_SOURCE_LOCATION}/aufs2-kbuild.patch
+apply_patch $kernel_source_location 0 ${AUFS_SOURCE_LOCATION}/rhel6.5-vfs-update.patch
 
 echo "adding additional AUFS files..."
-cp -r ${AUFS_SOURCE_LOCATION}/aufs2-standalone/fs/aufs                   ${kernel_source_location}/fs/
-cp ${AUFS_SOURCE_LOCATION}/aufs2-standalone/Documentation/ABI/testing/*  ${kernel_source_location}/Documentation/ABI/testing/
-cp ${AUFS_SOURCE_LOCATION}/aufs2-standalone/include/linux/aufs_type.h    ${kernel_source_location}/include/linux/
+cp -r ${AUFS_SOURCE_LOCATION}/fs/aufs                   ${kernel_source_location}/fs/
+cp ${AUFS_SOURCE_LOCATION}/Documentation/ABI/testing/*  ${kernel_source_location}/Documentation/ABI/testing/
+cp ${AUFS_SOURCE_LOCATION}/include/linux/aufs_type.h    ${kernel_source_location}/include/linux/
 
 echo "patching AUFS kernel sources..."
-apply_patch $kernel_source_location 0 ${AUFS_SOURCE_LOCATION}/aufs2-standalone/cvmfs-fix-deadlock.patch
+apply_patch $kernel_source_location 0 ${AUFS_SOURCE_LOCATION}/cvmfs-fix-deadlock.patch
 
 echo "compressing kernel sources..."
 compress_kernel_sources_tarbz2 $source_location
