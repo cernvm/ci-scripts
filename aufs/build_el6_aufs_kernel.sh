@@ -23,7 +23,6 @@ download_kernel_sources $source_location $AUFS_KERNEL_VERSION
 
 echo "applying patches to build configuration..."
 apply_patch $source_location 1 ${AUFS_SOURCE_LOCATION}/rhel6.3-config-generic.patch
-apply_patch $source_location 1 ${AUFS_SOURCE_LOCATION}/kernel-headers.patch
 
 echo "decompressing kernel sources..."
 decompress_kernel_sources_tarbz2 $source_location
