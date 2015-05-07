@@ -63,8 +63,8 @@ echo "successfully built AUFS enabled kernel ${aufs_kernel_version_tag}"
 echo "downloading OpenAFS, ZFS kernel module sources..."
 download_kmod_sources $source_location \
                       kernel-module-openafs-${AUFS_KERNEL_VERSION}
-download_kmod_sources $source_location spl_kmod
-download_kmod_sources $source_location zfs_kmod
+download_kmod_sources $source_location spl-kmod
+download_kmod_sources $source_location zfs-kmod
 
 echo "installing just created kernel RPMs..."
 install_kernel_devel_rpm "$rpmbuild_location" "$aufs_kernel_version_tag"
@@ -80,8 +80,8 @@ rpmbuild --define "%_topdir ${rpmbuild_location}"      \
 echo "building ZFS kernel modules..."
 rpmbuild --define "%_topdir ${rpmbuild_location}"      \
          --define "%_tmppath ${rpmbuild_location}/TMP" \
-         --rebuild spl_kmod*.rpm
+         --rebuild spl-kmod*.rpm
 rpmbuild --define "%_topdir ${rpmbuild_location}"      \
          --define "%_tmppath ${rpmbuild_location}/TMP" \
-         --rebuild zfs_kmod*.rpm
+         --rebuild zfs-kmod*.rpm
 
