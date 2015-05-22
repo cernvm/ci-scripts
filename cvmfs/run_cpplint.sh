@@ -26,5 +26,5 @@ if [ x"$CVMFS_RUN_CPPLINT" != x"true" ]; then
   exit 0
 fi
 
-echo "running CppLint and sending output to $CVMFS_CPPLINT_RESULT_LOCATION ..."
-${CVMFS_SOURCE_LOCATION}/${LINT_SCRIPT} > $CVMFS_CPPLINT_RESULT_LOCATION 2>&1
+echo "running CppLint and sending output to $CVMFS_CPPLINT_RESULT_LOCATION ..." # always exit 0
+${CVMFS_SOURCE_LOCATION}/${LINT_SCRIPT} > $CVMFS_CPPLINT_RESULT_LOCATION 2>&1 || exit 0
