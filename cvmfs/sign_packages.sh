@@ -14,32 +14,31 @@ package_type="$(get_package_type)"
 rpm_signing_server="https://cvm-sign01.cern.ch/cgi-bin/rpm/sign-rpm"
 
 sign_rpm() {
-  local oldwd="$(pwd)"
+  local rpm_directory="${CVMFS_BUILD_LOCATION}/RPMS"
 
-  cd $CVMFS_BUILD_LOCATION
-  echo "looking for RPMs to sign in $(pwd)..."
-  for rpm in $(find . -type f | grep -e '.*\.rpm$'); do
+  [ -d $rpm_directory ] || return 1
+  echo "looking for RPMs to sign in ${rpm_directory}..."
+
+  for rpm in $(find "$rpm_directory" -type f | grep -e '.*\.rpm$'); do
     local unsigned_rpm="$(echo "$rpm" | sed -e 's/^\(.*\)\.rpm$/\1.nosig.rpm/')"
     local unsigned_rpm_path="$(dirname $rpm)/${unsigned_rpm}"
 
     echo "renaming ${rpm} to ${unsigned_rpm_path}..."
-    mv $rpm $unsigned_rpm_path || return 1
+    mv $rpm $unsigned_rpm_path || return 2
 
     echo "signing ${unsigned_rpm_path} saving into ${rpm}..."
     curl --data-binary @$unsigned_rpm_path                     \
          --cacert      /etc/pki/tls/certs/cern-ca-bundle.crt   \
          --cert        /etc/pki/tls/certs/$(hostname -s).crt   \
          --key         /etc/pki/tls/private/$(hostname -s).key \
-         "$rpm_signing_server" > $rpm || return 2
+         "$rpm_signing_server" > $rpm || return 3
 
     echo "validating ${rpm}..."
-    rpm -K $rpm || return 3
+    rpm -K $rpm || return 4
 
     echo "removing ${unsigned_rpm_path}..."
-    rm -f $unsigned_rpm_path || return 4
+    rm -f $unsigned_rpm_path || return 5
   done
-
-  cd $oldwd
 }
 
 case "$package_type" in
