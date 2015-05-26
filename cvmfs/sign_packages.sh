@@ -44,7 +44,7 @@ sign_rpm() {
 
 case "$package_type" in
   rpm)
-    echo "signing RPM"
+    sign_rpm || die "fail (error code: $?)"
     ;;
   *)
     echo "signing is not supported for $package_type"
