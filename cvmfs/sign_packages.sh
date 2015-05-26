@@ -18,23 +18,24 @@ sign_rpm() {
 
   cd $CVMFS_BUILD_LOCATION
   for rpm in $(find . -type f | grep -e '.*\.rpm$'); do
-    local unsigned_rpm="$(dirname $rpm)/$(basename -s .rpm $rpm).unsigned.rpm"
+    local unsigned_rpm="$(echo "$rpm" | sed -e 's/^\(.*\)\.rpm$/\1.nosig.rpm/')"
+    local unsigned_rpm_path="$(dirname $rpm)/${unsigned_rpm}"
 
-    echo "renaming ${rpm} to ${unsigned_rpm}..."
-    mv $rpm $unsigned_rpm
+    echo "renaming ${rpm} to ${unsigned_rpm_path}..."
+    mv $rpm $unsigned_rpm_path || return 1
 
-    echo "signing ${unsigned_rpm} saving into ${rpm}..."
-    curl --data-binary @<RPM>                             \
-         --cacert /etc/pki/tls/certs/cern-ca-bundle.crt   \
-         --cert   /etc/pki/tls/certs/$(hostname -s).crt   \
-         --key    /etc/pki/tls/private/$(hostname -s).key \
-         "$rpm_signing_server" > $rpm
+    echo "signing ${unsigned_rpm_path} saving into ${rpm}..."
+    curl --data-binary @$unsigned_rpm_path                     \
+         --cacert      /etc/pki/tls/certs/cern-ca-bundle.crt   \
+         --cert        /etc/pki/tls/certs/$(hostname -s).crt   \
+         --key         /etc/pki/tls/private/$(hostname -s).key \
+         "$rpm_signing_server" > $rpm || return 2
 
     echo "validating ${rpm}..."
-    rpm -K $rpm
+    rpm -K $rpm || return 3
 
-    echo "removing ${unsigned_rpm}..."
-    rm -f $unsigned_rpm
+    echo "removing ${unsigned_rpm_path}..."
+    rm -f $unsigned_rpm_path || return 4
   done
 
   cd $oldwd
