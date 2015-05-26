@@ -15,11 +15,13 @@ rpm_signing_server="https://cvm-sign01.cern.ch/cgi-bin/rpm/sign-rpm"
 
 sign_rpm() {
   local rpm_directory="${CVMFS_BUILD_LOCATION}/RPMS"
+  local source_rpm_directory="${CVMFS_BUILD_LOCATION}/SRPMS"
 
   [ -d $rpm_directory ] || return 1
-  echo "looking for RPMs to sign in ${rpm_directory}..."
+  echo "looking for RPMs in ${rpm_directory} and ${source_rpm_directory}..."
 
-  for rpm in $(find "$rpm_directory" -type f | grep -e '.*\.rpm$'); do
+  for rpm in $(find "$rpm_directory" "$source_rpm_directory" -type f | \
+               grep -e '.*\.rpm$'); do
     local unsigned_rpm="$(echo "$rpm" | sed -e 's/^\(.*\)\.rpm$/\1.nosig.rpm/')"
 
     echo "renaming ${rpm} to ${unsigned_rpm}..."
