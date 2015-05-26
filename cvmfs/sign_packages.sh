@@ -21,13 +21,12 @@ sign_rpm() {
 
   for rpm in $(find "$rpm_directory" -type f | grep -e '.*\.rpm$'); do
     local unsigned_rpm="$(echo "$rpm" | sed -e 's/^\(.*\)\.rpm$/\1.nosig.rpm/')"
-    local unsigned_rpm_path="$(dirname $rpm)/${unsigned_rpm}"
 
-    echo "renaming ${rpm} to ${unsigned_rpm_path}..."
-    mv $rpm $unsigned_rpm_path || return 2
+    echo "renaming ${rpm} to ${unsigned_rpm}..."
+    mv $rpm $unsigned_rpm || return 2
 
-    echo "signing ${unsigned_rpm_path} saving into ${rpm}..."
-    curl --data-binary @$unsigned_rpm_path                     \
+    echo "signing ${unsigned_rpm} saving into ${rpm}..."
+    curl --data-binary @$unsigned_rpm                          \
          --cacert      /etc/pki/tls/certs/cern-ca-bundle.crt   \
          --cert        /etc/pki/tls/certs/$(hostname -s).crt   \
          --key         /etc/pki/tls/private/$(hostname -s).key \
@@ -36,8 +35,8 @@ sign_rpm() {
     echo "validating ${rpm}..."
     rpm -K $rpm || return 4
 
-    echo "removing ${unsigned_rpm_path}..."
-    rm -f $unsigned_rpm_path || return 5
+    echo "removing ${unsigned_rpm}..."
+    rm -f $unsigned_rpm || return 5
   done
 }
 
