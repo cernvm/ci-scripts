@@ -30,6 +30,7 @@ sign_rpm() {
          --cacert      /etc/pki/tls/certs/cern-ca-bundle.crt   \
          --cert        /etc/pki/tls/certs/$(hostname -s).crt   \
          --key         /etc/pki/tls/private/$(hostname -s).key \
+         --silent                                              \
          "$rpm_signing_server" > $rpm || return 3
 
     echo "validating ${rpm}..."
