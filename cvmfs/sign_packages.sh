@@ -17,6 +17,7 @@ sign_rpm() {
   local oldwd="$(pwd)"
 
   cd $CVMFS_BUILD_LOCATION
+  echo "looking for RPMs to sign in $(pwd)..."
   for rpm in $(find . -type f | grep -e '.*\.rpm$'); do
     local unsigned_rpm="$(echo "$rpm" | sed -e 's/^\(.*\)\.rpm$/\1.nosig.rpm/')"
     local unsigned_rpm_path="$(dirname $rpm)/${unsigned_rpm}"
