@@ -110,6 +110,16 @@
     "setup"   : "ubuntu_x86_64_setup.sh",
     "test"    : "ubuntu_x86_64_test.sh",
     "user"    : "ubuntu"
+  },
+
+  {
+    "dist"    : "ubuntu1504",
+    "config"  : "x86_64",
+    "ami"     : "ami-00000360",
+    "label"   : "ubuntu.x86_64",
+    "setup"   : "ubuntu_x86_64_setup.sh",
+    "test"    : "ubuntu_x86_64_test.sh",
+    "user"    : "ubuntu"
   }
 
 ]
