@@ -10,6 +10,7 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 [ ! -z $CVMFS_BUILD_LOCATION    ] || die "CVMFS_BUILD_LOCATION missing"
 [ ! -z $CVMFS_SOURCE_LOCATION   ] || die "CVMFS_SOURCE_LOCATION missing"
 [ ! -z $CVMFS_TEST_LOCATION     ] || die "CVMFS_TEST_LOCATION missing"
+[ ! -z $CVMFS_PYTHON_LOCATION   ] || die "CVMFS_PYTHON_LOCATION missing"
 [ ! -z $CVMFS_DATA_LOCATION     ] || die "CVMFS_DATA_LOCATION missing"
 which python2.7 > /dev/null 2>&1  || die "python2.7 is not in the PATH or is not installed"
 
