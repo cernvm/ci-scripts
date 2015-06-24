@@ -38,8 +38,8 @@ ${CVMFS_BUILD_LOCATION}/test/unittests/cvmfs_unittests_debug \
                                           --gtest_output=xml:$CVMFS_XML_FILE
 
 # create the directories
-mkdir html
-mkdir xml
+rm -rf html && mkdir html
+rm -rf xml && mkdir xml
 
 # run gcovr to get the html
 gcovr --object-directory=${CVMFS_BUILD_LOCATION}/test/unittests/CMakeFiles/cvmfs_unittests_debug.dir/    \
@@ -47,7 +47,7 @@ gcovr --object-directory=${CVMFS_BUILD_LOCATION}/test/unittests/CMakeFiles/cvmfs
       --html --html-detail --output=html/coverage.html
 
 # run gcovr to get the xml
-gcovr --object-directory=${CVMFS_SOURCE_LOCATION}/test/unittests/CMakeFiles/cvmfs_unittests_debug.dir/    \
-      --root=${CVMFS_SOURCE_LOCATION} --branches --gcov-filter=".*cvmfs#cvmfs.*" --print-summary          \
+gcovr --object-directory=${CVMFS_BUILD_LOCATION}/test/unittests/CMakeFiles/cvmfs_unittests_debug.dir/    \
+      --root=${CVMFS_SOURCE_LOCATION} --branches --gcov-filter=".*cvmfs#cvmfs.*" --print-summary         \
       --xml --xml-pretty --output=xml/coverage.xml
 
