@@ -34,7 +34,7 @@ make -j 4
 # run cvmfs_unittest_debug (all tests always)
 echo "Running the tests (with XML output ${CVMFS_XML_FILE})"
 ${CVMFS_BUILD_LOCATION}/test/unittests/cvmfs_unittests_debug \
-                                          --gtest_shuffle \
+                                          --gtest_shuffle    \
                                           --gtest_output=xml:$CVMFS_XML_FILE
 
 # create the directories
@@ -43,11 +43,11 @@ rm -rf xml && mkdir xml
 
 # run gcovr to get the html
 gcovr --object-directory=${CVMFS_BUILD_LOCATION}/test/unittests/CMakeFiles/cvmfs_unittests_debug.dir/    \
-      --root=${CVMFS_SOURCE_LOCATION} --branches --gcov-filter=".*cvmfs#cvmfs.*" --print-summary         \
+      --root=${CVMFS_SOURCE_LOCATION}/.. --branches --gcov-filter=".*cvmfs#cvmfs.*" --print-summary      \
       --html --html-detail --output=html/coverage.html
 
 # run gcovr to get the xml
 gcovr --object-directory=${CVMFS_BUILD_LOCATION}/test/unittests/CMakeFiles/cvmfs_unittests_debug.dir/    \
-      --root=${CVMFS_SOURCE_LOCATION} --branches --gcov-filter=".*cvmfs#cvmfs.*" --print-summary         \
+      --root=${CVMFS_SOURCE_LOCATION}/.. --branches --gcov-filter=".*cvmfs#cvmfs.*" --print-summary      \
       --xml --xml-pretty --output=xml/coverage.xml
 
