@@ -139,5 +139,14 @@ install_kernel_devel_rpm() {
   sudo rpm -vi --force $packages
 }
 
+install_module_rpm() {
+  local build_location="$1"
+  local kernel_version="$2"
+  local module_name="$3"
+
+  local rpm="${build_location}/RPMS/x86_64/${module_name}-${kernel_version}.rpm"
+  sudo rpm -vi --force $rpm
+}
+
 echo "print environment variables..."
 env

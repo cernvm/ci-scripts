@@ -77,11 +77,17 @@ rpmbuild --define "%_topdir ${rpmbuild_location}"      \
          --define "kernvers $aufs_kernel_version_tag"  \
          --rebuild openafs-*.rpm
 
+echo "building SPL kernel modules..."
+rpmbuild --define "%_topdir ${rpmbuild_location}"      \
+         --define "%_tmppath ${rpmbuild_location}/TMP" \
+         --define "%kernels $aufs_kernel_version_tag"  \
+         --rebuild spl-kmod*.rpm
+echo "  installing SPL modules..."
+install_module_rpm "$rpmbuild_location" "$aufs_kernel_version_tag" kmod-spl
+install_module_rpm "$rpmbuild_location" "$aufs_kernel_version_tag" kmod-spl-devel
 echo "building ZFS kernel modules..."
 rpmbuild --define "%_topdir ${rpmbuild_location}"      \
          --define "%_tmppath ${rpmbuild_location}/TMP" \
-         --rebuild spl-kmod*.rpm
-rpmbuild --define "%_topdir ${rpmbuild_location}"      \
-         --define "%_tmppath ${rpmbuild_location}/TMP" \
+         --define "%kernels $aufs_kernel_version_tag"  \
          --rebuild zfs-kmod*.rpm
 
