@@ -32,7 +32,7 @@ fi
 echo "switching to ${CVMFS_BUILD_LOCATION} and invoking build script..."
 cd "${CVMFS_BUILD_LOCATION}"
 cmake -DBUILD_UNITTESTS_DEBUG=yes ${CVMFS_SOURCE_LOCATION}
-make -j 4
+make -j 8
 
 # run cvmfs_unittest_debug (all tests always)
 echo "Running the tests (with XML output ${CVMFS_XML_FILE})"
@@ -45,10 +45,10 @@ rm -rf html && mkdir html
 rm -rf xml && mkdir xml
 
 # run gcovr to get the html
-gcovr --root=${CVMFS_SOURCE_LOCATION} --branches filter=".*cvmfs/cvmfs.*" --print-summary --sort-percentage \
+gcovr --root=${CVMFS_SOURCE_LOCATION} --branches --filter=".*cvmfs/cvmfs.*" --print-summary \
       --html --html-detail --output=html/coverage.html
 
 # run gcovr to get the xml
-gcovr --root=${CVMFS_SOURCE_LOCATION} --branches filter=".*cvmfs/cvmfs.*" --print-summary --sort-percentage \
+gcovr --root=${CVMFS_SOURCE_LOCATION} --branches --filter=".*cvmfs/cvmfs.*" --print-summary \
       --xml --xml-pretty --output=xml/coverage.xml
 
