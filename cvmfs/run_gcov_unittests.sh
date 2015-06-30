@@ -31,15 +31,16 @@ cd "${CVMFS_BUILD_LOCATION}"
 cmake -DBUILD_UNITTESTS_DEBUG=yes ${CVMFS_SOURCE_LOCATION}
 make -j 4
 
+# create the directories
+rm -rf html && mkdir html
+rm -rf xml && mkdir xml
+
 # run cvmfs_unittest_debug (all tests always)
 echo "Running the tests (with XML output ${CVMFS_XML_FILE})"
 ${CVMFS_BUILD_LOCATION}/test/unittests/cvmfs_unittests_debug \
                                           --gtest_shuffle    \
                                           --gtest_output=xml:$CVMFS_XML_FILE
 
-# create the directories
-rm -rf html && mkdir html
-rm -rf xml && mkdir xml
 
 # run gcovr to get the html
 gcovr --object-directory=${CVMFS_BUILD_LOCATION}/test/unittests/CMakeFiles/cvmfs_unittests_debug.dir/    \
