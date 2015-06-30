@@ -5,7 +5,6 @@ script_location=$(cd "$(dirname "$0")"; pwd)
 reachability_timeout=1800  # (  30 minutes )
 accessibility_timeout=7200 # ( 120 minutes )
 
-set -x
 
 die() {
   local msg=$1
