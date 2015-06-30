@@ -37,7 +37,7 @@ platform_script_path=""
 test_username="sftnight"
 
 # RHEL (SLC) requires a tty for sudo... work around that
-# sudo_fix="Defaults:root !requiretty"
+sudo_fix="Defaults:root !requiretty"
 if [ $(id -u) -eq 0 ]; then
   # if we are root, we can fix it right away
   if ! cat /etc/sudoers | grep -q "$sudo_fix"; then
@@ -133,8 +133,8 @@ elif which apt-get > /dev/null 2>&1; then
 fi
 
 echo "checking out the CernVM-FS source from $cvmfs_git_repository ($cvmfs_git_branch)..."
-# [ ! -d $cvmfs_source_directory ] || rm -fR $cvmfs_source_directory
-# git clone $cvmfs_git_repository $cvmfs_source_directory || exit 6
+[ ! -d $cvmfs_source_directory ] || rm -fR $cvmfs_source_directory
+git clone $cvmfs_git_repository $cvmfs_source_directory || exit 6
 cd $cvmfs_source_directory
 git checkout $cvmfs_git_branch || exit 7
 cd $cvmfs_workspace
