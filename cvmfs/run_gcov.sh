@@ -31,7 +31,7 @@ fi
 # run the build
 echo "switching to ${CVMFS_BUILD_LOCATION} and invoking build script..."
 cd "${CVMFS_BUILD_LOCATION}"
-cmake -DBUILD_UNITTESTS_DEBUG=yes ${CVMFS_SOURCE_LOCATION}
+cmake -DBUILD_COVERAGE=yes -DBUILD_UNITTESTS_DEBUG=yes ${CVMFS_SOURCE_LOCATION}
 make -j 8
 
 # run cvmfs_unittest_debug (all tests always)
