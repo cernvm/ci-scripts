@@ -13,9 +13,9 @@
 # EC2_KEY_LOCATION="/home/.../ibex_key.pem"
 
 # internal script configuration
-script_location=$(dirname $(readlink --canonicalize $0))
-reachability_timeout=1800  # (  30 minutes )
-accessibility_timeout=7200 # ( 120 minutes )
+script_location=$(cd "$(dirname "$0")"; pwd)
+. ${script_location}/common.sh
+
 config_package_base_url="https://ecsft.cern.ch/dist/cvmfs/cvmfs-config"
 
 # static information (check also remote_setup.sh and remote_run.sh)
@@ -51,12 +51,6 @@ instance_id=""
 #
 
 
-die() {
-  local msg=$1
-  echo $msg
-  exit 103
-}
-
 
 usage() {
   local msg="$1"
@@ -80,194 +74,20 @@ usage() {
 }
 
 
-check_retcode() {
-  local retcode=$1
-  local additional_msg="$2"
-
-  if [ $retcode -ne 0 ]; then
-    echo -n "fail"
-  else
-    echo -n "okay"
-  fi
-  if [ x"$additional_msg" != x"" ]; then
-    echo " ($additional_msg)"
-  else
-    echo ""
-  fi
-
-  return $retcode
-}
-
-
-check_timeout() {
-  local timeout_state=$1
-  local timeout_start=$2
-  local waiting_time=$(( ( $timeout_start - $timeout_state ) / 60 ))
-
-  [ $timeout_state -ne 0 ]
-  check_retcode $? "waited $waiting_time minutes"
-}
-
-
-# Reads the package map produced by the nightly build process to map supported
-# platforms to their associated packages.
-# pkgmap-format (ini-style):
-#     [<platform name>]
-#     client=<url to client package>
-#     server=<url to server package>
-#     ...=...
-#     [<next platform name>]
-#     ...=...
-#
-# @param pkgmap_url    URL where to find the package map file
-# @param platform      the platform name to be searched for
-# @param package       the package to be retrieved from the pkgmap
-# @return              0 on success (queried package URL through stdout)
-read_package_map() {
-  local pkgmap_url=$1
-  local platform=$2
-  local package=$3
-
-  local platform_found=0
-  local package_url=""
-  local old_ifs="$IFS"
-
-  IFS='
-'
-  for line in $(wget --no-check-certificate --quiet --output-document=- $pkgmap_url); do
-    # search the desired platform
-    if [ $platform_found -eq 0 ] && [ x"$line" = x"[$platform]" ]; then
-      platform_found=1
-      continue
-    fi
-
-    # when the platform was found, look for the desired package name
-    if [ $platform_found -eq 1 ]; then
-      # if the next platform starts, we didn't find the desired package
-      if echo "$line" | grep -q -e '^\[.*\]$'; then
-        break
-      fi
-
-      # check for desired package name and possibly return successfully
-      if [ x"$(echo "$line" | cut -d= -f1)" = x"$package" ]; then
-        package_url="$(echo "$line" | cut -d= -f2)"
-        break
-      fi
-    fi
-  done
-
-  IFS="$old_ifs"
-
-  # check if the desired package URL was found
-  if [ x"$package_url" != x"" ]; then
-    echo "$package_url"
-    return 0
-  else
-    return 2
-  fi
-}
-
-
-spawn_virtual_machine() {
+spawn_my_virtual_machine() {
   local ami=$1
   local userdata="$2"
 
   local retcode
 
-  # spawn the virtual machine on ibex
   echo -n "spawning virtual machine from $ami... "
   local spawn_results
-  spawn_results=$(${script_location}/instance_handler.py spawn                 \
-                                         --access-key       $EC2_ACCESS_KEY    \
-                                         --secret-key       $EC2_SECRET_KEY    \
-                                         --cloud-endpoint   $EC2_ENDPOINT      \
-                                         --key              $EC2_KEY           \
-                                         --instance-type    $EC2_INSTANCE_TYPE \
-                                         --userdata         "$userdata"        \
-                                         --ami              $ami)
+  spawn_results="$(spawn_virtual_machine $ami "$userdata")"
   retcode=$?
   instance_id=$(echo $spawn_results | awk '{print $1}')
   ip_address=$(echo $spawn_results | awk '{print $2}')
 
   check_retcode $retcode
-}
-
-
-wait_for_virtual_machine() {
-  local ip=$1
-  local username=$2
-
-  # wait for the virtual machine to respond to pings
-  echo -n "waiting for IP ($ip) to become reachable... "
-  local timeout=$reachability_timeout
-  while [ $timeout -gt 0 ] && ! ping -c 1 $ip > /dev/null 2>&1; do
-    sleep 10
-    timeout=$(( $timeout - 10 ))
-  done
-  if ! check_timeout $timeout $reachability_timeout; then return 1; fi
-
-  # wait for the virtual machine to become accessible via ssh
-  echo -n "waiting for VM ($ip) to become accessible... "
-  timeout=$accessibility_timeout
-  while [ $timeout -gt 0 ] &&                                      \
-        ! ssh -i $EC2_KEY_LOCATION -o StrictHostKeyChecking=no     \
-                                   -o UserKnownHostsFile=/dev/null \
-                                   -o LogLevel=ERROR               \
-                                   -o BatchMode=yes                \
-              ${username}@${ip} 'echo hallo' > /dev/null 2>&1; do
-    sleep 10
-    timeout=$(( $timeout - 10 ))
-  done
-  if ! check_timeout $timeout $accessibility_timeout; then return 1; fi
-}
-
-
-tear_down_virtual_machine() {
-  local instance=$1
-
-  echo -n "tearing down virtual machine instance $instance... "
-  local teardown_results
-  teardown_results=$(${script_location}/instance_handler.py terminate          \
-                                         --access-key       $EC2_ACCESS_KEY    \
-                                         --secret-key       $EC2_SECRET_KEY    \
-                                         --cloud-endpoint   $EC2_ENDPOINT      \
-                                         --instance-id      $instance)
-  check_retcode $?
-}
-
-
-run_script_on_virtual_machine() {
-  local ip=$1
-  local username=$2
-  local script_path=$3
-  shift 3
-
-  args=""
-  while [ $# -gt 0 ]; do
-    if echo "$1" | grep -q "[[:space:]]"; then
-      args="$args \"$1\""
-    else
-      args="$args $1"
-    fi
-    shift 1
-  done
-
-  ssh -i $EC2_KEY_LOCATION -o StrictHostKeyChecking=no     \
-                           -o UserKnownHostsFile=/dev/null \
-                           -o LogLevel=ERROR               \
-                           -o BatchMode=yes                \
-      $username@$ip 'cat | bash /dev/stdin' $args < $script_path
-}
-
-
-retrieve_file_from_virtual_machine() {
-  local ip=$1
-  local username=$2
-  local file_path=$3
-  local dest_path=$4
-
-  scp -i $EC2_KEY_LOCATION -o StrictHostKeyChecking=no \
-      $username@${ip}:${file_path} ${dest_path} > /dev/null 2>&1
 }
 
 
@@ -428,7 +248,7 @@ config_packages="$config_package_urls"
 # spawn the virtual machine image, run the platform specific setup script
 # on it, wait for the spawning and setup to be complete and run the actual
 # test suite on the VM.
-spawn_virtual_machine     $ami_name   "$userdata" || die "Aborting..."
+spawn_my_virtual_machine  $ami_name   "$userdata" || die "Aborting..."
 wait_for_virtual_machine  $ip_address  $username  || die "Aborting..."
 setup_virtual_machine     $ip_address  $username  || die "Aborting..."
 wait_for_virtual_machine  $ip_address  $username  || die "Aborting..."
