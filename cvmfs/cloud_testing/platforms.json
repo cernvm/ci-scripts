@@ -71,6 +71,16 @@
   },
 
   {
+    "dist"    : "el6",
+    "config"  : "x86_64_gcov",
+    "ami"     : "ami-0000032a",
+    "label"   : "el6.x86_64",
+    "setup"   : "slc6_x86_64-gcov_setup.sh",
+    "test"    : "slc6_x86_64-gcov_test.sh",
+    "user"    : "root"
+  },
+
+  {
     "dist"    : "el7",
     "config"  : "x86_64",
     "ami"     : "ami-00000347",
