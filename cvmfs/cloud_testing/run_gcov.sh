@@ -18,13 +18,12 @@ script_location=$(cd "$(dirname "$0")"; pwd)
 
 config_package_base_url="https://ecsft.cern.ch/dist/cvmfs/cvmfs-config"
 
-# static information (check also remote_setup.sh and remote_run.sh)
-cvmfs_workspace="/tmp/cvmfs-test-workspace"
+# static information (check also remote_cov_setup.sh and remote_cov_run.sh)
+cvmfs_workspace="/tmp/cvmfs-test-gcov-workspace"
 cvmfs_source_directory="${cvmfs_workspace}/cvmfs-source"
 cvmfs_log_directory="${cvmfs_workspace}/logs"
 
 # global variables for external script parameters
-testee_url=""
 platform=""
 platform_run_script=""
 platform_setup_script=""
@@ -33,13 +32,8 @@ ami_name=""
 log_destination="."
 username="root"
 userdata=""
-
-# package download locations
-server_package=""
-client_package=""
-config_packages=""  # might be more than one... BEWARE OF SPACES!!
-unittest_package=""
-source_tarball="source.tar.gz" # will be prepended by ${testee_url} later
+cvmfs_git_repository="https://github.com/cvmfs/cvmfs.git"
+cvmfs_git_branch="devel"
 
 # global variables (get filled by spawn_virtual_machine)
 ip_address=""
@@ -58,9 +52,8 @@ usage() {
   echo "Error: $msg"
   echo
   echo "Mandatory options:"
-  echo " -u <testee URL>            URL to the nightly build directory to be tested"
   echo " -p <platform name>         name of the platform to be tested"
-  echo " -b <setup script>          platform specific setup script (inside the tarball)"
+  echo " -x <setup script>          platform specific setup script (inside the tarball)"
   echo " -r <run script>            platform specific test script (inside the tarball)"
   echo " -a <AMI name>              the virtual machine image to spawn"
   echo
@@ -69,6 +62,8 @@ usage() {
   echo " -d <results destination>   Directory to store final test session logs"
   echo " -m <ssh user name>         User name to be used for VM login (default: root)"
   echo " -c <cloud init userdata>   User data string to be passed to the new instance"
+  echo " -s <git repository>        CernVM-FS git repository to be checked out"
+  echo " -b <git branch name>       branch name to be tested"
 
   exit 1
 }
@@ -91,20 +86,42 @@ spawn_my_virtual_machine() {
 }
 
 
+get_test_results() {
+  local ip=$1
+  local username=$2
+  local retval=0
+
+  echo -n "retrieving test results... "
+  retrieve_file_from_virtual_machine \
+      $ip                            \
+      $username                      \
+      "${cvmfs_log_directory}/*"     \
+      $log_destination
+  check_retcode $?
+}
+
+
+handle_test_failure() {
+  local ip=$1
+  local username=$2
+
+  get_test_results $ip $username
+
+  echo -n "something went wrong - destroying VM ($ip)... "
+  # tear_down_virtual_machine $instance_id || die "fail!"
+  echo "done"
+}
+
+
 setup_virtual_machine() {
   local ip=$1
   local username=$2
 
   local remote_setup_script
-  remote_setup_script="${script_location}/remote_setup.sh"
+  remote_setup_script="${script_location}/remote_gcov_setup.sh"
 
-  echo -n "setting up VM ($ip) for CernVM-FS test suite... "
+  echo -n "setting up VM ($ip) for CernVM-FS integration test coverage... "
   run_script_on_virtual_machine $ip $username $remote_setup_script \
-      -s $server_package                                           \
-      -c $client_package                                           \
-      -t $source_tarball                                           \
-      -g $unittest_package                                         \
-      -k "$config_packages"                                        \
       -r $platform_setup_script
   check_retcode $?
   if [ $? -ne 0 ]; then
@@ -125,45 +142,17 @@ run_test_cases() {
   local retcode
   local log_files
   local remote_run_script
-  remote_run_script="${script_location}/remote_run.sh"
+  remote_run_script="${script_location}/remote_gcov_run.sh"
 
   echo -n "running test cases on VM ($ip)... "
   run_script_on_virtual_machine $ip $username $remote_run_script \
-      -s $server_package                                         \
-      -c $client_package                                         \
-      -k "$config_packages"                                      \
       -r $platform_run_script
   check_retcode $?
 
   if [ $? -ne 0 ]; then
     handle_test_failure $ip $username
+    return 1
   fi
-}
-
-
-handle_test_failure() {
-  local ip=$1
-  local username=$2
-
-  get_test_results $ip $username
-
-  echo "at least one test case failed... skipping destructions of VM!"
-  exit 100
-}
-
-
-get_test_results() {
-  local ip=$1
-  local username=$2
-  local retval=0
-
-  echo -n "retrieving test results... "
-  retrieve_file_from_virtual_machine \
-      $ip                            \
-      $username                      \
-      "${cvmfs_log_directory}/*"     \
-      $log_destination
-  check_retcode $?
 }
 
 
@@ -172,25 +161,22 @@ get_test_results() {
 #
 
 
-while getopts "r:b:u:p:e:a:d:m:c:" option; do
+while getopts "p:x:r:a:e:d:m:c:s:b:" option; do
   case $option in
-    r)
-      platform_run_script=$OPTARG
-      ;;
-    b)
-      platform_setup_script=$OPTARG
-      ;;
-    u)
-      testee_url=$OPTARG
-      ;;
     p)
       platform=$OPTARG
       ;;
-    e)
-      ec2_config=$OPTARG
+    x)
+      platform_setup_script=$OPTARG
+      ;;
+    r)
+      platform_run_script=$OPTARG
       ;;
     a)
       ami_name=$OPTARG
+      ;;
+    e)
+      ec2_config=$OPTARG
       ;;
     d)
       log_destination=$OPTARG
@@ -200,6 +186,12 @@ while getopts "r:b:u:p:e:a:d:m:c:" option; do
       ;;
     c)
       userdata="$OPTARG"
+      ;;
+    s)
+      cvmfs_git_repository="$OPTARG"
+      ;;
+    b)
+      cvmfs_git_branch=$OPTARG
       ;;
     ?)
       shift $(($OPTIND-2))
@@ -212,35 +204,9 @@ done
 if [ x$platform_run_script   = "x" ] ||
    [ x$platform_setup_script = "x" ] ||
    [ x$platform              = "x" ] ||
-   [ x$testee_url            = "x" ] ||
    [ x$ami_name              = "x" ]; then
   usage "Missing parameter(s)"
 fi
-
-# figure out which packages need to be downloaded
-client_package=$(read_package_map   ${testee_url}/pkgmap "$platform" 'client'   )
-server_package=$(read_package_map   ${testee_url}/pkgmap "$platform" 'server'   )
-unittest_package=$(read_package_map ${testee_url}/pkgmap "$platform" 'unittests')
-config_packages="$(read_package_map ${testee_url}/pkgmap "$platform" 'config'   )"
-
-# check if all necessary packages were found
-if [ x"$server_package"        = "x" ] ||
-   [ x"$client_package"        = "x" ] ||
-   [ x"$config_packages"       = "x" ] ||
-   [ x"$unittest_package"      = "x" ]; then
-  usage "Incomplete pkgmap file"
-fi
-
-# construct the full package URLs
-client_package="${testee_url}/${client_package}"
-server_package="${testee_url}/${server_package}"
-unittest_package="${testee_url}/${unittest_package}"
-source_tarball="${testee_url}/${source_tarball}"
-config_package_urls=""
-for config_package in $config_packages; do
-  config_package_urls="${config_package_base_url}/${config_package} $config_package_urls"
-done
-config_packages="$config_package_urls"
 
 # load EC2 configuration
 . $ec2_config
