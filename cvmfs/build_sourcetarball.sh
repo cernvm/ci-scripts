@@ -43,7 +43,7 @@ while [ $# -gt 0 ]; do
 done
 
 # build the invocation string and print it for debugging reasons
-command_tmpl="$build_script ${CVMFS_SOURCE_LOCATION} ${CVMFS_BUILD_LOCATION} $args"
+command_tmpl="$build_script ${CVMFS_SOURCE_LOCATION} ${CVMFS_SOURCETARBALL_LOCATION} $args"
 echo "++ $command_tmpl"
 
 # run the build script
