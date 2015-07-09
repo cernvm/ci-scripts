@@ -23,7 +23,7 @@ mkdir -p "$CVMFS_SOURCETARBALL_LOCATION"
 # run the build
 echo "looking for build script to invoke..."
 build_script_location="${CVMFS_SOURCE_LOCATION}/ci"
-build_script_name="${CVMFS_BUILD_SCRIPT_BASE}_${sourcetarball}.sh"
+build_script_name="${CVMFS_BUILD_SCRIPT_BASE}_sourcetarball.sh"
 build_script="${build_script_location}/${build_script_name}"
 
 # check if the script exists and is executable
