@@ -43,6 +43,13 @@ sign_rpm() {
   done
 }
 
+if [ ! -f /etc/pki/tls/certs/$(hostname -s).crt ]; then
+  echo "WARNING: NO HOST CERTIFICATE FOUND!"
+  echo "  Expected /etc/pki/tls/certs/$(hostname -s).crt"
+  echo "  Not signing packages!"
+  exit 0
+fi
+
 case "$package_type" in
   rpm)
     sign_rpm || die "fail (error code: $?)"
