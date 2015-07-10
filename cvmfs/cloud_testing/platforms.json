@@ -89,7 +89,8 @@
     "test"    : "centos7_x86_64_test.sh",
     "user"    : "centos",
     "context" : "#!/bin/sh
-                 echo 'Defaults:centos !requiretty' | tee --append /etc/sudoers"
+                 echo 'Defaults !requiretty' | tee --append /etc/sudoers
+                 echo 'Defaults visiblepw' | tee --append /etc/sudoers"
   },
 
   {
