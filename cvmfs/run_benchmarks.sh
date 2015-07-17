@@ -16,11 +16,9 @@ which python2.7 > /dev/null 2>&1  || die "python2.7 is not in the PATH or is not
 
 
 # running the benchmarks
-current_user=$(whoami)
 cd ${CVMFS_BUILD_LOCATION}
 sudo make install
 cd ${CVMFS_TEST_LOCATION}
-sudo -E ./run.sh ${CVMFS_DATA_LOCATION}/benchmark.log -o ${CVMFS_DATA_LOCATION}/benchmark.xml benchmarks/*
-sudo cp -r /tmp/cvmfs_benchmarks ${CVMFS_DATA_LOCATION}
-sudo chown -R $current_user ${CVMFS_DATA_LOCATION}/cvmfs_benchmarks
+./run.sh ${CVMFS_DATA_LOCATION}/benchmark.log -o ${CVMFS_DATA_LOCATION}/benchmark.xml benchmarks/*
+cp -r /tmp/cvmfs_benchmarks ${CVMFS_DATA_LOCATION}
 python2.7 ${CVMFS_PYTHON_LOCATION}/statistics_collector.py ${CVMFS_DATA_LOCATION}/cvmfs_benchmarks/*/*.data
