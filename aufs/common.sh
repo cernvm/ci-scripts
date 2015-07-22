@@ -23,12 +23,13 @@ get_kernel_package_name() {
 download_kernel_sources() {
   local source_location="$1"
   local kernel_version="$2"
+  local yum_repo="$3"
   local previous_workdir="$(pwd)"
 
   cd $source_location
 
   yum clean all
-  yumdownloader --source kernel-${kernel_version}
+  yumdownloader --disablerepo=* --enablerepo=${yum_repo} --source kernel-${kernel_version}
   rpm2cpio kernel-${kernel_version}.src.rpm | cpio -i
   rm -f kernel-${kernel_version}.src.rpm
 
