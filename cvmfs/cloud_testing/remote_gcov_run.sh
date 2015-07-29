@@ -82,6 +82,6 @@ fi
 
 # run the platform specific script to perform CernVM-FS tests
 echo "running platform specific script $platform_script ..."
-sudo -H -E -u $test_username sh $platform_script_abs -t $cvmfs_source_directory\
-                                                     -l $cvmfs_log_directory
+sudo -H -E -u $test_username bash $platform_script_abs -t $cvmfs_source_directory \
+                                                       -l $cvmfs_log_directory
 
