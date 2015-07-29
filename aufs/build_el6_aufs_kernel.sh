@@ -83,8 +83,7 @@ rpmbuild --define "%_topdir ${rpmbuild_location}"      \
          --define "%kernels $aufs_kernel_version_tag"  \
          --rebuild spl-kmod*.rpm
 echo "  installing SPL modules..."
-install_module_rpm "$rpmbuild_location" "$aufs_kernel_version_tag" kmod-spl
-install_module_rpm "$rpmbuild_location" "$aufs_kernel_version_tag" kmod-spl-devel
+rpm -vi --force "${rpmbuild_location}/RPMS/x86_64/kmod-spl-*.rpm"
 echo "building ZFS kernel modules..."
 rpmbuild --define "%_topdir ${rpmbuild_location}"      \
          --define "%_tmppath ${rpmbuild_location}/TMP" \
