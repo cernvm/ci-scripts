@@ -19,7 +19,7 @@ prepare_kernel_build_environment $AUFS_BUILD_LOCATION
 echo "downloading the kernel sources..."
 rpmbuild_location="${AUFS_BUILD_LOCATION}/rpmbuild"
 source_location="${rpmbuild_location}/SOURCES"
-download_kernel_sources $source_location $AUFS_KERNEL_VERSION sl6-security
+download_kernel_sources $source_location $AUFS_KERNEL_VERSION slc6-updates-source
 
 echo "applying patches to build configuration..."
 apply_patch $source_location 1 ${AUFS_SOURCE_LOCATION}/rhel6.3-config-generic.patch
