@@ -12,6 +12,8 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 # discover what to do for the platform
 package_type="$(get_package_type)"
 rpm_signing_server="https://cvm-sign01.cern.ch/cgi-bin/rpm/sign-rpm"
+deb_signing_server="https://cvm-sign01.cern.ch/cgi-bin/deb/sign-deb"
+
 
 sign_rpm() {
   local rpm_directory="${CVMFS_BUILD_LOCATION}/RPMS"
@@ -43,6 +45,34 @@ sign_rpm() {
   done
 }
 
+
+sign_deb() {
+  [ -d "${CVMFS_BUILD_LOCATION}" ] || return 1
+  echo "looking for DEBs in ${CVMFS_BUILD_LOCATION}..."
+
+  for deb in $(find "${CVMFS_BUILD_LOCATION}" -type f | \
+               grep -e '.*\.deb$'); do
+    local unsigned_deb="$(echo "$deb" | sed -e 's/^\(.*\)\.deb$/\1.nosig.deb/')"
+
+    echo "renaming ${deb} to ${unsigned_deb}..."
+    mv $deb $unsigned_deb || return 2
+
+    echo "signing ${unsigned_deb} saving into ${deb}..."
+    curl --data-binary @$unsigned_deb                          \
+         --cacert      /etc/pki/tls/certs/cern-ca-bundle.crt   \
+         --cert        /etc/pki/tls/certs/$(hostname -s).crt   \
+         --key         /etc/pki/tls/private/$(hostname -s).key \
+         --silent                                              \
+         "$deb_signing_server" > $deb || return 3
+
+    echo "validating ${deb}..."
+    dpkg-sig -c $deb | grep -q GOODSIG || return 4
+
+    echo "removing ${unsigned_deb}..."
+    rm -f $unsigned_deb || return 5
+  done
+}
+
 if [ ! -f /etc/pki/tls/certs/$(hostname -s).crt ]; then
   echo "WARNING: NO HOST CERTIFICATE FOUND!"
   echo "  Expected /etc/pki/tls/certs/$(hostname -s).crt"
@@ -53,6 +83,9 @@ fi
 case "$package_type" in
   rpm)
     sign_rpm || die "fail (error code: $?)"
+    ;;
+  deb)
+    sign_deb || die "fail (error code: $?)"
     ;;
   *)
     echo "signing is not supported for $package_type"
