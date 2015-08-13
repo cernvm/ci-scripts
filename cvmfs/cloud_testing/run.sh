@@ -71,7 +71,7 @@ usage() {
   echo " -m <ssh user name>         User name to be used for VM login (default: root)"
   echo " -c <cloud init userdata>   User data string to be passed to the new instance"
   echo
-  echo " -p <custom client URL>     URL to a nightly build for a custom CVMFS client"
+  echo " -l <custom client URL>     URL to a nightly build for a custom CVMFS client"
 
   exit 1
 }
@@ -175,7 +175,7 @@ get_test_results() {
 #
 
 
-while getopts "r:b:u:p:e:a:d:m:c:p:" option; do
+while getopts "r:b:u:p:e:a:d:m:c:l:" option; do
   case $option in
     r)
       platform_run_script=$OPTARG
@@ -204,7 +204,7 @@ while getopts "r:b:u:p:e:a:d:m:c:p:" option; do
     c)
       userdata="$OPTARG"
       ;;
-    p)
+    l)
       client_testee_url=$OPTARG
       ;;
     ?)

@@ -35,4 +35,4 @@ ${SCRIPT_LOCATION}/cloud_testing/run.sh                    \
         -a  $(get_platform_parameter 'ami'     "$vm_desc") \
         -m  $(get_platform_parameter 'user'    "$vm_desc") \
         -c "$(get_platform_parameter 'context' "$vm_desc")"\
-        -p "$CVMFS_CLIENT_TESTEE_URL"
+        -l "$CVMFS_CLIENT_TESTEE_URL"
