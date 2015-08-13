@@ -25,6 +25,7 @@ cvmfs_log_directory="${cvmfs_workspace}/logs"
 
 # global variables for external script parameters
 testee_url=""
+client_testee_url=""
 platform=""
 platform_run_script=""
 platform_setup_script=""
@@ -69,6 +70,8 @@ usage() {
   echo " -d <results destination>   Directory to store final test session logs"
   echo " -m <ssh user name>         User name to be used for VM login (default: root)"
   echo " -c <cloud init userdata>   User data string to be passed to the new instance"
+  echo
+  echo " -p <custom client URL>     URL to a nightly build for a custom CVMFS client"
 
   exit 1
 }
@@ -172,7 +175,7 @@ get_test_results() {
 #
 
 
-while getopts "r:b:u:p:e:a:d:m:c:" option; do
+while getopts "r:b:u:p:e:a:d:m:c:p:" option; do
   case $option in
     r)
       platform_run_script=$OPTARG
@@ -201,6 +204,9 @@ while getopts "r:b:u:p:e:a:d:m:c:" option; do
     c)
       userdata="$OPTARG"
       ;;
+    p)
+      client_testee_url=$OPTARG
+      ;;
     ?)
       shift $(($OPTIND-2))
       usage "Unrecognized option: $1"
@@ -217,11 +223,20 @@ if [ x$platform_run_script   = "x" ] ||
   usage "Missing parameter(s)"
 fi
 
+# check if we have a custom client testee URL
+if [ ! -z "$client_testee_url" ]; then
+  echo "using custom client from here: $client_testee_url"
+else
+  client_testee_url="$testee_url"
+fi
+
 # figure out which packages need to be downloaded
-client_package=$(read_package_map   ${testee_url}/pkgmap "$platform" 'client'   )
-server_package=$(read_package_map   ${testee_url}/pkgmap "$platform" 'server'   )
-unittest_package=$(read_package_map ${testee_url}/pkgmap "$platform" 'unittests')
-config_packages="$(read_package_map ${testee_url}/pkgmap "$platform" 'config'   )"
+ctu="$client_testee_url"
+otu="$testee_url"
+client_package=$(read_package_map   ${ctu}/pkgmap "$platform" 'client'   )
+server_package=$(read_package_map   ${otu}/pkgmap "$platform" 'server'   )
+unittest_package=$(read_package_map ${otu}/pkgmap "$platform" 'unittests')
+config_packages="$(read_package_map ${otu}/pkgmap "$platform" 'config'   )"
 
 # check if all necessary packages were found
 if [ x"$server_package"        = "x" ] ||
@@ -232,10 +247,10 @@ if [ x"$server_package"        = "x" ] ||
 fi
 
 # construct the full package URLs
-client_package="${testee_url}/${client_package}"
-server_package="${testee_url}/${server_package}"
-unittest_package="${testee_url}/${unittest_package}"
-source_tarball="${testee_url}/${source_tarball}"
+client_package="${ctu}/${client_package}"
+server_package="${otu}/${server_package}"
+unittest_package="${otu}/${unittest_package}"
+source_tarball="${otu}/${source_tarball}"
 config_package_urls=""
 for config_package in $config_packages; do
   config_package_urls="${config_package_base_url}/${config_package} $config_package_urls"
