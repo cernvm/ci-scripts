@@ -6,8 +6,13 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 . ${BUILD_SCRIPT_LOCATION}/../jenkins/common.sh
 . ${BUILD_SCRIPT_LOCATION}/common.sh
 
+# This script works as well for aufs kernel binaries
+if [ "x${AUFS_BUILD_LOCATION}" != "x" ]; then
+  CVMFS_BUILD_LOCATION="$AUFS_BUILD_LOCATION"
+fi
+
 # sanity checks
-[ ! -z $CVMFS_BUILD_LOCATION    ] || die "CVMFS_BUILD_LOCATION missing"
+[ ! -z $CVMFS_BUILD_LOCATION ] || die "CVMFS_BUILD_LOCATION missing"
 
 # discover what to do for the platform
 package_type="$(get_package_type)"
