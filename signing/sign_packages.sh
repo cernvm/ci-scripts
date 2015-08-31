@@ -6,9 +6,11 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 . ${BUILD_SCRIPT_LOCATION}/../jenkins/common.sh
 . ${BUILD_SCRIPT_LOCATION}/common.sh
 
-# This script works as well for aufs kernel binaries
+# This script works as well for aufs packages
 if [ "x${AUFS_BUILD_LOCATION}" != "x" ]; then
   CVMFS_BUILD_LOCATION="$AUFS_BUILD_LOCATION"
+elif [ "x${AUFS_UTIL_BUILD_LOCATION}" != "x" ]; then
+  CVMFS_BUILD_LOCATION="$AUFS_UTIL_BUILD_LOCATION"
 fi
 
 # sanity checks
