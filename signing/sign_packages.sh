@@ -4,7 +4,6 @@ set -e
 
 BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 . ${BUILD_SCRIPT_LOCATION}/../jenkins/common.sh
-. ${BUILD_SCRIPT_LOCATION}/common.sh
 
 # This script works as well for aufs packages
 if [ "x${AUFS_BUILD_LOCATION}" != "x" ]; then
