@@ -9,7 +9,7 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 # sanity checks
 [ ! -z $CVMFS_BUILD_LOCATION    ] || die "CVMFS_BUILD_LOCATION missing"
 [ ! -z $CVMFS_SOURCE_LOCATION   ] || die "CVMFS_SOURCE_LOCATION missing"
-[ ! -z $CVMFS_BUILD_SCRIPT_BASE ] || die "CVMFS_BUILD_SCRIPT_BASE missing"
+[ ! -z $CVMFS_BUILD_PACKAGE     ] || die "CVMFS_BUILD_PACKAGE missing"
 [ ! -z $CVMFS_CI_PLATFORM_LABEL ] || die "CVMFS_CI_PLATFORM_LABEL missing"
 
 # setup a fresh build workspace
@@ -22,9 +22,7 @@ mkdir -p "$CVMFS_BUILD_LOCATION"
 
 # run the build
 echo "looking for build script to invoke..."
-build_script_location="${CVMFS_SOURCE_LOCATION}/ci"
-build_script_name="${CVMFS_BUILD_SCRIPT_BASE}_$(get_package_type).sh"
-build_script="${build_script_location}/${build_script_name}"
+build_script="${CVMFS_SOURCE_LOCATION}/ci/build_package.sh"
 
 # check if the script exists and is executable
 [ -f $build_script ] || die "Build script '${build_script}' not found"
@@ -45,7 +43,10 @@ while [ $# -gt 0 ]; do
 done
 
 # build the invocation string and print it for debugging reasons
-command_tmpl="$build_script ${CVMFS_SOURCE_LOCATION} ${CVMFS_BUILD_LOCATION} $args"
+command_tmpl="$build_script ${CVMFS_SOURCE_LOCATION} \
+                            ${CVMFS_BUILD_LOCATION}  \
+                            ${CVMFS_BUILD_PACKAGE}   \
+                            $args"
 echo "++ $command_tmpl"
 
 # run the build script
