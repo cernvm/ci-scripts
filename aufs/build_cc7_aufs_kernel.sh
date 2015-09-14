@@ -19,7 +19,7 @@ prepare_kernel_build_environment $AUFS_BUILD_LOCATION
 echo "downloading the kernel sources..."
 rpmbuild_location="${AUFS_BUILD_LOCATION}/rpmbuild"
 source_location="${rpmbuild_location}/SOURCES"
-download_kernel_sources $source_location $AUFS_KERNEL_VERSION
+download_kernel_sources $source_location $AUFS_KERNEL_VERSION updates-source
 
 echo "decompressing kernel sources..."
 decompress_kernel_sources_tarxz $source_location
