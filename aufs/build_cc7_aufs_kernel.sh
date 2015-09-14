@@ -26,15 +26,15 @@ decompress_kernel_sources_tarxz $source_location
 kernel_source_location="${source_location}/${kernel_id}"
 
 echo "applying AUFS patches..."
-apply_patch $kernel_source_location 1 ${AUFS_SOURCE_LOCATION}/aufs3-standalone/aufs3-kbuild.patch
-apply_patch $kernel_source_location 1 ${AUFS_SOURCE_LOCATION}/aufs3-standalone/aufs3-base.patch
-apply_patch $kernel_source_location 1 ${AUFS_SOURCE_LOCATION}/aufs3-standalone/aufs3-mmap.patch
-apply_patch $kernel_source_location 0 ${AUFS_SOURCE_LOCATION}/aufs3-standalone/aufs3-mmap-fremap.patch
+apply_patch $kernel_source_location 1 ${AUFS_SOURCE_LOCATION}/aufs3-kbuild.patch
+apply_patch $kernel_source_location 1 ${AUFS_SOURCE_LOCATION}/aufs3-base.patch
+apply_patch $kernel_source_location 1 ${AUFS_SOURCE_LOCATION}/aufs3-mmap.patch
+apply_patch $kernel_source_location 0 ${AUFS_SOURCE_LOCATION}/aufs3-mmap-fremap.patch
 
 echo "adding additional files to kernel source tree..."
-cp -r ${AUFS_SOURCE_LOCATION}/aufs3-standalone/fs/aufs                         ${kernel_source_location}/fs/
-cp    ${AUFS_SOURCE_LOCATION}/aufs3-standalone/Documentation/ABI/testing/*     ${kernel_source_location}/Documentation/ABI/testing/
-cp    ${AUFS_SOURCE_LOCATION}/aufs3-standalone/include/uapi/linux/aufs_type.h  ${kernel_source_location}/include/uapi/linux/
+cp -r ${AUFS_SOURCE_LOCATION}/fs/aufs                         ${kernel_source_location}/fs/
+cp    ${AUFS_SOURCE_LOCATION}/Documentation/ABI/testing/*     ${kernel_source_location}/Documentation/ABI/testing/
+cp    ${AUFS_SOURCE_LOCATION}/include/uapi/linux/aufs_type.h  ${kernel_source_location}/include/uapi/linux/
 
 echo "compressing kernel sources..."
 compress_kernel_sources_tarxz $source_location
