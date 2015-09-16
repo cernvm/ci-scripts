@@ -48,10 +48,11 @@ done
 # invocation accordingly
 command_tmpl=""
 if [ x"$CVMFS_CI_PLATFORM_LABEL" = x"docker" ]; then
+  docker_image_name="${CVMFS_BUILD_PLATFORM}_${CVMFS_BUILD_ARCH}"
   command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/build_on_docker.sh \
                     ${CVMFS_SOURCE_LOCATION}                   \
                     ${CVMFS_BUILD_LOCATION}                    \
-                    ${CVMFS_BUILD_PLATFORM}                    \
+                    ${docker_image_name}                       \
                     $build_script $args" # Note: build_on_docker.sh calls the
                                          #       build script with the right
                                          #       parameter by convention!
