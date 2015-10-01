@@ -38,3 +38,14 @@ get_platform_parameter() {
     echo -n "$vm_description" | jq --raw-output ".$parameter"
   fi
 }
+
+# extracts an architecture string from a CI or build machine label such as:
+#   docker-i386
+#   bare-armv7hl
+#   ...
+# @param label  the full label including the prefix and separated by -
+# @return       the desired architecture string
+extract_arch() {
+  local label="$1"
+  echo "$label" | sed -e 's/^[^-]\+-\(.*\)$/\1/'
+}
