@@ -48,8 +48,9 @@ done
 # check if we should run in a dockerized environment and set up the build script
 # invocation accordingly
 command_tmpl=""
+desired_architecture="$(extract_arch $CVMFS_BUILD_ARCH)"
 if [ x"$CVMFS_CI_PLATFORM_LABEL" = x"docker" ]; then
-  docker_image_name="${CVMFS_BUILD_PLATFORM}_${CVMFS_BUILD_ARCH}"
+  docker_image_name="${CVMFS_BUILD_PLATFORM}_${desired_architecture}"
   command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/build_on_docker.sh \
                     ${CVMFS_SOURCE_LOCATION}                   \
                     ${CVMFS_BUILD_LOCATION}                    \
