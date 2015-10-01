@@ -50,6 +50,7 @@ done
 command_tmpl=""
 desired_architecture="$(extract_arch $CVMFS_BUILD_ARCH)"
 if [ x"$CVMFS_CI_PLATFORM_LABEL" = x"docker" ]; then
+  echo "building on docker for ${desired_architecture}..."
   docker_image_name="${CVMFS_BUILD_PLATFORM}_${desired_architecture}"
   command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/build_on_docker.sh \
                     ${CVMFS_SOURCE_LOCATION}                   \
@@ -60,6 +61,7 @@ if [ x"$CVMFS_CI_PLATFORM_LABEL" = x"docker" ]; then
                                          #       parameter by convention!
                                          #       (compare: else-branch)
 else
+  echo "building bare metal for ${desired_architecture}..."
   command_tmpl="$build_script ${CVMFS_SOURCE_LOCATION} ${CVMFS_BUILD_LOCATION} $args"
 fi
 
