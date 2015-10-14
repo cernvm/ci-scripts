@@ -13,7 +13,8 @@ elif [ "x${AUFS_UTIL_BUILD_LOCATION}" != "x" ]; then
 fi
 
 # sanity checks
-[ ! -z $CVMFS_BUILD_LOCATION ] || die "CVMFS_BUILD_LOCATION missing"
+[ ! -z $CVMFS_BUILD_LOCATION    ] || die "CVMFS_BUILD_LOCATION missing"
+[ ! -z $CVMFS_CI_PLATFORM_LABEL ] || die "CVMFS_CI_PLATFORM_LABEL missing"
 
 # discover what to do for the platform
 package_type="$(get_package_type)"
