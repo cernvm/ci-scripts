@@ -5,6 +5,10 @@ set -e
 BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 . ${BUILD_SCRIPT_LOCATION}/../jenkins/common.sh
 
+# signing server endpoints
+rpm_signing_server="https://cvm-sign01.cern.ch/cgi-bin/rpm/sign-rpm"
+deb_signing_server="https://cvm-sign01.cern.ch/cgi-bin/deb/sign-deb"
+
 # This script works as well for aufs packages
 if [ "x${AUFS_BUILD_LOCATION}" != "x" ]; then
   CVMFS_BUILD_LOCATION="$AUFS_BUILD_LOCATION"
@@ -34,9 +38,6 @@ else
   # system's default package type
   package_type="$(get_package_type)"
 fi
-
-rpm_signing_server="https://cvm-sign01.cern.ch/cgi-bin/rpm/sign-rpm"
-deb_signing_server="https://cvm-sign01.cern.ch/cgi-bin/deb/sign-deb"
 
 
 sign_rpm() {
