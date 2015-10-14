@@ -17,7 +17,24 @@ fi
 [ ! -z $CVMFS_CI_PLATFORM_LABEL ] || die "CVMFS_CI_PLATFORM_LABEL missing"
 
 # discover what to do for the platform
-package_type="$(get_package_type)"
+package_type="unknown"
+if [ x"$CVMFS_CI_PLATFORM_LABEL" = x"docker" ]; then
+  # on a docker host we need to guess which package type to sign since it might
+  # not be the package type of the host system
+  rpms="$(find $CVMFS_BUILD_LOCATION -name '*.rpm' | wc -l)"
+  debs="$(find $CVMFS_BUILD_LOCATION -name '*.deb' | wc -l)"
+  [ $rpms -gt 0 ] || [ $debs -gt 0 ] || die "Neither RPMs nor DEBs found"
+  if [ $rpms -gt $debs ]; then
+    package_type="rpm"
+  else
+    package_type="deb"
+  fi
+else
+  # on a bare metal build machine we just assume the package type to be the
+  # system's default package type
+  package_type="$(get_package_type)"
+fi
+
 rpm_signing_server="https://cvm-sign01.cern.ch/cgi-bin/rpm/sign-rpm"
 deb_signing_server="https://cvm-sign01.cern.ch/cgi-bin/deb/sign-deb"
 
