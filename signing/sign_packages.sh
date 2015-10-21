@@ -11,9 +11,9 @@ deb_signing_server="https://cvm-sign01.cern.ch/cgi-bin/deb/sign-deb"
 
 # This script works as well for aufs packages
 if [ "x${AUFS_BUILD_LOCATION}" != "x" ]; then
-  CVMFS_BUILD_LOCATION="$AUFS_BUILD_LOCATION"
+  CVMFS_BUILD_LOCATION="${AUFS_BUILD_LOCATION}/rpmbuild"
 elif [ "x${AUFS_UTIL_BUILD_LOCATION}" != "x" ]; then
-  CVMFS_BUILD_LOCATION="$AUFS_UTIL_BUILD_LOCATION"
+  CVMFS_BUILD_LOCATION="${AUFS_UTIL_BUILD_LOCATION}/rpmbuild"
 fi
 
 # sanity checks
