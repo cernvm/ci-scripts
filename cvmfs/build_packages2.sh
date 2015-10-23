@@ -49,7 +49,7 @@ done
 # invocation accordingly
 command_tmpl=""
 desired_architecture="$(extract_arch $CVMFS_BUILD_ARCH)"
-if [ x"$CVMFS_CI_PLATFORM_LABEL" = x"docker" ]; then
+if is_docker_host; then
   echo "building on docker for ${desired_architecture}..."
   docker_image_name="${CVMFS_BUILD_PLATFORM}_${desired_architecture}"
   command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/build_on_docker.sh \

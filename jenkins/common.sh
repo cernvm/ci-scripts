@@ -18,6 +18,10 @@ is_macos() {
   [ x"$(uname)" = x"Darwin" ]
 }
 
+is_docker_host() {
+  [ x"$CVMFS_CI_PLATFORM_LABEL" = x"docker" ]
+}
+
 get_package_type() {
   which dpkg > /dev/null 2>&1 && echo "deb" && return 0
   which rpm  > /dev/null 2>&1 && echo "rpm" && return 0
