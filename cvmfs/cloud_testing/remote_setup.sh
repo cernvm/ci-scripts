@@ -31,14 +31,36 @@ usage() {
 }
 
 
+mini_which() {
+  local executable="$1"
+  local old_ifs=$IFS
+  local found=0
+  IFS=":"
+  for p in $PATH; do
+    if [ -x ${p}/${executable} ]; then
+      found=1
+      break
+    fi
+  done
+  IFS=$old_ifs
+  [ $found -eq 1 ]
+}
+
+
 download() {
   local url=$1
   local download_output=
 
   local dl_bin=""
-  if which wget > /dev/null 2>&1; then
+  local which_bin="which"
+
+  if ! which -v > /dev/null 2>&1; then
+    which_bin="mini_which"
+  fi
+
+  if $which_bin wget > /dev/null 2>&1; then
     dl_bin="wget --no-check-certificate"
-  elif which curl > /dev/null 2>&1; then
+  elif $which_bin curl > /dev/null 2>&1; then
     dl_bin="curl --insecure --silent --remote-name"
   else
     echo "didn't find wget or curl."
