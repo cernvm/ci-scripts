@@ -13,6 +13,8 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 [ ! -z $CVMFS_CI_PLATFORM_LABEL ] || die "CVMFS_CI_PLATFORM_LABEL missing"
 [ ! -z $CVMFS_BUILD_PLATFORM    ] || die "CVMFS_BUILD_PLATFORM missing"
 [ ! -z $CVMFS_BUILD_ARCH        ] || die "CVMFS_BUILD_ARCH missing"
+[ ! -z $CVMFS_NIGHTLY_BUILD     ] || die "CVMFS_NIGHTLY_BUILD missing"
+[ ! -z $BUILD_NUMBER            ] || die "BUILD_NUMBER missing"
 
 # setup a fresh build workspace
 if [ -d $CVMFS_BUILD_LOCATION ]; then
@@ -22,6 +24,13 @@ fi
 echo "creating a fresh build location in ${CVMFS_BUILD_LOCATION}..."
 mkdir -p "$CVMFS_BUILD_LOCATION"
 chmod 0777 "$CVMFS_BUILD_LOCATION"
+
+# figure out if we a doing a nightly build
+nightly_number=
+if [ x"$CVMFS_NIGHTLY_BUILD" = x"true" ]; then
+  echo "creating a nightly build..."
+  nightly_number=${BUILD_NUMBER}
+fi
 
 # run the build
 echo "looking for build script to invoke..."
@@ -34,17 +43,6 @@ build_script="${CVMFS_SOURCE_LOCATION}/ci/build_package.sh"
 echo "switching to $CVMFS_BUILD_LOCATION and invoking build script..."
 cd "$CVMFS_BUILD_LOCATION"
 
-# parse the command line arguments (keep quotation marks)
-args="$CVMFS_PACKAGE"
-while [ $# -gt 0 ]; do
-  if echo "$1" | grep -q "[[:space:]]"; then
-    args="$args \"$1\""
-  else
-    args="$args $1"
-  fi
-  shift 1
-done
-
 # check if we should run in a dockerized environment and set up the build script
 # invocation accordingly
 command_tmpl=""
@@ -56,13 +54,13 @@ if is_docker_host; then
                     ${CVMFS_SOURCE_LOCATION}                   \
                     ${CVMFS_BUILD_LOCATION}                    \
                     ${docker_image_name}                       \
-                    $build_script $args" # Note: build_on_docker.sh calls the
-                                         #       build script with the right
-                                         #       parameter by convention!
-                                         #       (compare: else-branch)
+                    $build_script $nightly_number" # Note: build_on_docker.sh calls the
+                                                   #       build script with the right
+                                                   #       parameter by convention!
+                                                   #       (compare: else-branch)
 else
   echo "building bare metal for ${desired_architecture}..."
-  command_tmpl="$build_script ${CVMFS_SOURCE_LOCATION} ${CVMFS_BUILD_LOCATION} $args"
+  command_tmpl="$build_script ${CVMFS_SOURCE_LOCATION} ${CVMFS_BUILD_LOCATION} $nightly_number"
 fi
 
 # run the build script
