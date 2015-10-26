@@ -11,6 +11,9 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 [ ! -z $CVMFS_BUILD_LOCATION  ] || die "CVMFS_BUILD_LOCATION missing"
 [ ! -z $BUILD_NUMBER          ] || die "BUILD_NUMBER missing"
 
+# make sure that the build location is there
+[ -d $CVMFS_BUILD_LOCATION ] || mkdir -p $CVMFS_BUILD_LOCATION
+
 # run the build
 echo "looking for build script to invoke..."
 build_script="${CVMFS_SOURCE_LOCATION}/ci/build_cvmfs_sourcetarball.sh"
