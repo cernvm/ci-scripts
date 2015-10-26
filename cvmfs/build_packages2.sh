@@ -54,13 +54,16 @@ if is_docker_host; then
                     ${CVMFS_SOURCE_LOCATION}                   \
                     ${CVMFS_BUILD_LOCATION}                    \
                     ${docker_image_name}                       \
-                    $build_script $nightly_number" # Note: build_on_docker.sh calls the
-                                                   #       build script with the right
-                                                   #       parameter by convention!
-                                                   #       (compare: else-branch)
+                    $build_script                              \
+                    $CVMFS_PACKAGE                             \
+                    $nightly_number" # Note: build_on_docker.sh calls the
+                                     #       build script with the right
+                                     #       parameter by convention!
+                                     #       (compare: else-branch)
 else
   echo "building bare metal for ${desired_architecture}..."
-  command_tmpl="$build_script ${CVMFS_SOURCE_LOCATION} ${CVMFS_BUILD_LOCATION} $nightly_number"
+  command_tmpl="$build_script ${CVMFS_SOURCE_LOCATION} ${CVMFS_BUILD_LOCATION} \
+                              $CVMFS_PACKAGE $nightly_number"
 fi
 
 # run the build script
