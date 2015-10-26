@@ -38,6 +38,7 @@ userdata=""
 # package download locations
 server_package=""
 client_package=""
+devel_package=""
 config_packages=""  # might be more than one... BEWARE OF SPACES!!
 unittest_package=""
 source_tarball="source.tar.gz" # will be prepended by ${testee_url} later
@@ -105,6 +106,7 @@ setup_virtual_machine() {
   run_script_on_virtual_machine $ip $username $remote_setup_script \
       -s $server_package                                           \
       -c $client_package                                           \
+      -d $devel_package                                            \
       -t $source_tarball                                           \
       -g $unittest_package                                         \
       -k "$config_packages"                                        \
@@ -134,6 +136,7 @@ run_test_cases() {
   run_script_on_virtual_machine $ip $username $remote_run_script \
       -s $server_package                                         \
       -c $client_package                                         \
+      -d $devel_package                                          \
       -k "$config_packages"                                      \
       -r $platform_run_script
   check_retcode $?
@@ -235,12 +238,14 @@ ctu="$client_testee_url"
 otu="$testee_url"
 client_package=$(read_package_map   ${ctu}/pkgmap "$platform" 'client'   )
 server_package=$(read_package_map   ${otu}/pkgmap "$platform" 'server'   )
+devel_package=$(read_package_map    ${ctu}/pkgmap "$platform" 'devel'    )
 unittest_package=$(read_package_map ${otu}/pkgmap "$platform" 'unittests')
 config_packages="$(read_package_map ${otu}/pkgmap "$platform" 'config'   )"
 
 # check if all necessary packages were found
 if [ x"$server_package"        = "x" ] ||
    [ x"$client_package"        = "x" ] ||
+   [ x"$devel_package"         = "x" ] ||
    [ x"$config_packages"       = "x" ] ||
    [ x"$unittest_package"      = "x" ]; then
   usage "Incomplete pkgmap file"
@@ -249,6 +254,7 @@ fi
 # construct the full package URLs
 client_package="${ctu}/${client_package}"
 server_package="${otu}/${server_package}"
+devel_package="${ctu}/${devel_package}"
 unittest_package="${otu}/${unittest_package}"
 source_tarball="${otu}/${source_tarball}"
 config_package_urls=""

@@ -15,6 +15,7 @@ usage() {
   echo "-r <test script>      platform specific script (inside the cvmfs sources)"
   echo "-s <server package>   CernVM-FS server package to be tested"
   echo "-c <client package>   CernVM-FS client package to be tested"
+  echo "-d <devel package>    CernVM-FS devel package to be tested"
   echo "-k <config packages>  CernVM-FS configuration packages to be used"
   echo
   echo "Optional parameters:"
@@ -37,6 +38,7 @@ platform_script_path=""
 test_username="sftnight"
 server_package=""
 client_package=""
+devel_package=""
 config_packages=""
 
 # from now on everything is logged to the logfile
@@ -52,7 +54,7 @@ exec &>                                  $RUN_LOGFILE
 cd $cvmfs_workspace
 
 # read parameters
-while getopts "r:s:c:k:p:u:" option; do
+while getopts "r:s:c:d:k:p:u:" option; do
   case $option in
     r)
       platform_script=$OPTARG
@@ -62,6 +64,9 @@ while getopts "r:s:c:k:p:u:" option; do
       ;;
     c)
       client_package=$(readlink --canonicalize $(basename $OPTARG))
+      ;;
+    d)
+      devel_package=$(readlink --canonicalize $(basename $OPTARG))
       ;;
     k)
       config_package_paths=""
@@ -86,6 +91,7 @@ done
 # check if we have all bits and pieces
 if [ x"$platform_script"  = "x" ] ||
    [ x"$client_package"   = "x" ] ||
+   [ x"$devel_package"    = "x" ] ||
    [ x"$server_package"   = "x" ] ||
    [ x"$config_packages"  = "x" ]; then
   usage "Missing parameter(s)"
@@ -93,7 +99,8 @@ fi
 
 # check if the needed packages are downloaded
 if [ ! -f $server_package ] ||
-   [ ! -f $client_package ]; then
+   [ ! -f $client_package ] ||
+   [ ! -f $devel_package  ]; then
   usage "Missing package(s)"
 fi
 
@@ -103,6 +110,7 @@ done
 
 # export the location of the client, server and config packages
 export CVMFS_CLIENT_PACKAGE=$client_package
+export CVMFS_DEVEL_PACKAGE=$devel_package
 export CVMFS_SERVER_PACKAGE=$server_package
 export CVMFS_CONFIG_PACKAGES="$config_packages"
 

@@ -15,6 +15,7 @@ usage() {
   echo "Mandatory options:"
   echo "-s <cvmfs server package>  CernVM-FS server package to be tested"
   echo "-c <cvmfs client package>  CernVM-FS client package to be tested"
+  echo "-d <cvmfs devel package>   CernVM-FS devel package to be tested"
   echo "-t <cvmfs source tarball>  CernVM-FS sources containing associated tests"
   echo "-g <cvmfs tests package>   CernVM-FS unit tests package"
   echo "-k <cvmfs config packages> CernVM-FS config packages"
@@ -92,6 +93,7 @@ platform_script=""
 platform_script_path=""
 server_package=""
 client_package=""
+devel_package=""
 config_packages=""
 source_tarball=""
 unittest_package=""
@@ -139,7 +141,7 @@ touch ${cvmfs_log_directory}/setup.log
 exec &> ${cvmfs_log_directory}/setup.log
 
 # read parameters
-while getopts "r:s:c:t:g:k:p:u:" option; do
+while getopts "r:s:c:d:t:g:k:p:u:" option; do
   case $option in
     r)
       platform_script=$OPTARG
@@ -149,6 +151,9 @@ while getopts "r:s:c:t:g:k:p:u:" option; do
       ;;
     c)
       client_package=$OPTARG
+      ;;
+    d)
+      devel_package=$OPTARG
       ;;
     t)
       source_tarball=$OPTARG
@@ -179,6 +184,7 @@ sudo echo "testing sudo..." || exit 2
 if [ "x$platform_script"  = "x" ] ||
    [ "x$server_package"   = "x" ] ||
    [ "x$client_package"   = "x" ] ||
+   [ "x$devel_package"    = "x" ] ||
    [ "x$config_packages"  = "x" ] ||
    [ "x$source_tarball"   = "x" ] ||
    [ "x$unittest_package" = "x" ]; then
@@ -201,6 +207,7 @@ fi
 echo "downloading packages..."
 download $server_package
 download $client_package
+download $devel_package
 download $source_tarball
 download $unittest_package
 for pkg in $config_packages; do
@@ -210,6 +217,7 @@ done
 # get local file path of downloaded files
 server_package=$(readlink --canonicalize $(basename $server_package))
 client_package=$(readlink --canonicalize $(basename $client_package))
+devel_package=$(readlink --canonicalize $(basename $devel_package))
 source_tarball=$(readlink --canonicalize $(basename $source_tarball))
 unittest_package=$(readlink --canonicalize $(basename $unittest_package))
 config_package_paths=""
@@ -256,8 +264,9 @@ fi
 # run the platform specific script to perform platform specific test setups
 echo "running platform specific script $platform_script... "
 sudo -H -E -u $test_username bash $platform_script_abs -s $server_package         \
-                                                     -c $client_package           \
-                                                     -g $unittest_package         \
-                                                     -k "$config_packages"        \
-                                                     -t $cvmfs_source_directory   \
-                                                     -l $cvmfs_log_directory
+                                                       -c $client_package         \
+                                                       -d $devel_package          \
+                                                       -g $unittest_package       \
+                                                       -k "$config_packages"      \
+                                                       -t $cvmfs_source_directory \
+                                                       -l $cvmfs_log_directory
