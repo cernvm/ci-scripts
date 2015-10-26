@@ -52,18 +52,20 @@ check_timeout() {
 #     [<next platform name>]
 #     ...=...
 #
-# @param pkgmap_url    URL where to find the package map file
-# @param platform      the platform name to be searched for
-# @param package       the package to be retrieved from the pkgmap
-# @return              0 on success (queried package URL through stdout)
+# @param base_pkgmap_url  base URL where to find the package map files
+# @param platform         the platform name to be searched for
+# @param package          the package to be retrieved from the pkgmap
+# @return                 0 on success (queried package URL through stdout)
 read_package_map() {
-  local pkgmap_url=$1
+  local base_pkgmap_url=$1
   local platform=$2
   local package=$3
 
   local platform_found=0
   local package_url=""
   local old_ifs="$IFS"
+
+  local pkgmap_url="${base_pkgmap_url}/pkgmap.${platform}"
 
   IFS='
 '
