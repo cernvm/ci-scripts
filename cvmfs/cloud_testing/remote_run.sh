@@ -133,4 +133,5 @@ echo "running platform specific script $platform_script ..."
 sudo -H -E -u $test_username bash $platform_script_abs -t $cvmfs_source_directory \
                                                        -l $cvmfs_log_directory    \
                                                        -s $server_package         \
-                                                       -c $client_package
+                                                       -c $client_package         \
+                                                       -d $devel_package
