@@ -36,7 +36,7 @@ if is_docker_host; then
     ${CVMFS_BUILD_LOCATION} \
     ${docker_image_name} \
     ${CVMFS_SOURCE_LOCATION}/${LINT_SCRIPT} \
-    $CVMFS_CPPLINT_RESULT_LOCATION
+    $CVMFS_CPPLINT_RESULT_LOCATION"
 else
   echo "running CppLint bare metal for ${desired_architecture}..."
   command_tmpl="${CVMFS_SOURCE_LOCATION}/${LINT_SCRIPT} ${CVMFS_CPPLINT_RESULT_LOCATION}"
