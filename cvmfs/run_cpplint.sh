@@ -26,5 +26,29 @@ if [ x"$CVMFS_RUN_CPPLINT" != x"true" ]; then
   exit 0
 fi
 
-echo "running CppLint and sending output to $CVMFS_CPPLINT_RESULT_LOCATION ..." # always exit 0
-${CVMFS_SOURCE_LOCATION}/${LINT_SCRIPT} > $CVMFS_CPPLINT_RESULT_LOCATION 2>&1 || exit 0
+command_tmpl=""
+desired_architecture="$(extract_arch $CVMFS_BUILD_ARCH)"
+if is_docker_host; then
+  echo "running CppLint on docker for ${desired_architecture} and sending output to $CVMFS_CPPLINT_RESULT_LOCATION..."
+  docker_image_name="${CVMFS_BUILD_PLATFORM}_${desired_architecture}"
+  command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/build_on_docker.sh \
+    ${CVMFS_SOURCE_LOCATION} \
+    ${CVMFS_BUILD_LOCATION} \
+    ${docker_image_name} \
+    ${CVMFS_SOURCE_LOCATION}/${LINT_SCRIPT} \
+    $CVMFS_CPPLINT_RESULT_LOCATION
+else
+  echo "running CppLint bare metal for ${desired_architecture}..."
+  command_tmpl="${CVMFS_SOURCE_LOCATION}/${LINT_SCRIPT} ${CVMFS_CPPLINT_RESULT_LOCATION}"
+fi
+
+# run the build script
+echo "++ $command_tmpl"
+$command_tmpl
+
+# chown result after cppLint on docker
+if is_docker_host; then
+  echo "chown-ing ${CVMFS_CPPLINT_RESULT_LOCATION} to $(whoami)"
+  sudo chown $(whoami) ${CVMFS_CPPLINT_RESULT_LOCATION}
+fi
+
