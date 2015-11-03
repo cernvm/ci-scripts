@@ -18,7 +18,31 @@ if [ ! -d "$CVMFS_BUILD_LOCATION" ] || [ x"$CVMFS_BUILD_CLEAN" = x"true" ]; then
 fi
 
 # run the build
-echo "switching to $CVMFS_BUILD_LOCATION and invoking build script..."
-cd "$CVMFS_BUILD_LOCATION"
-${CVMFS_SOURCE_LOCATION}/ci/build_incremental_multi.sh "$CVMFS_SOURCE_LOCATION" \
-                                                       "$(get_number_of_cpu_cores)"
+command_tmpl=""
+desired_architecture="$(extract_arch $CVMFS_BUILD_ARCH)"
+if is_docker_host; then
+  echo "incremental build on docker for ${desired_architecture}..."
+  docker_image_name="${CVMFS_BUILD_PLATFORM}_${desired_architecture}"
+  command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/build_on_docker.sh \
+    ${CVMFS_SOURCE_LOCATION} \
+    ${CVMFS_BUILD_LOCATION} \
+    ${docker_image_name} \
+    ${CVMFS_SOURCE_LOCATION}/ci/build_incremental_multi.sh \
+    ${CVMFS_SOURCE_LOCATION} \
+    ${CVMFS_BUILD_LOCATION} \
+    $(get_number_of_cpu_cores)"
+else
+  echo "incremental build (bare metal) for ${desired_architecture}..."
+  command_tmp="${CVMFS_SOURCE_LOCATION}/ci/build_incremental_multi.sh \
+    "$CVMFS_SOURCE_LOCATION" \
+    "$CVMFS_BUILD_LOCATION" \
+    $(get_number_of_cpu_cores)"
+fi
+
+echo "++ $command_tmpl"
+$command_tmpl
+
+if is_docker_host; then
+  echo "chown-ing $CVMFS_BUILD_LOCATION to $(whoami)"
+  sudo chown $(whoami) -R $CVMFS_BUILD_LOCATION
+fi 
