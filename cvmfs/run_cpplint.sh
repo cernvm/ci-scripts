@@ -46,9 +46,3 @@ fi
 echo "++ $command_tmpl"
 $command_tmpl
 
-# chown result after cppLint on docker
-if is_docker_host; then
-  echo "chown-ing ${CVMFS_CPPLINT_RESULT_LOCATION} to $(whoami)"
-  sudo chown $(whoami) ${CVMFS_CPPLINT_RESULT_LOCATION}
-fi
-

@@ -42,7 +42,3 @@ fi
 echo "++ $command_tmpl"
 $command_tmpl
 
-if is_docker_host; then
-  echo "chown-ing $CVMFS_BUILD_LOCATION to $(whoami)"
-  sudo chown $(whoami) -R $CVMFS_BUILD_LOCATION
-fi 
