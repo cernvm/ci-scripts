@@ -7,6 +7,7 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 . ${BUILD_SCRIPT_LOCATION}/common.sh
 
 # sanity checks
+[ ! -z $WORKSPACE             ] || die "WORKSPACE missing"
 [ ! -z $CVMFS_BUILD_LOCATION  ] || die "CVMFS_BUILD_LOCATION missing"
 [ ! -z $CVMFS_SOURCE_LOCATION ] || die "CVMFS_SOURCE_LOCATION missing"
 [ ! -z $CVMFS_BUILD_CLEAN     ] || die "CVMFS_BUILD_CLEAN missing"
@@ -23,9 +24,8 @@ desired_architecture="$(extract_arch $CVMFS_BUILD_ARCH)"
 if is_docker_host; then
   echo "incremental build on docker for ${desired_architecture}..."
   docker_image_name="${CVMFS_BUILD_PLATFORM}_${desired_architecture}"
-  command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/build_on_docker.sh \
-    ${CVMFS_SOURCE_LOCATION} \
-    ${CVMFS_BUILD_LOCATION} \
+  command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/run_on_docker.sh \
+    ${WORKSPACE} \
     ${docker_image_name} \
     ${CVMFS_SOURCE_LOCATION}/ci/build_incremental_multi.sh \
     ${CVMFS_SOURCE_LOCATION} \

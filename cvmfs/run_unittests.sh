@@ -7,6 +7,7 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 . ${BUILD_SCRIPT_LOCATION}/common.sh
 
 # sanity checks
+[ ! -z $WORKSPACE ]                              || die "WORKSPACE MISSING"
 [ ! -z $CVMFS_SOURCE_LOCATION ]                  || die "CVMFS_SOURCE_LOCATION missing"
 [ ! -z $CVMFS_RUN_UNITTESTS ]                    || die "CVMFS_RUN_UNITTESTS missing"
 [ ! -z $CVMFS_RUN_PYTHON_UNITTESTS ]             || die "CVMFS_RUN_PYTHON_UNITTESTS missing"
@@ -33,9 +34,8 @@ if [ x"$CVMFS_RUN_UNITTESTS" = x"true" ]; then
 
   if is_docker_host; then
     echo "running unit tests on docker for ${desired_architecture}"
-    command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/build_on_docker.sh \
-      ${CVMFS_SOURCE_LOCATION} \
-      ${CVMFS_BUILD_LOCATION} \
+    command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/run_on_docker.sh \
+      ${WORKSPACE} \
       ${docker_image_name} \
       ${CVMFS_SOURCE_LOCATION}/ci/run_unittests.sh"
   else
@@ -59,9 +59,8 @@ if [ x"$CVMFS_RUN_PYTHON_UNITTESTS" = x"true" ]; then
 
   if is_docker_host; then
     echo "running python unittests on docker..."
-    command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/build_on_docker.sh \
-      ${CVMFS_SOURCE_LOCATION} \
-      ${CVMFS_BUILD_LOCATION} \
+    command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/run_on_docker.sh \
+      ${WORKSPACE} \
       ${docker_image_name} \
       ${CVMFS_SOURCE_LOCATION}/ci/run_python_unittests.sh"
   else

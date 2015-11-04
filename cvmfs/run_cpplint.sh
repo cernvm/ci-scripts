@@ -9,6 +9,7 @@ SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 LINT_SCRIPT="ci/run_cpplint.sh"
 
 # sanity checks
+[ ! -z $WORKSPACE ]                            || die "WORKSPACE missing"
 [ ! -z $CVMFS_RUN_CPPLINT ]                    || die "CVMFS_RUN_CPPLINT missing"
 [ ! -z $CVMFS_SOURCE_LOCATION ]                || die "CVMFS_SOURCE_LOCATION missing"
 [ ! -z $CVMFS_CPPLINT_RESULT_LOCATION ]        || die "CVMFS_CPPLINT_RESULT_LOCATION missing"
@@ -31,9 +32,8 @@ desired_architecture="$(extract_arch $CVMFS_BUILD_ARCH)"
 if is_docker_host; then
   echo "running CppLint on docker for ${desired_architecture} and sending output to $CVMFS_CPPLINT_RESULT_LOCATION..."
   docker_image_name="${CVMFS_BUILD_PLATFORM}_${desired_architecture}"
-  command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/build_on_docker.sh \
-    ${CVMFS_SOURCE_LOCATION} \
-    ${CVMFS_BUILD_LOCATION} \
+  command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/run_on_docker.sh \
+    ${WORKSPACE} \
     ${docker_image_name} \
     ${CVMFS_SOURCE_LOCATION}/${LINT_SCRIPT} \
     $CVMFS_CPPLINT_RESULT_LOCATION"
