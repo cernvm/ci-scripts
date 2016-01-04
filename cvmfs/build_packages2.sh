@@ -20,7 +20,7 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 # setup a fresh build workspace
 if [ -d $CVMFS_BUILD_LOCATION ]; then
   echo "removing previous build location..."
-  sudo rm -fR "$CVMFS_BUILD_LOCATION"
+  rm -fR "$CVMFS_BUILD_LOCATION"
 fi
 echo "creating a fresh build location in ${CVMFS_BUILD_LOCATION}..."
 mkdir -p "$CVMFS_BUILD_LOCATION"
