@@ -52,26 +52,3 @@ if [ x"$CVMFS_RUN_UNITTESTS" = x"true" ]; then
 else
   echo "Unit tests are disabled... skipping"
 fi
-
-# check if the python unittests should be run
-if [ x"$CVMFS_RUN_PYTHON_UNITTESTS" = x"true" ]; then
-  echo "running python unittests..."
-
-  if is_docker_host; then
-    echo "running python unittests on docker..."
-    command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/run_on_docker.sh \
-      ${WORKSPACE} \
-      ${docker_image_name} \
-      ${CVMFS_SOURCE_LOCATION}/ci/run_python_unittests.sh"
-  else
-    echo "running python unittests on bare metal..."
-    command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/run_python_unittests.sh"
-  fi
-  command_tmpl="$command_tmpl ${CVMFS_UNITTESTS_PYTHON_RESULT_LOCATION}"
-  echo "++ $command_tmpl"
-
-  # run the build script
-  $command_tmpl
-else
-  echo "Python unit tests are disabled... skipping"
-fi
