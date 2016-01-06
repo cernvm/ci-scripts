@@ -10,10 +10,8 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 [ ! -z $WORKSPACE ]                              || die "WORKSPACE MISSING"
 [ ! -z $CVMFS_SOURCE_LOCATION ]                  || die "CVMFS_SOURCE_LOCATION missing"
 [ ! -z $CVMFS_RUN_UNITTESTS ]                    || die "CVMFS_RUN_UNITTESTS missing"
-[ ! -z $CVMFS_RUN_PYTHON_UNITTESTS ]             || die "CVMFS_RUN_PYTHON_UNITTESTS missing"
 [ ! -z $CVMFS_UNITTESTS_BINARY ]                 || die "CVMFS_UNITTESTS_BINARY missing"
 [ ! -z $CVMFS_UNITTESTS_RESULT_LOCATION ]        || die "CVMFS_UNITTESTS_RESULT_LOCATION missing"
-[ ! -z $CVMFS_UNITTESTS_PYTHON_RESULT_LOCATION ] || die "CVMFS_UNITTESTS_PYTHON_RESULT_LOCATION missing"
 
 # check if there is already a result file and clean it up
 if [ -f $CVMFS_UNITTESTS_RESULT_LOCATION ]; then
