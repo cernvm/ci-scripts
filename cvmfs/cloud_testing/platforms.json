@@ -141,6 +141,16 @@
     "setup"   : "fedora22_x86_64_setup.sh",
     "test"    : "fedora22_x86_64_test.sh",
     "user"    : "fedora"
+  },
+
+  {
+    "dist"    : "fedora23",
+    "config"  : "x86_64",
+    "ami"     : "ami-0000038b",
+    "label"   : "fedora23_x86_64",
+    "setup"   : "fedora23_x86_64_setup.sh",
+    "test"    : "fedora23_x86_64_test.sh",
+    "user"    : "fedora"
   }
 
 ]
