@@ -122,6 +122,11 @@ setup_virtual_machine() {
   echo "done"
 }
 
+is_linux_vm() {
+  local ami=$1
+  echo "$ami" | grep -E "^ami-[0-9a-zA-Z]+$"
+  [ $? -eq 0 ]
+}
 
 run_test_cases() {
   local ip=$1
@@ -241,6 +246,12 @@ server_package=$(read_package_map   ${otu}/pkgmap "$platform" 'server'   )
 devel_package=$(read_package_map    ${ctu}/pkgmap "$platform" 'devel'    )
 unittest_package=$(read_package_map ${otu}/pkgmap "$platform" 'unittests')
 config_packages="$(read_package_map ${otu}/pkgmap "$platform" 'config'   )"
+
+# if we are on mac then we have to run an special script
+if [ ! $(is_linux_vm $ami_name) ]; then
+  $script_location/run_mac.sh $otu $client_package $source_tarball $ami_name $platform_setup_script $platform_run_script
+  exit $?
+fi
 
 # check if all necessary packages were found
 if [ x"$server_package"        = "x" ] ||
