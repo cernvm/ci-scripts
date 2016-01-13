@@ -25,7 +25,7 @@ has_platform_parameter() {
   local parameter="$1"
   local vm_description="$2"
   local result
-  result="$(echo -n "$vm_description" | jq --raw-output "has(\"$parameter\")")"
+  result=$(echo "$vm_description" | jq --raw-output "has(\"$parameter\")")
   [ x"$result" = x"true" ]
 }
 
@@ -35,7 +35,7 @@ get_platform_parameter() {
   if ! has_platform_parameter "$parameter" "$vm_description"; then
     echo ""
   else
-    echo -n "$vm_description" | jq --raw-output ".$parameter"
+    echo "$vm_description" | jq --raw-output ".$parameter"
   fi
 }
 
