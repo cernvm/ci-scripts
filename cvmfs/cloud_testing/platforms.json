@@ -141,6 +141,16 @@
     "setup"   : "fedora22_x86_64_setup.sh",
     "test"    : "fedora22_x86_64_test.sh",
     "user"    : "fedora"
+  },
+
+  {
+    "dist"    : "osx",
+    "config"  : "x86_64",
+    "ami"     : "yosemite",
+    "label"   : "osx.x86_64",
+    "setup"   : "osx_x86_64_setup.sh",
+    "test"    : "osx_x86_64_test.sh",
+    "user"    : "vagrant"
   }
 
 ]
