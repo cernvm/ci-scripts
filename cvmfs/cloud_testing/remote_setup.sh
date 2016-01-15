@@ -199,7 +199,7 @@ if [ $? -ne 0 ]; then
     echo "cannot create user account $test_username"
     exit 4
   fi
-  echo "$test_username ALL = NOPASSWD: ALL"  | sudo tee --append /etc/sudoers
+  echo "$test_username ALL=(ALL:ALL) NOPASSWD: ALL"  | sudo tee --append /etc/sudoers
   echo "Defaults:$test_username !requiretty" | sudo tee --append /etc/sudoers
 fi
 
