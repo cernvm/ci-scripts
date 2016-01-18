@@ -23,26 +23,6 @@ cvmfs_workspace="/tmp/cvmfs-test-workspace"
 cvmfs_source_directory="${cvmfs_workspace}/cvmfs-source"
 cvmfs_log_directory="${cvmfs_workspace}/logs"
 
-# global variables for external script parameters
-testee_url=""
-client_testee_url=""
-platform=""
-platform_run_script=""
-platform_setup_script=""
-ec2_config=""
-ami_name=""
-log_destination="."
-username="root"
-userdata=""
-
-# package download locations
-server_package=""
-client_package=""
-devel_package=""
-config_packages=""  # might be more than one... BEWARE OF SPACES!!
-unittest_package=""
-source_tarball="source.tar.gz" # will be prepended by ${testee_url} later
-
 # global variables (get filled by spawn_virtual_machine)
 ip_address=""
 instance_id=""
@@ -122,12 +102,6 @@ setup_virtual_machine() {
   echo "done"
 }
 
-is_linux_vm() {
-  local ami=$1
-  echo "$ami" | grep -E "^ami-[0-9a-zA-Z]+$"
-  [ $? -eq 0 ]
-}
-
 run_test_cases() {
   local ip=$1
   local username=$2
@@ -182,46 +156,6 @@ get_test_results() {
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 
-
-while getopts "r:b:u:p:e:a:d:m:c:l:" option; do
-  case $option in
-    r)
-      platform_run_script=$OPTARG
-      ;;
-    b)
-      platform_setup_script=$OPTARG
-      ;;
-    u)
-      testee_url=$OPTARG
-      ;;
-    p)
-      platform=$OPTARG
-      ;;
-    e)
-      ec2_config=$OPTARG
-      ;;
-    a)
-      ami_name=$OPTARG
-      ;;
-    d)
-      log_destination=$OPTARG
-      ;;
-    m)
-      username=$OPTARG
-      ;;
-    c)
-      userdata="$OPTARG"
-      ;;
-    l)
-      client_testee_url=$OPTARG
-      ;;
-    ?)
-      shift $(($OPTIND-2))
-      usage "Unrecognized option: $1"
-      ;;
-  esac
-done
-
 # check if we have all bits and pieces
 if [ x$platform_run_script   = "x" ] ||
    [ x$platform_setup_script = "x" ] ||
@@ -246,12 +180,6 @@ server_package=$(read_package_map   ${otu}/pkgmap "$platform" 'server'   )
 devel_package=$(read_package_map    ${ctu}/pkgmap "$platform" 'devel'    )
 unittest_package=$(read_package_map ${otu}/pkgmap "$platform" 'unittests')
 config_packages="$(read_package_map ${otu}/pkgmap "$platform" 'config'   )"
-
-# if we are on mac then we have to run an special script
-if [ ! $(is_linux_vm $ami_name) ]; then
-  $script_location/run_mac.sh $otu $client_package $source_tarball $ami_name $platform_setup_script $platform_run_script
-  exit $?
-fi
 
 # check if all necessary packages were found
 if [ x"$server_package"        = "x" ] ||

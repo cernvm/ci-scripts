@@ -39,6 +39,12 @@ get_platform_parameter() {
   fi
 }
 
+is_linux_vm() {
+  local ami=$1
+  echo "$ami" | grep -E "^ami-[0-9a-zA-Z]+$"
+  [ $? -eq 0 ]
+}
+
 # extracts an architecture string from a CI or build machine label such as:
 #   docker-i386
 #   bare-armv7hl

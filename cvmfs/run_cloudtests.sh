@@ -25,14 +25,23 @@ has_platform_parameter 'test'  "$vm_desc" || die "VM parameter .test missing"
 has_platform_parameter 'ami'   "$vm_desc" || die "VM parameter .ami missing"
 has_platform_parameter 'user'  "$vm_desc" || die "VM parameter .user missing"
 
+export testee_url="$CVMFS_TESTEE_URL"
+export client_testee_url="$CVMFS_CLIENT_TESTEE_URL"
+export platform=$(get_platform_parameter 'label'   "$vm_desc")
+export platform_setup_script=$(get_platform_parameter 'setup'   "$vm_desc")
+export platform_run_script=$(get_platform_parameter 'test'    "$vm_desc")
+export ec2_config="$EC2_CONFIG"
+export ami_name=$(get_platform_parameter 'ami'     "$vm_desc")
+export username=$(get_platform_parameter 'user'    "$vm_desc")
+export userdata=$(get_platform_parameter 'context' "$vm_desc")
+export source_tarball="source.tar.gz"
+
+
 echo "Running cloud tests for $CVMFS_PLATFORM / $CVMFS_PLATFORM_CONFIG ..."
-${SCRIPT_LOCATION}/cloud_testing/run.sh                    \
-        -u $CVMFS_TESTEE_URL                               \
-        -p  $(get_platform_parameter 'label'   "$vm_desc") \
-        -b  $(get_platform_parameter 'setup'   "$vm_desc") \
-        -r  $(get_platform_parameter 'test'    "$vm_desc") \
-        -e $EC2_CONFIG                                     \
-        -a  $(get_platform_parameter 'ami'     "$vm_desc") \
-        -m  $(get_platform_parameter 'user'    "$vm_desc") \
-        -c "$(get_platform_parameter 'context' "$vm_desc")"\
-        -l "$CVMFS_CLIENT_TESTEE_URL"
+
+# if we are on mac then we have to run an special script
+if [ ! $(is_linux_vm $ami_name) ]; then
+  ${SCRIPT_LOCATION}/cloud_testing/run_mac.sh
+else
+  ${SCRIPT_LOCATION}/cloud_testing/run.sh
+fi
