@@ -26,6 +26,7 @@ cvmfs_log_directory="${cvmfs_workspace}/logs"
 # global variables (get filled by spawn_virtual_machine)
 ip_address=""
 instance_id=""
+log_destination="."
 
 
 #
