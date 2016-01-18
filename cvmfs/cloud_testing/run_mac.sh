@@ -8,7 +8,7 @@
 SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 cd "$SCRIPT_LOCATION"
 . ${SCRIPT_LOCATION}/common.sh
-
+set -x
 log_destination="."
 osx_name="$ami_name"
 package_name=$(read_package_map   ${testee_url}/pkgmap "$platform" 'client')
