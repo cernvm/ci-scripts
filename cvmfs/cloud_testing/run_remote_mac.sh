@@ -20,6 +20,9 @@ echo "Printing environment " && env
 
 original_directory=$(pwd)
 
+# Create the workspace and the log directories
+mkdir -p "$cvmfs_workspace" "$cvmfs_log_directory"
+
 # Download and decompress the sources and install the client
 wget $source_tarball_url && tar xvf $source_name && mv cvmfs* cvmfs || usage "Couldn't download and decompress the sources in the mac VM"
 wget $client_package_url && cd / && sudo /usr/sbin/installer -pkg /Users/vagrant/$package_name -target / && cd $original_directory || usage "Couldn't download and install the CVMFS package"

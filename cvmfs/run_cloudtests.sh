@@ -25,6 +25,7 @@ has_platform_parameter 'test'  "$vm_desc" || die "VM parameter .test missing"
 has_platform_parameter 'ami'   "$vm_desc" || die "VM parameter .ami missing"
 has_platform_parameter 'user'  "$vm_desc" || die "VM parameter .user missing"
 
+# exports for scripts in mac and linux
 export testee_url="$CVMFS_TESTEE_URL"
 export client_testee_url="$CVMFS_CLIENT_TESTEE_URL"
 export platform=$(get_platform_parameter 'label'   "$vm_desc")
@@ -35,6 +36,10 @@ export ami_name=$(get_platform_parameter 'ami'     "$vm_desc")
 export username=$(get_platform_parameter 'user'    "$vm_desc")
 export userdata=$(get_platform_parameter 'context' "$vm_desc")
 export source_tarball="source.tar.gz"
+
+# static information (check also remote_setup.sh and remote_run.sh)
+export cvmfs_workspace="/tmp/cvmfs-test-workspace"
+export cvmfs_log_directory="${cvmfs_workspace}/logs"
 
 
 echo "Running cloud tests for $CVMFS_PLATFORM / $CVMFS_PLATFORM_CONFIG ..."

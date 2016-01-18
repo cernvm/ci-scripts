@@ -1,7 +1,8 @@
 #!/bin/sh
 
 # This script spawns a virtual machine of a specific platform type on ibex and
-# runs the associated test cases on this machine
+# runs the associated test cases on this machine.
+# Some variables have been sourced in ../run_cloudtests.sh
 
 # Configuration for cloud access
 # Example:
@@ -17,11 +18,7 @@ script_location=$(cd "$(dirname "$0")"; pwd)
 . ${script_location}/common.sh
 
 config_package_base_url="https://ecsft.cern.ch/dist/cvmfs/cvmfs-config"
-
-# static information (check also remote_setup.sh and remote_run.sh)
-cvmfs_workspace="/tmp/cvmfs-test-workspace"
 cvmfs_source_directory="${cvmfs_workspace}/cvmfs-source"
-cvmfs_log_directory="${cvmfs_workspace}/logs"
 
 # global variables (get filled by spawn_virtual_machine)
 ip_address=""
