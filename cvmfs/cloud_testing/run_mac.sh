@@ -20,6 +20,7 @@ which vagrant                           || echo "Vagrant is not installed!"
 vagrant plugin list | grep vagrant-scp  || echo "Vagrant scp plugin not installed!"
 
 # Step 1: boot the VM
+vagrant destroy -f $osx_name || echo "There are no Vagrant VMs. Creating one"  # just in case it's still there
 vagrant up $osx_name || echo "Cannot execute vagrant up $osx_name"
 
 # Step 2: run the script
