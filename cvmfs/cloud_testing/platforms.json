@@ -134,6 +134,16 @@
   },
 
   {
+    "dist"    : "ubuntu1510",
+    "config"  : "x86_64",
+    "ami"     : "ami-0000037e",
+    "label"   : "ubuntu1204_x86_64",
+    "setup"   : "ubuntu_x86_64_setup.sh",
+    "test"    : "ubuntu1510_x86_64_test.sh",
+    "user"    : "ubuntu"
+  },
+
+  {
     "dist"    : "fedora22",
     "config"  : "x86_64",
     "ami"     : "ami-0000037d",
