@@ -75,7 +75,6 @@ spawn_my_virtual_machine() {
 
 setup_virtual_machine() {
   local ip=$1
-  local username=$2
 
   local remote_setup_script
   remote_setup_script="${script_location}/remote_setup.sh"
@@ -88,7 +87,7 @@ setup_virtual_machine() {
       -t $source_tarball                                              \
       -g $unittest_package                                            \
       -k "$config_packages"                                           \
-      -r $CT_PLATFORM_setup_script
+      -r $CT_PLATFORM_SETUP_SCRIPT
   check_retcode $?
   if [ $? -ne 0 ]; then
     handle_test_failure $ip $CT_USERNAME
@@ -102,7 +101,6 @@ setup_virtual_machine() {
 
 run_test_cases() {
   local ip=$1
-  local username=$2
 
   local retcode
   local log_files
@@ -115,7 +113,7 @@ run_test_cases() {
       -c $client_package                                         \
       -d $devel_package                                          \
       -k "$config_packages"                                      \
-      -r $CT_PLATFORM_run_script
+      -r $CT_PLATFORM_RUN_SCRIPT
   check_retcode $?
 
   if [ $? -ne 0 ]; then
@@ -126,7 +124,6 @@ run_test_cases() {
 
 handle_test_failure() {
   local ip=$1
-  local username=$2
 
   get_test_results $ip $CT_USERNAME
 
@@ -137,13 +134,12 @@ handle_test_failure() {
 
 get_test_results() {
   local ip=$1
-  local username=$2
   local retval=0
 
   echo -n "retrieving test results... "
   retrieve_file_from_virtual_machine \
       $ip                            \
-      $username                      \
+      $CT_USERNAME                   \
       "${CT_CVMFS_LOG_DIRECTORY}/*"  \
       $log_destination
   check_retcode $?
