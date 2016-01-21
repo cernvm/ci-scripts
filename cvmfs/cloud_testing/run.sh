@@ -46,9 +46,9 @@ spawn_my_virtual_machine() {
 
   local retcode
 
-  echo -n "spawning virtual machine from $ami... "
+  echo -n "spawning virtual machine from $CT_AMI_NAME... "
   local spawn_results
-  spawn_results="$(spawn_virtual_machine $ami "$userdata")"
+  spawn_results="$(spawn_virtual_machine $CT_AMI_NAME "$CT_USERDATA")"
   retcode=$?
   instance_id=$(echo $spawn_results | awk '{print $1}')
   ip_address=$(echo $spawn_results | awk '{print $2}')
@@ -68,7 +68,7 @@ setup_virtual_machine() {
       -s $server_package                                              \
       -c $client_package                                              \
       -d $devel_package                                               \
-      -t $source_tarball                                              \
+      -t $CT_SOURCE_TARBALL                                           \
       -g $unittest_package                                            \
       -k "$config_packages"                                           \
       -r $CT_PLATFORM_SETUP_SCRIPT
