@@ -36,22 +36,6 @@ usage() {
   local msg="$1"
 
   echo "Error: $msg"
-  echo
-  echo "Mandatory options:"
-  echo " -u <testee URL>            URL to the nightly build directory to be tested"
-  echo " -p <platform name>         name of the platform to be tested"
-  echo " -b <setup script>          platform specific setup script (inside the tarball)"
-  echo " -r <run script>            platform specific test script (inside the tarball)"
-  echo " -a <AMI name>              the virtual machine image to spawn"
-  echo
-  echo "Optional parameters:"
-  echo " -e <EC2 config file>       local location of the ec2_config.sh file"
-  echo " -d <results destination>   Directory to store final test session logs"
-  echo " -m <ssh user name>         User name to be used for VM login (default: root)"
-  echo " -c <cloud init userdata>   User data string to be passed to the new instance"
-  echo
-  echo " -l <custom client URL>     URL to a nightly build for a custom CVMFS client"
-
   exit 1
 }
 
