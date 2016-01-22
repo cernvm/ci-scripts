@@ -96,7 +96,7 @@
   {
     "dist"    : "ubuntu1204",
     "config"  : "x86_64",
-    "ami"     : "ami-000001c6",
+    "ami"     : "ami-0000038e",
     "label"   : "ubuntu1204_x86_64",
     "setup"   : "ubuntu_x86_64_setup.sh",
     "test"    : "ubuntu1204_x86_64_test.sh",
@@ -106,7 +106,7 @@
   {
     "dist"    : "ubuntu1404",
     "config"  : "x86_64",
-    "ami"     : "ami-000002da",
+    "ami"     : "ami-0000038d",
     "label"   : "ubuntu1204_x86_64",
     "setup"   : "ubuntu_x86_64_setup.sh",
     "test"    : "ubuntu_x86_64_test.sh",
