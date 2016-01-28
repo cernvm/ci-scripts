@@ -83,7 +83,7 @@
   {
     "dist"    : "el7",
     "config"  : "x86_64",
-    "ami"     : "ami-00000347",
+    "ami"     : "ami-0000038f",
     "label"   : "cc7_x86_64",
     "setup"   : "centos7_x86_64_setup.sh",
     "test"    : "centos7_x86_64_test.sh",
