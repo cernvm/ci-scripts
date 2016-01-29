@@ -146,7 +146,7 @@
   {
     "dist"    : "fedora22",
     "config"  : "x86_64",
-    "ami"     : "ami-0000037d",
+    "ami"     : "ami-00000393",
     "label"   : "fedora22_x86_64",
     "setup"   : "fedora22_x86_64_setup.sh",
     "test"    : "fedora22_x86_64_test.sh",
