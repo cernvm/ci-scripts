@@ -4,4 +4,4 @@
 set -e
 
 sudo -u vagrant brew update
-sudo -u vagrant brew install jq wget Caskroom/cask/osxfuse
+sudo -u vagrant brew install jq md5sha1sum wget Caskroom/cask/osxfuse
