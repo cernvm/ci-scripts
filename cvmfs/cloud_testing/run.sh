@@ -30,7 +30,7 @@ log_destination="."
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 
-
+set -x
 
 usage() {
   local msg="$1"
@@ -145,9 +145,9 @@ fi
 
 # check if we have a custom client testee URL
 if [ ! -z "$CT_CLIENT_TESTEE_URL" ]; then
-  echo "using custom client from here: $client_testee_url"
+  echo "using custom client from here: $CT_CLIENT_TESTEE_URL"
 else
-  client_testee_url="$testee_url"
+  export CT_CLIENT_TESTEE_URL="$CT_TESTEE_URL"
 fi
 
 # figure out which packages need to be downloaded
@@ -181,7 +181,7 @@ done
 config_packages="$config_package_urls"
 
 # load EC2 configuration
-. $ec2_config
+. $CT_EC2_CONFIG
 
 # spawn the virtual machine image, run the platform specific setup script
 # on it, wait for the spawning and setup to be complete and run the actual

@@ -1,6 +1,7 @@
 #!/bin/sh
 
 set -e
+set -x
 
 SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 . ${SCRIPT_LOCATION}/../jenkins/common.sh
@@ -42,7 +43,7 @@ export CT_CVMFS_WORKSPACE="/tmp/cvmfs-test-workspace"
 export CT_CVMFS_LOG_DIRECTORY="${CT_CVMFS_WORKSPACE}/logs"
 
 
-echo "Running cloud tests for $CT_CVMFS_PLATFORM / $CVMFS_PLATFORM_CONFIG ..."
+echo "Running cloud tests for $CT_PLATFORM / $CVMFS_PLATFORM_CONFIG ..."
 
 # if we are on mac then we have to run an special script
 if [ ! $(is_linux_vm $CT_AMI_NAME) ]; then
