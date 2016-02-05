@@ -1,14 +1,16 @@
 #!/bin/bash
 
 set -e
+set -x
 
 BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 . ${BUILD_SCRIPT_LOCATION}/../jenkins/common.sh
 . ${BUILD_SCRIPT_LOCATION}/common.sh
 
 [ ! -z $CVMFS_SERVERMON_SOURCE_LOCATION   ] || die "CVMFS_SERVERMON_SOURCE_LOCATION missing"
+[ ! -z $WORKSPACE   ]                       || die "WORKSPACE missing"
 
-CVMFS_SERVERMON_RESULT_LOCATION=~/rpmbuild
+CVMFS_SERVERMON_RESULT_LOCATION="${WORKSPACE}/rpmbuild"
 mkdir     ${CVMFS_SERVERMON_RESULT_LOCATION}              \
           ${CVMFS_SERVERMON_RESULT_LOCATION}/TMP          \
           ${CVMFS_SERVERMON_RESULT_LOCATION}/RPMS         \
@@ -35,7 +37,7 @@ cp -R ${CVMFS_SERVERMON_SOURCE_LOCATION}/webapi        \
       $source_path
 
 targz_path=${source_path}.tar.gz
-cd source_path=${CVMFS_SERVERMON_RESULT_LOCATION}/SOURCES
+cd ${CVMFS_SERVERMON_RESULT_LOCATION}/SOURCES
 tar czf $targz_path $source_name
 rm -rf "$source_path"
 
