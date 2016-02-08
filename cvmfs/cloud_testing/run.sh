@@ -68,7 +68,7 @@ setup_virtual_machine() {
       -s $server_package                                              \
       -c $client_package                                              \
       -d $devel_package                                               \
-      -t $CT_SOURCE_TARBALL                                           \
+      -t $source_tarball                                              \
       -g $unittest_package                                            \
       -k "$config_packages"                                           \
       -r $CT_PLATFORM_SETUP_SCRIPT
@@ -92,11 +92,11 @@ run_test_cases() {
   remote_run_script="${script_location}/remote_run.sh"
 
   echo -n "running test cases on VM ($ip)... "
-  run_script_on_virtual_machine $ip $CT_USERNAME $remote_run_script \
-      -s $server_package                                         \
-      -c $client_package                                         \
-      -d $devel_package                                          \
-      -k "$config_packages"                                      \
+  run_script_on_virtual_machine $ip $CT_USERNAME $remote_run_script   \
+      -s $server_package                                              \
+      -c $client_package                                              \
+      -d $devel_package                                               \
+      -k "$config_packages"                                           \
       -r $CT_PLATFORM_RUN_SCRIPT
   check_retcode $?
 
