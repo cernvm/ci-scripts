@@ -20,6 +20,8 @@ if [ $# -lt 3 ]; then
   exit 1
 fi
 
+set -x
+
 WORKSPACE="$1"
 CVMFS_DOCKER_IMAGE="$2"
 shift 2
@@ -105,21 +107,18 @@ elif [ $(image_creation $image_name) -lt $(image_recipe $container_dir) ]; then
 fi
 
 # collect the environment variables that belong to the CVMFS and CERNVM workspaces
-args=""
-for var in $(env | grep -e "^\(CVMFS\|CERNVM\)_.+\$"); do
-  args="$args --env=$var"
+for var in $(env | grep -e "^\(CVMFS\|CERNVM\)_.*\$"); do
+  args="--env=\"$var\" $args"
 done
 
 # run provided script inside the docker container
 uid=$(id -u)
 gid=$(id -g)
 echo "++ $@"
-sudo docker run --volume="$WORKSPACE":"$WORKSPACE"                    \
-                --volume=/etc/passwd:/etc/passwd                      \
-                --volume=/etc/group:/etc/group                        \
-                --user=${uid}:${gid}                                  \
-                --rm=true                                             \
-                --privileged=true                                     \
-                "$args"                                               \
-                "$image_name"                                         \
-                "$@"
+sudo docker run --volume="$WORKSPACE":"$WORKSPACE"      \
+                --volume=/etc/passwd:/etc/passwd        \
+                --volume=/etc/group:/etc/group          \
+                --user=${uid}:${gid}                    \
+                --rm=true                               \
+                --privileged=true                       \
+                $args $image_name "$@"
