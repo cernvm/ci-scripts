@@ -106,7 +106,7 @@ fi
 
 # collect the environment variables that belong to the CVMFS and CERNVM workspaces
 args=""
-for var in env | grep -e "^\(CVMFS\|CERNVM\)_.+\$" do
+for var in $(env | grep -e "^\(CVMFS\|CERNVM\)_.+\$"); do
   args="$args --env=$var"
 done
 
