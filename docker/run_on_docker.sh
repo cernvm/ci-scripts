@@ -20,8 +20,6 @@ if [ $# -lt 3 ]; then
   exit 1
 fi
 
-set -x
-
 WORKSPACE="$1"
 CVMFS_DOCKER_IMAGE="$2"
 shift 2
