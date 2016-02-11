@@ -143,13 +143,18 @@ for var in $(env | grep -e "^\(CVMFS\|CERNVM\)_.*\$"); do
 done
 
 # run provided script inside the docker container
+# Note: Workaround for stdout/stderr redirection in conjunction with
+#       docker_script_wrapper.sh
 uid=$(id -u)
 gid=$(id -g)
 echo "++ $@"
-sudo docker run --volume="$WORKSPACE":"$WORKSPACE"      \
-                --volume=/etc/passwd:/etc/passwd        \
-                --volume=/etc/group:/etc/group          \
-                --user=${uid}:${gid}                    \
-                --rm=true                               \
-                --privileged=true                       \
-                $args $image_name "$@"
+sudo docker run --volume="$WORKSPACE":"$WORKSPACE"           \
+                --volume=/etc/passwd:/etc/passwd             \
+                --volume=/etc/group:/etc/group               \
+                --volume="$OUTPUT_POOL_DIR:$OUTPUT_POOL_DIR" \
+                --user=${uid}:${gid}                         \
+                --rm=true                                    \
+                --privileged=true                            \
+                $args $image_name                            \
+                ${OUTPUT_POOL_DIR}/docker_script_wrapper.sh  \
+                $fstdout $fstderr "$@"
