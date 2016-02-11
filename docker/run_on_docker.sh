@@ -104,6 +104,39 @@ elif [ $(image_creation $image_name) -lt $(image_recipe $container_dir) ]; then
   bootstrap_image "$image_name" "$container_dir"
 fi
 
+# Workaround: set up a stdout/stderr redirection to circumvent docker's broken
+#             forwarding. Apparently this is a known issue of Docker and might
+#             become fixed at some point.
+#             (See docker_script_wrapper.sh for more details)
+OUTPUT_POOL_DIR=
+OUTPUT_POOL_STDOUT_READER=
+OUTPUT_POOL_STDERR_READER=
+cleanup_output_pool() {
+  echo "running cleanup function..."
+  [ -z $OUTPUT_POOL_STDOUT_READER ] || kill $OUTPUT_POOL_STDOUT_READER
+  [ -z $OUTPUT_POOL_STDERR_READER ] || kill $OUTPUT_POOL_STDERR_READER
+  [ -z $OUTPUT_POOL_DIR           ] || rm -fR $OUTPUT_POOL_DIR
+}
+
+trap cleanup_output_pool EXIT HUP INT TERM
+
+OUTPUT_POOL_DIR=$(mktemp -d)
+[ -d $OUTPUT_POOL_DIR ] || die "cannot create output redirection pool"
+fstdout="${OUTPUT_POOL_DIR}/stdout"
+fstderr="${OUTPUT_POOL_DIR}/stderr"
+touch $fstdout $fstderr || die "cannot create output redirection files"
+cp ${SCRIPT_LOCATION}/docker_script_wrapper.sh $OUTPUT_POOL_DIR || \
+  die "cannot put docker_script_wrapper.sh in place"
+
+tail -f $fstdout &
+OUTPUT_POOL_STDOUT_READER=$!
+tail -f $fstderr >&2 &
+OUTPUT_POOL_STDERR_READER=$!
+
+[ ! -z $OUTPUT_POOL_STDOUT_READER ] && [ ! -z $OUTPUT_POOL_STDERR_READER ] && \
+kill -0 $OUTPUT_POOL_STDOUT_READER  && kill -0 $OUTPUT_POOL_STDERR_READER  || \
+  die "cannot setup output redirection readers"
+
 # collect the environment variables that belong to the CVMFS and CERNVM workspaces
 for var in $(env | grep -e "^\(CVMFS\|CERNVM\)_.*\$"); do
   args="--env=\"$var\" $args"
