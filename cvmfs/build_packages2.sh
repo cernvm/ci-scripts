@@ -7,15 +7,16 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 . ${BUILD_SCRIPT_LOCATION}/common.sh
 
 # sanity checks
-[ ! -z $WORKSPACE               ] || die "WORKSPACE missing"
-[ ! -z $CVMFS_BUILD_LOCATION    ] || die "CVMFS_BUILD_LOCATION missing"
-[ ! -z $CVMFS_SOURCE_LOCATION   ] || die "CVMFS_SOURCE_LOCATION missing"
-[ ! -z $CVMFS_PACKAGE           ] || die "CVMFS_PACKAGE missing"
-[ ! -z $CVMFS_CI_PLATFORM_LABEL ] || die "CVMFS_CI_PLATFORM_LABEL missing"
-[ ! -z $CVMFS_BUILD_PLATFORM    ] || die "CVMFS_BUILD_PLATFORM missing"
-[ ! -z $CVMFS_BUILD_ARCH        ] || die "CVMFS_BUILD_ARCH missing"
-[ ! -z $CVMFS_NIGHTLY_BUILD     ] || die "CVMFS_NIGHTLY_BUILD missing"
-[ ! -z $BUILD_NUMBER            ] || die "BUILD_NUMBER missing"
+[ ! -z $WORKSPACE                 ] || die "WORKSPACE missing"
+[ ! -z $CVMFS_BUILD_LOCATION      ] || die "CVMFS_BUILD_LOCATION missing"
+[ ! -z $CVMFS_SOURCE_LOCATION     ] || die "CVMFS_SOURCE_LOCATION missing"
+[ ! -z $CVMFS_PACKAGE             ] || die "CVMFS_PACKAGE missing"
+[ ! -z $CVMFS_CI_PLATFORM_LABEL   ] || die "CVMFS_CI_PLATFORM_LABEL missing"
+[ ! -z $CVMFS_BUILD_PLATFORM      ] || die "CVMFS_BUILD_PLATFORM missing"
+[ ! -z $CVMFS_BUILD_ARCH          ] || die "CVMFS_BUILD_ARCH missing"
+[ ! -z $CVMFS_NIGHTLY_BUILD       ] || die "CVMFS_NIGHTLY_BUILD missing"
+[ ! -z $BUILD_NUMBER              ] || die "BUILD_NUMBER missing"
+[ ! -z $CERNVM_CI_SCRIPT_LOCATION ] || die "CERNVM_CI_SCRIPT_LOCATION missing"
 
 # setup a fresh build workspace
 if [ -d $CVMFS_BUILD_LOCATION ]; then
@@ -51,13 +52,13 @@ desired_architecture="$(extract_arch $CVMFS_BUILD_ARCH)"
 if is_docker_host; then
   echo "building on docker for ${desired_architecture}..."
   docker_image_name="${CVMFS_BUILD_PLATFORM}_${desired_architecture}"
-  command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/run_on_docker.sh \
-                    ${WORKSPACE}                             \
-                    ${docker_image_name}                     \
-                    $build_script                            \
-                    ${CVMFS_SOURCE_LOCATION}                 \
-                    ${CVMFS_BUILD_LOCATION}                  \
-                    $CVMFS_PACKAGE                           \
+  command_tmpl="${CERNVM_CI_SCRIPT_LOCATION}/docker/run_on_docker.sh  \
+                    ${WORKSPACE}                                      \
+                    ${docker_image_name}                              \
+                    $build_script                                     \
+                    ${CVMFS_SOURCE_LOCATION}                          \
+                    ${CVMFS_BUILD_LOCATION}                           \
+                    $CVMFS_PACKAGE                                    \
                     $nightly_number"
 else
   echo "building bare metal for ${desired_architecture}..."
