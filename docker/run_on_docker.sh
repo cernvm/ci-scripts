@@ -137,9 +137,15 @@ OUTPUT_POOL_STDERR_READER=$!
 kill -0 $OUTPUT_POOL_STDOUT_READER  && kill -0 $OUTPUT_POOL_STDERR_READER  || \
   die "cannot setup output redirection readers"
 
-# collect the environment variables that belong to the CVMFS and CERNVM workspaces
-for var in $(env | grep -e "^\(CVMFS\|CERNVM\)_.*\$"); do
-  args="--env=\"$var\" $args"
+# collect the environment variables belonging to the CVMFS and CERNVM workspaces
+# TODO(rmeusel): figure out how to properly escape environment variables that
+#                contain whitespace
+for var in $(env | grep -ohe "^\(CVMFS\|CERNVM\)_[^=]*"); do
+  if eval "echo \$$var" | grep -qe "[[:space:]]"; then
+    echo "WARNING: skipped forwarding of environment variable \$$var"
+    continue
+  fi
+  args="--env $var=$(eval "echo \$$var") $args"
 done
 
 # run provided script inside the docker container
