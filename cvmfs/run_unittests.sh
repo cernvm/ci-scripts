@@ -12,6 +12,7 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 [ ! -z $CVMFS_RUN_UNITTESTS ]                    || die "CVMFS_RUN_UNITTESTS missing"
 [ ! -z $CVMFS_UNITTESTS_BINARY ]                 || die "CVMFS_UNITTESTS_BINARY missing"
 [ ! -z $CVMFS_UNITTESTS_RESULT_LOCATION ]        || die "CVMFS_UNITTESTS_RESULT_LOCATION missing"
+[ ! -z $CERNVM_CI_SCRIPT_LOCATION ]              || die "CERNVM_CI_SCRIPT_LOCATION missing"
 
 # check if there is already a result file and clean it up
 if [ -f $CVMFS_UNITTESTS_RESULT_LOCATION ]; then
@@ -32,7 +33,7 @@ if [ x"$CVMFS_RUN_UNITTESTS" = x"true" ]; then
 
   if is_docker_host; then
     echo "running unit tests on docker for ${desired_architecture}"
-    command_tmpl="${CVMFS_SOURCE_LOCATION}/ci/run_on_docker.sh \
+    command_tmpl="${CERNVM_CI_SCRIPT_LOCATION}/docker/run_on_docker.sh \
       ${WORKSPACE} \
       ${docker_image_name} \
       ${CVMFS_SOURCE_LOCATION}/ci/run_unittests.sh"
