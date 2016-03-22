@@ -2,6 +2,8 @@
 
 set -e
 
+ZFS_VERSION=0.6.5.5
+
 BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 . ${BUILD_SCRIPT_LOCATION}/../jenkins/common.sh
 . ${BUILD_SCRIPT_LOCATION}/common.sh
@@ -78,15 +80,20 @@ rpmbuild --define "%_topdir ${rpmbuild_location}"      \
          --rebuild openafs-*.rpm
 
 echo "building SPL kernel modules..."
-rpmbuild --define "%_topdir ${rpmbuild_location}"      \
-         --define "%_tmppath ${rpmbuild_location}/TMP" \
-         --define "%kernels $aufs_kernel_version_tag"  \
-         --rebuild spl-kmod*.rpm
+git clone https://github.com/zfsonlinux/spl.git zfs-spl
+cd zfs-spl
+git checkout spl-$ZFS_VERSION
+./autogen.sh
+./configure --with-spec=redhat
+make rpm
 echo "  installing SPL modules..."
-sudo rpm -vi --force "${rpmbuild_location}/RPMS/x86_64/kmod-spl-*.rpm"
-echo "building ZFS kernel modules..."
-rpmbuild --define "%_topdir ${rpmbuild_location}"      \
-         --define "%_tmppath ${rpmbuild_location}/TMP" \
-         --define "%kernels $aufs_kernel_version_tag"  \
-         --rebuild zfs-kmod*.rpm
+sudo rpm -vi "kmod-spl-devel-*.rpm"
+cd ..
 
+echo "building ZFS kernel modules..."
+git clone https://github.com/zfsonlinux/zfs.git zfs-zfs
+cd zfs-zfs
+git checkout zfs-$ZFS_VERSION
+./autogen.sh
+./configure --with-spec=redhat
+make rpm
