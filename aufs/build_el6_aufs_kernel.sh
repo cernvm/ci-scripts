@@ -87,7 +87,7 @@ git checkout spl-$ZFS_VERSION
 ./configure --with-spec=redhat
 make rpm
 echo "  installing SPL modules..."
-sudo rpm -vi "kmod-spl-devel-*.rpm"
+sudo rpm -vi --force "kmod-spl-devel-*.rpm"
 cd ..
 
 echo "building ZFS kernel modules..."
