@@ -137,6 +137,12 @@ OUTPUT_POOL_STDERR_READER=$!
 kill -0 $OUTPUT_POOL_STDOUT_READER  && kill -0 $OUTPUT_POOL_STDERR_READER  || \
   die "cannot setup output redirection readers"
 
+# Jenkins provides the CVMFS_CI_PLATFORM_LABEL as a platform specifier. For
+# docker this needs to be re-set to the actual label rather than 'docker'
+if [ x"$CVMFS_CI_PLATFORM_LABEL" = x"docker" ]; then
+  CVMFS_CI_PLATFORM_LABEL="$CVMFS_DOCKER_IMAGE"
+fi
+
 # collect the environment variables belonging to the CVMFS and CERNVM workspaces
 # TODO(rmeusel): figure out how to properly escape environment variables that
 #                contain whitespace
