@@ -23,7 +23,7 @@
   {
     "dist"    : "el6",
     "config"  : "x86",
-    "ami"     : "ami-0000032b",
+    "ami"     : "ami-00000373",
     "label"   : "slc6_i386",
     "setup"   : "slc6_i386_setup.sh",
     "test"    : "slc6_i386_test.sh",
@@ -33,7 +33,7 @@
   {
     "dist"    : "el6",
     "config"  : "x86_64",
-    "ami"     : "ami-0000032a",
+    "ami"     : "ami-00000376",
     "label"   : "slc6_x86_64",
     "setup"   : "slc6_x86_64_setup.sh",
     "test"    : "slc6_x86_64_test.sh",
@@ -43,7 +43,7 @@
   {
     "dist"    : "el6",
     "config"  : "x86_64_nfs",
-    "ami"     : "ami-0000032a",
+    "ami"     : "ami-00000376",
     "label"   : "slc6_x86_64",
     "setup"   : "slc6_x86_64-NFS_setup.sh",
     "test"    : "slc6_x86_64-NFS_test.sh",
@@ -53,7 +53,7 @@
   {
     "dist"    : "el6",
     "config"  : "x86_64_exlcache",
-    "ami"     : "ami-0000032a",
+    "ami"     : "ami-00000376",
     "label"   : "slc6_x86_64",
     "setup"   : "slc6_x86_64-EXCLCACHE_setup.sh",
     "test"    : "slc6_x86_64-EXCLCACHE_test.sh",
@@ -63,7 +63,7 @@
   {
     "dist"    : "el6",
     "config"  : "x86_64_infoheader",
-    "ami"     : "ami-0000032a",
+    "ami"     : "ami-00000376",
     "label"   : "slc6_x86_64",
     "setup"   : "slc6_x86_64-INFOHEADER_setup.sh",
     "test"    : "slc6_x86_64-INFOHEADER_test.sh",
@@ -73,7 +73,7 @@
   {
     "dist"    : "el6",
     "config"  : "x86_64_gcov",
-    "ami"     : "ami-0000032a",
+    "ami"     : "ami-00000376",
     "label"   : "slc6_x86_64",
     "setup"   : "slc6_x86_64-gcov_setup.sh",
     "test"    : "slc6_x86_64-gcov_test.sh",
