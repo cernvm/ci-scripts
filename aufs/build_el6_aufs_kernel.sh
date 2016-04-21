@@ -95,5 +95,5 @@ git clone https://github.com/zfsonlinux/zfs.git zfs-zfs
 cd zfs-zfs
 git checkout zfs-$ZFS_VERSION
 ./autogen.sh
-./configure --with-spec=redhat
+./configure --with-spec=redhat --with-spl=../zfs-spl
 make rpm
