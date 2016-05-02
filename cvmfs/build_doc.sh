@@ -6,7 +6,7 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 . ${BUILD_SCRIPT_LOCATION}/../jenkins/common.sh
 . ${BUILD_SCRIPT_LOCATION}/common.sh
 
-DOXYGEN_SCRIPT="ci/run_cpplint.sh"
+DOXYGEN_SCRIPT="ci/build_doxygen.sh"
 
 # sanity checks
 [ ! -z $WORKSPACE ]             || die "WORKSPACE missing"
