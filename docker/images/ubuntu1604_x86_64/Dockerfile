@@ -19,3 +19,8 @@ RUN         apt-get -y update && apt-get -y install         \
                                               unzip         \
                                               uuid-dev      \
                                               valgrind
+
+RUN apt-get -y update && apt-get -y install \
+  doxygen \
+  graphviz \
+  gsfonts
