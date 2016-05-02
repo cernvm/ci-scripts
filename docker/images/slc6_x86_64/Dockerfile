@@ -9,6 +9,11 @@ RUN         yum -y update && yum -y install                     \
                                         gcc                     \
                                         gcc-c++                 \
                                         git                     \
+                                        globus-common-devel     \
+                                        globus-gsi-callback-devel \
+                                        globus-gsi-cert-utils-devel \
+                                        globus-gsi-credential-devel \
+                                        globus-gsi-sysconfig-devel \
                                         gridsite                \
                                         hardlink                \
                                         libattr-devel           \
