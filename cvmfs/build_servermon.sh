@@ -8,9 +8,9 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 . ${BUILD_SCRIPT_LOCATION}/common.sh
 
 [ ! -z $CVMFS_SERVERMON_SOURCE_LOCATION   ] || die "CVMFS_SERVERMON_SOURCE_LOCATION missing"
-[ ! -z $CVMFS_WORKSPACE   ]                 || die "CVMFS_WORKSPACE missing"
+[ ! -z $WORKSPACE   ]                       || die "WORKSPACE missing"
 
-CVMFS_SERVERMON_RESULT_LOCATION="${CVMFS_WORKSPACE}/rpmbuild"
+CVMFS_SERVERMON_RESULT_LOCATION="${WORKSPACE}/rpmbuild"
 mkdir     ${CVMFS_SERVERMON_RESULT_LOCATION}              \
           ${CVMFS_SERVERMON_RESULT_LOCATION}/TMP          \
           ${CVMFS_SERVERMON_RESULT_LOCATION}/RPMS         \
