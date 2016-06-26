@@ -10,7 +10,7 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 [ ! -z $GIT_SOURCES ] || die "GIT_SOURCES missing"
 
 RPMBUILD_LOCATION="${WORKSPACE}/rpmbuild"
-PACKAGE="$(filename $GIT_SOURCES)"
+PACKAGE="$(basename $GIT_SOURCES)"
 SPEC_FILE="${GIT_SOURCES}/${PACKAGE}.spec"
 
 [ -d $GIT_SOURCES ] || die "source directory $GIT_SOURCES missing"
@@ -36,4 +36,4 @@ cd $OLDPWD
 
 echo "building RPM"
 rpmbuild -ba "${GIT_SOURCES}/${PACKAGE}.spec" \
-  --define "%_topdir ${RPMBUILD_LOCATION}"  
+  --define "%_topdir ${RPMBUILD_LOCATION}"
