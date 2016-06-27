@@ -38,9 +38,9 @@ echo "creating source tarball ${PACKAGE}-${VERSION}.tar.gz"
 cd $GIT_SOURCES
 git archive \
   --prefix="${PACKAGE}-${VERSION}/" \
-  --format=tar.gz \
-  $(git describe --contains --all HEAD) \
-  > "${RPMBUILD_LOCATION}/SOURCES/${PACKAGE}-${VERSION}.tar.gz"
+  --format=tar \
+  $(git describe --contains --all HEAD) | \
+  gzip > "${RPMBUILD_LOCATION}/SOURCES/${PACKAGE}-${VERSION}.tar.gz"
 cd $OLDPWD
 
 echo "building RPM ${PACKAGE}"
