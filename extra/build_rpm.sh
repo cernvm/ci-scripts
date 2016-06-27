@@ -2,8 +2,15 @@
 
 set -e
 
+usage() {
+  echo "Usage: $0 <workspace> <git sources>"
+}
+
 BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 . ${BUILD_SCRIPT_LOCATION}/../jenkins/common.sh
+
+WORKSPACE="$1"
+GIT_SOURCES="$2"
 
 # sanity checks
 [ ! -z $WORKSPACE   ] || die "WORKSPACE missing"
