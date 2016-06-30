@@ -26,6 +26,9 @@ RUN        zypper -n update && zypper -n install   \
                                   valgrind-devel   \
                                   zlib-devel
 
+RUN        ln -s /usr/bin/ld.bfd /etc/alternatives/ld
+RUN        ln -s /usr/bin/unzip-plain /etc/alternatives/unzip
+
 RUN        useradd sftnight
 USER       sftnight
 WORKDIR    /home/sftnight
