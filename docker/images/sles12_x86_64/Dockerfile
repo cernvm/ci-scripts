@@ -20,6 +20,7 @@ RUN        zypper -n update && zypper -n install   \
                                   patch            \
                                   pkgconfig        \
                                   python-devel     \
+                                  rpmbuild         \
                                   tar              \
                                   unzip            \
                                   valgrind-devel   \
