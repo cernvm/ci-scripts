@@ -5,7 +5,7 @@ set -e
 REPO_BASE_URL=http://cvm-storage00.cern.ch/yum/sles12/
 REPO_BASE_URL_SDK=http://cvm-storage00.cern.ch/yum/sles12-sdk/
 DESTINATION=/chroot
-BASE_PACKAGES="sles-release zypper"
+BASE_PACKAGES="sles-release which zypper"
 
 echo "registering cleanup handler..."
 cleanup() {
