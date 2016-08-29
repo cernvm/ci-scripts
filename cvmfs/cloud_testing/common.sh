@@ -179,7 +179,7 @@ run_script_on_virtual_machine() {
     shift 1
   done
 
-  ssh -t -i $EC2_KEY_LOCATION -o StrictHostKeyChecking=no     \
+  ssh -i $EC2_KEY_LOCATION -o StrictHostKeyChecking=no     \
                            -o UserKnownHostsFile=/dev/null \
                            -o LogLevel=ERROR               \
                            -o BatchMode=yes                \
