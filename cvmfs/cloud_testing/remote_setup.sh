@@ -117,6 +117,13 @@ else
     sleep 1
   done
   [ $timeout -gt 0 ] || exit 2
+  # CC7: wait until cloud init set no-tty default
+  timeout=600
+  while sudo echo "f" 2>&1 | grep -q "tty" && [ $timeout -gt 0 ]; do
+    timeout=$(( $timeout - 1 ))
+    sleep 1
+  done
+  [ $timeout -gt 0 ] || exit 2
   if ! sudo cat /etc/sudoers | grep -q "$sudo_fix"; then
     echo "$sudo_fix" | sudo tee --append /etc/sudoers > /dev/null 2>&1
   fi
