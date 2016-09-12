@@ -30,6 +30,11 @@ get_package_type() {
 }
 
 get_number_of_cpu_cores() {
+  if [ "x$CVMFS_PARALLEL_MAKE" != "x" ]; then
+    echo $CVMFS_PARALLEL_MAKE
+    return 0
+  fi
+
   if is_linux; then
     cat /proc/cpuinfo | grep -e '^processor' | wc -l
   elif is_macos; then
