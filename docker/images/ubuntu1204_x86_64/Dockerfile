@@ -24,5 +24,4 @@ RUN         apt-get -y update && apt-get -y install                        \
                                               unzip                        \
                                               uuid-dev                     \
                                               valgrind                     \
-                                              voms-dev                     \
-
+                                              voms-dev
