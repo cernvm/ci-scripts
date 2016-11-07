@@ -43,6 +43,7 @@ mkdir -p $DESTINATION
 echo "bootstrapping a build environment..."
 debootstrap --variant=buildd  \
             --arch=$BASE_ARCH \
+	    --force-check-gpg \
             $UBUNTU_RELEASE   \
             $DESTINATION      \
             $REPO_BASE_URL
