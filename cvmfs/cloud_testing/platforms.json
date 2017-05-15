@@ -96,6 +96,18 @@
                  echo 'Defaults visiblepw' | tee --append /etc/sudoers"
   },
   {
+    "dist": "el7",
+    "config": "x86_64_nfs",
+    "ami": "ami-2b1e8c87",
+    "label": "cc7_x86_64",
+    "setup": "centos7_x86_64-NFS_setup.sh",
+    "test": "centos7_x86_64-NFS_test.sh",
+    "user": "root",
+    "context": "#!/bin/sh
+                 echo 'Defaults !requiretty' | tee --append /etc/sudoers
+                 echo 'Defaults visiblepw' | tee --append /etc/sudoers"
+  },
+  {
     "dist": "ubuntu1204",
     "config": "x86_64",
     "ami": "ami-65efae4a",
