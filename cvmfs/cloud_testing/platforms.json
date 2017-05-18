@@ -110,7 +110,7 @@
   {
     "dist": "ubuntu1204",
     "config": "x86_64",
-    "ami": "ami-65efae4a",
+    "ami": "ami-53c2a1d5",
     "label": "ubuntu1204_x86_64",
     "setup": "ubuntu_x86_64_setup.sh",
     "test": "ubuntu1204_x86_64_test.sh",
