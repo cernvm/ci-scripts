@@ -156,9 +156,9 @@
     "dist": "ubuntu1604",
     "config": "x86",
     "ami": "ami-0720888a",
-    "label": "ubuntu1604_x86",
-    "setup": "ubuntu_1604_x86_setup.sh",
-    "test": "ubuntu_1604_x86_test.sh",
+    "label": "ubuntu1604_i686",
+    "setup": "ubuntu_1604_i686_setup.sh",
+    "test": "ubuntu_1604_i686_test.sh",
     "user": "ubuntu"
   },
   {
