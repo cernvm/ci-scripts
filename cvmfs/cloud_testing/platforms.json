@@ -112,8 +112,8 @@
     "config": "x86_64",
     "ami": "ami-53c2a1d5",
     "label": "ubuntu1204_x86_64",
-    "setup": "ubuntu_x86_64_setup.sh",
-    "test": "ubuntu1204_x86_64_test.sh",
+    "setup": "ubuntu_setup.sh",
+    "test": "ubuntu_test.sh",
     "user": "ubuntu"
   },
   {
@@ -121,8 +121,8 @@
     "config": "x86_64",
     "ami": "ami-6f304f09",
     "label": "ubuntu1204_x86_64",
-    "setup": "ubuntu_x86_64_setup.sh",
-    "test": "ubuntu_x86_64_test.sh",
+    "setup": "ubuntu_setup.sh",
+    "test": "ubuntu_test.sh",
     "user": "ubuntu"
   },
   {
@@ -130,8 +130,8 @@
     "config": "x86_64",
     "ami": "ami-ec1ef186",
     "label": "ubuntu1204_x86_64",
-    "setup": "ubuntu_x86_64_setup.sh",
-    "test": "ubuntu_x86_64_test.sh",
+    "setup": "ubuntu_setup.sh",
+    "test": "ubuntu_test.sh",
     "user": "ubuntu"
   },
   {
@@ -139,8 +139,8 @@
     "config": "x86_64",
     "ami": "ami-9587cf68",
     "label": "ubuntu1204_x86_64",
-    "setup": "ubuntu_x86_64_setup.sh",
-    "test": "ubuntu_x86_64_test.sh",
+    "setup": "ubuntu_setup.sh",
+    "test": "ubuntu_test.sh",
     "user": "ubuntu"
   },
   {
@@ -148,8 +148,8 @@
     "config": "x86_64",
     "ami": "ami-6bb88929",
     "label": "ubuntu1204_x86_64",
-    "setup": "ubuntu_x86_64_setup.sh",
-    "test": "ubuntu1604_x86_64_test.sh",
+    "setup": "ubuntu_setup.sh",
+    "test": "ubuntu_test.sh",
     "user": "ubuntu"
   },
   {
@@ -157,8 +157,8 @@
     "config": "x86",
     "ami": "ami-0720888a",
     "label": "ubuntu1604_i686",
-    "setup": "ubuntu_1604_i686_setup.sh",
-    "test": "ubuntu_1604_i686_test.sh",
+    "setup": "ubuntu_setup.sh",
+    "test": "ubuntu_test.sh",
     "user": "ubuntu"
   },
   {
