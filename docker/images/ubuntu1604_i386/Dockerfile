@@ -18,6 +18,5 @@ RUN         apt-get -y update && apt-get -y install         \
                                               python-dev    \
                                               unzip         \
                                               uuid-dev      \
-                                              valgrind      \
-                                              voms-dev
+                                              valgrind
 
