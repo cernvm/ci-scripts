@@ -14,8 +14,13 @@ RUN         apt-get -y update && apt-get -y install                        \
                                               libcap-dev                   \
                                               libfuse-dev                  \
                                               libssl-dev                   \
+                                              libglobus-common-dev         \
+                                              libglobus-gsi-callback-dev   \
+                                              libglobus-gsi-cert-utils-dev \
+                                              libglobus-gsi-credential-dev \
                                               pkg-config                   \
                                               python-dev                   \
                                               unzip                        \
                                               uuid-dev                     \
-                                              valgrind
+                                              valgrind                     \
+                                              voms-dev
