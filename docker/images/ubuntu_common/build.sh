@@ -50,7 +50,7 @@ debootstrap --variant=buildd  \
 
 echo "installing stretch source repository for autofs backport..."
 echo "deb-src http://ftp.debian.org/debian stretch main" > $DESTINATION/etc/apt/sources.list.d/stretch-src.list
-keysfile="$(dirname $0)/stretch-keys.asc"
+keysfile="$(dirname $0)/../ubuntu_common/stretch-keys.asc"
 cp $keysfile $DESTINATION/etc/apt/trusted.gpg.d/stretch-keys.asc
 gpg --dearmor $DESTINATION/etc/apt/trusted.gpg.d/stretch-keys.asc
 
