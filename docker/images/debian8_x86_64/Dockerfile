@@ -21,3 +21,15 @@ RUN         apt-get -y update && apt-get -y install         \
                                               uuid-dev      \
                                               valgrind
 
+RUN apt-get -y update && apt-get -y install \
+  autoconf \
+  bison \
+  dh-systemd \
+  flex \
+  libhesiod-dev \
+  libkrb5-dev \
+  libldap2-dev \
+  libsasl2-dev \
+  libxml2-dev \
+  sssd-common
+

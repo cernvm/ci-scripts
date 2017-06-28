@@ -24,3 +24,16 @@ RUN apt-get -y update && apt-get -y install \
   doxygen \
   graphviz \
   gsfonts
+
+RUN sed -i /etc/apt/sources.list -e 's/main$/main universe/'
+RUN apt-get -y update && apt-get -y install \
+  autoconf \
+  bison \
+  dh-systemd \
+  flex \
+  libhesiod-dev \
+  libkrb5-dev \
+  libldap2-dev \
+  libsasl2-dev \
+  libxml2-dev \
+  sssd-common
