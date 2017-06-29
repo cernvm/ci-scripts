@@ -21,7 +21,7 @@ if [ $# -lt 3 ]; then
 fi
 
 WORKSPACE="$1"
-CVMFS_DOCKER_IMAGE="$2"
+CVMFS_DOCKER_IMAGE="$(echo $2 | sed 's/-test$//')"
 shift 2
 
 # retrieves the image creation time of a docker image in epoch
