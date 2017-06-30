@@ -39,10 +39,9 @@ rm -rf xml && mkdir xml
 
 # run cvmfs_unittest_debug (all tests always)
 echo "Running the tests (with XML output ${CVMFS_XML_FILE})"
-${CVMFS_BUILD_LOCATION}/test/unittests/cvmfs_unittests_debug \
-                                          --gtest_shuffle    \
-                                          --gtest_output=xml:$CVMFS_XML_FILE
-
+${CVMFS_SOURCE_LOCATION}/ci/run_unittests.sh \
+  -c ${CVMFS_BUILD_LOCATION}/cvmfs/cvmfs_cache_null:${CVMFS_BUILD_LOCATION}/cvmfs/cvmfs_cache_ram \
+  test/unittests/cvmfs_unittests_debug $CVMFS_XML_FILE
 
 # run gcovr to get the html
 gcovr --root=${CVMFS_SOURCE_LOCATION} --branches --filter=".*cvmfs/cvmfs.*" --print-summary \
