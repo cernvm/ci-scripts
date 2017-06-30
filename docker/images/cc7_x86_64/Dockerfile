@@ -1,4 +1,4 @@
-FROM        scratch
+FROM        cvm-dockerhub03.cern.ch/thin_scratch
 MAINTAINER  Rene Meusel <rene.meusel@cern.ch>
 
 ADD         cc7_x86_64.tar.gz /

@@ -1,6 +1,6 @@
 ## See README.md, build.sh and ../build_on_docker.sh
 
-FROM       scratch
+FROM       cvm-dockerhub03.cern.ch/thin_scratch
 MAINTAINER Rene Meusel <rene.meusel@cern.ch>
 
 ADD        slc4_i386.tar.gz /

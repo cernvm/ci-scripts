@@ -1,4 +1,4 @@
-FROM        scratch
+FROM        cvm-dockerhub03.cern.ch/thin_scratch
 MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
 ADD         ubuntu1604_i386.tar.gz /

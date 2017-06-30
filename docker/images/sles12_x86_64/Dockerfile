@@ -1,6 +1,6 @@
 ## See README.md, build.sh and ../build_on_docker.sh
 
-FROM       scratch
+FROM       cvm-dockerhub03.cern.ch/thin_scratch
 MAINTAINER Jakob Blomer <jblomer@cern.ch>
 
 ADD        sles12_x86_64.tar.gz /

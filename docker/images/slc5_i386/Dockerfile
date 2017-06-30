@@ -1,4 +1,4 @@
-FROM        scratch
+FROM        cvm-dockerhub03.cern.ch/thin_scratch
 MAINTAINER  Rene Meusel <rene.meusel@cern.ch>
 
 ADD         slc5_i386.tar.gz /
