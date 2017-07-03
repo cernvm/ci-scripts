@@ -85,23 +85,34 @@ bootstrap_image() {
   rm -fR $build_workdir
 }
 
+push_image() {
+    local image_name="$1"
+    docker push $image_name || die "Failed to push docker image $image_name"
+}
+
 # check if docker is installed
 which docker > /dev/null 2>&1 || die "docker is not installed"
 which git    > /dev/null 2>&1 || die "git is not installed"
 
 # check if the docker container specification exists in ci/docker
-image_name="cvmfs/${CVMFS_DOCKER_IMAGE}"
+image_name="cvmfs-dockerhub03.cern.ch/${CVMFS_DOCKER_IMAGE}"
 container_dir="${SCRIPT_LOCATION}/images/${CVMFS_DOCKER_IMAGE}"
 [ -d $container_dir ] || die "container $CVMFS_DOCKER_IMAGE not found"
 
 # bootstrap the docker container if non-existent or recreate if outdated
 if ! sudo docker images $image_name | grep -q "$image_name"; then
-  bootstrap_image "$image_name" "$container_dir"
-elif [ $(image_creation $image_name) -lt $(image_recipe $container_dir) ]; then
+  if ! docker pull $image_name; then
+    bootstrap_image "$image_name" "$container_dir"
+    push_image "$image_name"
+  fi
+fi
+
+if [ $(image_creation $image_name) -lt $(image_recipe $container_dir) ]; then
   echo -n "removing outdated docker image '$image_name'... "
   sudo docker rmi -f "$image_name" > /dev/null || die "fail"
   echo "done"
   bootstrap_image "$image_name" "$container_dir"
+  push_image "$image_name"
 fi
 
 # Workaround: set up a stdout/stderr redirection to circumvent docker's broken
