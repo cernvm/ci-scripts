@@ -21,6 +21,12 @@ if [ $# -lt 3 ]; then
 fi
 
 WORKSPACE="$1"
+
+# NOTE (nhardi): Docker image name consists of platform and arch part.
+# Experimental Jenkins build node and test job have suffix -test for
+# architecture but such configurations (Dockerbuild files) don't really exist.
+# The solution is to remove the "-test" suffix if there is one.
+# This doesn't # have any effect in normal runs.
 CVMFS_DOCKER_IMAGE="$(echo $2 | sed 's/-test$//')"
 shift 2
 
@@ -87,7 +93,15 @@ bootstrap_image() {
 
 push_image() {
     local image_name="$1"
-    docker push $image_name || die "Failed to push docker image $image_name"
+    local error_msg="Failed to push Docker image $image_name."
+
+    if ! docker push $image_name; then
+        if [ x"$FORCE_DOCKER_IMAGE_PUSH" = x"false" ]; then
+            echo "WARNING: $error_msg"
+        else
+            die "$error_msg"
+        fi
+    fi
 }
 
 # check if docker is installed
