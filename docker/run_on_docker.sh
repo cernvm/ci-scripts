@@ -109,7 +109,7 @@ which docker > /dev/null 2>&1 || die "docker is not installed"
 which git    > /dev/null 2>&1 || die "git is not installed"
 
 # check if the docker container specification exists in ci/docker
-image_name="cvmfs-dockerhub03.cern.ch/${CVMFS_DOCKER_IMAGE}"
+image_name="cvm-dockerhub03.cern.ch/${CVMFS_DOCKER_IMAGE}"
 container_dir="${SCRIPT_LOCATION}/images/${CVMFS_DOCKER_IMAGE}"
 [ -d $container_dir ] || die "container $CVMFS_DOCKER_IMAGE not found"
 
