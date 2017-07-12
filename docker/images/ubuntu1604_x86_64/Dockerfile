@@ -43,4 +43,4 @@ RUN curl -o /tmp/esl-erlang.deb \
     apt-get -y install libsctp1 libwxbase3.0-0v5 libwxgtk3.0-0v5 && \
     dpkg -i /tmp/esl-erlang.deb
 
-RUN curl -o /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3 && chmod +x /usr/local/bin/rebar3
+RUN curl -o /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3 && chmod +x /usr/local/bin/rebar3 && /usr/local/bin/rebar3 local install
