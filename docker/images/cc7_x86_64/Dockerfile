@@ -28,5 +28,12 @@ RUN         yum -y install                     \
                        zlib-devel
 
 RUN         useradd sftnight
+
+RUN curl -o /tmp/esl-erlang.rpm \
+    http://ecsft.cern.ch/dist/cvmfs/builddeps/otp/esl-erlang_20.0-1~centos~7_amd64.rpm && \
+    yum -y install /tmp/esl-erlang.rpm
+
+RUN curl -o /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3 && chmod +x /usr/local/bin/rebar3
+
 USER        sftnight
 WORKDIR     /home/sftnight
