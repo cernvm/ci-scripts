@@ -177,7 +177,7 @@
     "label": "fedora25_x86_64",
     "setup": "fedora25_x86_64_setup.sh",
     "test": "fedora25_x86_64_test.sh",
-    "user": "fedora"
+    "user": "root"
   },
   {
     "dist": "fedora26",
@@ -186,6 +186,6 @@
     "label": "fedora26_x86_64",
     "setup": "fedora26_x86_64_setup.sh",
     "test": "fedora26_x86_64_test.sh",
-    "user": "fedora"
+    "user": "root"
   }
 ]
