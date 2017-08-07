@@ -14,6 +14,7 @@ RUN         apt-get -y update && apt-get -y install         \
                                               libcap-dev    \
                                               libfuse-dev   \
                                               libssl-dev    \
+                                              libz-dev      \
                                               pbuilder      \
                                               pkg-config    \
                                               python-dev    \
