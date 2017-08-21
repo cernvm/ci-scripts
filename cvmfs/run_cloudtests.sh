@@ -15,7 +15,7 @@ EC2_CONFIG="/etc/cvmfs-testing/ec2_config.sh"
 [ ! -z $CVMFS_TESTEE_URL ]      || die "CVMFS_TESTEE_URL missing"
 which jq > /dev/null 2>&1       || die "jq utility missing"
 
-local gateway_services_location="NONE"
+gateway_services_location="NONE"
 if [ -z $CVMFS_SERVICES_URL ]; then
     echo "CVMFS Services URL: $CVMFS_SERVICES_URL"
     gateway_services_location=$CVMFS_SERVICES_URL
