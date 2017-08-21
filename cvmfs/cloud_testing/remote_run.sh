@@ -16,6 +16,7 @@ usage() {
   echo "-s <server package>   CernVM-FS server package to be tested"
   echo "-c <client package>   CernVM-FS client package to be tested"
   echo "-d <devel package>    CernVM-FS devel package to be tested"
+  echo "-g <gateway_services_url> CernVM-FS gateway services build ULR"
   echo "-k <config packages>  CernVM-FS configuration packages to be used"
   echo
   echo "Optional parameters:"
@@ -40,6 +41,7 @@ server_package=""
 client_package=""
 devel_package=""
 config_packages=""
+gateway_services_url=""
 
 # from now on everything is logged to the logfile
 # Note: the only output of this script is the absolute path to the generated
@@ -54,7 +56,7 @@ exec &>                                  $RUN_LOGFILE
 cd $cvmfs_workspace
 
 # read parameters
-while getopts "r:s:c:d:k:p:u:" option; do
+while getopts "r:s:c:d:g:k:p:u:" option; do
   case $option in
     r)
       platform_script=$OPTARG
@@ -67,6 +69,9 @@ while getopts "r:s:c:d:k:p:u:" option; do
       ;;
     d)
       devel_package=$(readlink --canonicalize $(basename $OPTARG))
+      ;;
+    g)
+      gateway_services_url=$OPTARG
       ;;
     k)
       config_package_paths=""
@@ -113,6 +118,7 @@ export CVMFS_CLIENT_PACKAGE=$client_package
 export CVMFS_DEVEL_PACKAGE=$devel_package
 export CVMFS_SERVER_PACKAGE=$server_package
 export CVMFS_CONFIG_PACKAGES="$config_packages"
+export CVMFS_SERVICES_URL=$gateway_services_url
 
 # change working directory to test workspace
 cd $cvmfs_workspace
