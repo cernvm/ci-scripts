@@ -6,7 +6,7 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 . ${BUILD_SCRIPT_LOCATION}/../jenkins/common.sh
 . ${BUILD_SCRIPT_LOCATION}/common.sh
 
-DOXYGEN_SCRIPT="ci/build_no_such_script.sh"
+GO_COMPILE_SCRIPT="github.com/cvmfs/docker-graphdriver/ci/jenkins/build_plugins.sh"
 
 # sanity checks
 [ ! -z $WORKSPACE ]             || die "WORKSPACE missing"
@@ -29,7 +29,7 @@ if is_docker_host; then
   command_tmpl="${CERNVM_CI_SCRIPT_LOCATION}/docker/run_on_docker.sh \
     ${WORKSPACE}                                                     \
     ${docker_image_name}                                             \
-    ${CVMFS_SOURCE_LOCATION}/${DOXYGEN_SCRIPT}                       \
+    ${CVMFS_SOURCE_LOCATION}/${GO_COMPILE_SCRIPT}                    \
     ${CVMFS_BUILD_LOCATION}"
 else
   echo "running CppLint bare metal for ${desired_architecture}..."
