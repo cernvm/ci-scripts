@@ -34,3 +34,6 @@ RUN apt-get -y update && apt-get -y install \
   libxml2-dev \
   sssd-common
 
+RUN apt-get -y update && apt-get -y install \
+  fakechroot
+
