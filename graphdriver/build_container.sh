@@ -12,7 +12,7 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 [ ! -z $CVMFS_SOURCE_LOCATION ] || die "CVMFS_SOURCE_LOCATION missing"
 [ ! -z $CVMFS_BUILD_CLEAN     ] || die "CVMFS_BUILD_CLEAN missing"
 
-CONTAINER_BUILD_SCRIPT="$CVMFS_SOURCE_LOCATION/ci/jenkins/build_container.sh"
+CONTAINER_BUILD_SCRIPT="ci/jenkins/build_container.sh"
 
 # setup a fresh build workspace on first execution or on request
 if [ ! -d "$CVMFS_BUILD_LOCATION" ] || [ x"$CVMFS_BUILD_CLEAN" = x"true" ]; then
