@@ -1,5 +1,5 @@
 FROM        scratch
-MAINTAINER  Rene Meusel <rene.meusel@cern.ch>
+MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
 ADD         cc7_x86_64.tar.gz /
 RUN         yum -y update && yum -y install epel-release
@@ -10,6 +10,7 @@ RUN         yum -y install                     \
                        gcc                     \
                        gcc-c++                 \
                        git                     \
+                       golang                  \
                        hardlink                \
                        libattr-devel           \
                        libcap-devel            \
@@ -34,10 +35,6 @@ RUN curl -o /tmp/esl-erlang.rpm \
     yum -y install /tmp/esl-erlang.rpm
 
 RUN curl -o /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3 && chmod +x /usr/local/bin/rebar3 && /usr/local/bin/rebar3 local install
-
-RUN curl -o /tmp/go.tar.gz http://ecsft.cern.ch/dist/cvmfs/builddeps/go1.8.4.linux-amd64.tar.gz && \
-    cd /tmp && tar xfz go.tar.gz
-ENV GOROOT="/tmp/go"
 
 USER        sftnight
 WORKDIR     /home/sftnight
