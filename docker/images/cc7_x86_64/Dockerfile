@@ -30,6 +30,12 @@ RUN         yum -y install                     \
 
 RUN         useradd sftnight
 
+# Relieve a bit the version requirement of selinux-policy
+RUN yum -y downgrade \
+  http://ftp.scientificlinux.org/linux/scientific/7.3/x86_64/os/Packages/selinux-policy-targeted-3.13.1-102.el7.noarch.rpm \
+  http://ftp.scientificlinux.org/linux/scientific/7.3/x86_64/os/Packages/selinux-policy-devel-3.13.1-102.el7.noarch.rpm \
+  http://ftp.scientificlinux.org/linux/scientific/7.3/x86_64/os/Packages/selinux-policy-3.13.1-102.el7.noarch.rpm
+
 RUN curl -o /tmp/esl-erlang.rpm \
     http://ecsft.cern.ch/dist/cvmfs/builddeps/otp/esl-erlang_20.0-1~centos~7_amd64.rpm && \
     yum -y install /tmp/esl-erlang.rpm
