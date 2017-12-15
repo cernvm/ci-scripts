@@ -184,8 +184,8 @@
     "config": "x86_64",
     "ami": "ami-bda71e23",
     "label": "fedora26_x86_64",
-    "setup": "fedora26_x86_64_setup.sh",
-    "test": "fedora26_x86_64_test.sh",
+    "setup": "fedora_setup.sh",
+    "test": "fedora_test.sh",
     "user": "fedora"
   },
   {
@@ -193,8 +193,8 @@
     "config": "x86_64",
     "ami": "ami-9131fcbc",
     "label": "fedora27_x86_64",
-    "setup": "fedora27_x86_64_setup.sh",
-    "test": "fedora27_x86_64_test.sh",
+    "setup": "fedora_setup.sh",
+    "test": "fedora_test.sh",
     "user": "fedora"
   }
 ]
