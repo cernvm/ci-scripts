@@ -1,7 +1,7 @@
 FROM        scratch
 MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
-ADD         fedora26_x86_64.tar.gz /
+ADD         fedora27_x86_64.tar.gz /
 RUN         dnf -y update && dnf -y install                     \
                                         cmake                   \
                                         curl-devel              \
