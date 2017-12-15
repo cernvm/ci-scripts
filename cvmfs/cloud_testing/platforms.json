@@ -187,5 +187,14 @@
     "setup": "fedora26_x86_64_setup.sh",
     "test": "fedora26_x86_64_test.sh",
     "user": "fedora"
+  },
+  {
+    "dist": "fedora27",
+    "config": "x86_64",
+    "ami": "ami-9131fcbc",
+    "label": "fedora27_x86_64",
+    "setup": "fedora27_x86_64_setup.sh",
+    "test": "fedora27_x86_64_test.sh",
+    "user": "fedora"
   }
 ]
