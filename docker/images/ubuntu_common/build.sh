@@ -48,15 +48,15 @@ debootstrap --variant=buildd  \
             $DESTINATION      \
             $REPO_BASE_URL
 
-echo "installing stretch and zesty source repositories for autofs backport..."
+echo "installing stretch and artful source repositories for autofs backport..."
 echo "deb-src http://ftp.debian.org/debian stretch main" > $DESTINATION/etc/apt/sources.list.d/stretch-src.list
-echo "deb-src http://archive.ubuntu.com/ubuntu/ zesty main" > $DESTINATION/etc/apt/sources.list.d/zesty-src.list
+echo "deb-src http://archive.ubuntu.com/ubuntu/ artful main" > $DESTINATION/etc/apt/sources.list.d/artful-src.list
 keysfile_stretch="$(dirname $0)/../ubuntu_common/stretch-keys.asc"
-keysfile_zesty="$(dirname $0)/../ubuntu_common/zesty-keys.asc"
+keysfile_artful="$(dirname $0)/../ubuntu_common/artful-keys.asc"
 cp $keysfile_stretch $DESTINATION/etc/apt/trusted.gpg.d/stretch-keys.asc
-cp $keysfile_zesty $DESTINATION/etc/apt/trusted.gpg.d/zesty-keys.asc
+cp $keysfile_artful $DESTINATION/etc/apt/trusted.gpg.d/artful-keys.asc
 gpg --dearmor $DESTINATION/etc/apt/trusted.gpg.d/stretch-keys.asc
-gpg --dearmor $DESTINATION/etc/apt/trusted.gpg.d/zesty-keys.asc
+gpg --dearmor $DESTINATION/etc/apt/trusted.gpg.d/artful-keys.asc
 
 echo "packaging up the image..."
 tar -czf $TARBALL_NAME -C $DESTINATION .
