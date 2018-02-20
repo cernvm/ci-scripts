@@ -19,11 +19,13 @@ RUN         yum -y update && yum -y install                     \
                                         libattr-devel           \
                                         libcap-devel            \
                                         libuuid-devel           \
+                                        libyaml-devel           \
                                         make                    \
                                         openssl-devel           \
                                         policycoreutils-python  \
                                         python-devel            \
                                         rpm-build               \
+                                        ruby-devel              \
                                         selinux-policy-devel    \
                                         selinux-policy-targeted \
                                         sysvinit-tools          \
@@ -41,6 +43,8 @@ RUN curl -o /tmp/esl-erlang.rpm \
     yum -y install /tmp/esl-erlang.rpm
 
 RUN curl -o /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3 && chmod +x /usr/local/bin/rebar3 && /usr/local/bin/rebar3 local install
+
+RUN curl -sSL  https://rvm.io/mpapis.asc | gpg2 --import - && curl -L https://get.rvm.io | bash -s stable && /bin/bash -l -c "rvm requirements" && /bin/bash -l -c "rvm install 1.9.3" && /bin/bash -l -c "gem install fpm --no-ri --no-rdoc"
 
 USER        sftnight
 WORKDIR     /home/sftnight

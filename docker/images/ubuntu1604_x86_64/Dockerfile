@@ -3,21 +3,27 @@ MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
 ADD         ubuntu1604_x86_64.tar.gz /
 RUN         apt-get -y update && apt-get -y upgrade
-RUN         apt-get -y update && apt-get -y install         \
-                                              autotools-dev \
-                                              cmake         \
-                                              debhelper     \
-                                              devscripts    \
-                                              gdb           \
-                                              git           \
-                                              libattr1-dev  \
-                                              libcap-dev    \
-                                              libfuse-dev   \
-                                              libssl-dev    \
-                                              pkg-config    \
-                                              python-dev    \
-                                              unzip         \
-                                              uuid-dev      \
+RUN         apt-get -y update && apt-get -y install           \
+                                              autotools-dev   \
+                                              build-essential \
+                                              cmake           \
+                                              debhelper       \
+                                              devscripts      \
+                                              gdb             \
+                                              gcc             \
+                                              git             \
+                                              libattr1-dev    \
+                                              libcap-dev      \
+                                              libffi-dev      \
+                                              libfuse-dev     \
+                                              libssl-dev      \
+                                              pkg-config      \
+                                              python-dev      \
+                                              ruby            \
+                                              ruby-dev        \
+                                              rubygems        \
+                                              unzip           \
+                                              uuid-dev        \
                                               valgrind
 
 RUN apt-get -y update && apt-get -y install \
@@ -44,3 +50,5 @@ RUN curl -o /tmp/esl-erlang.deb \
     dpkg -i /tmp/esl-erlang.deb
 
 RUN curl -o /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3 && chmod +x /usr/local/bin/rebar3 && /usr/local/bin/rebar3 local install
+
+RUN gem install --no-ri --no-rdoc fpm

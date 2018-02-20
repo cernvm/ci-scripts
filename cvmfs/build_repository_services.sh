@@ -34,7 +34,7 @@ fi
 
 # run the build
 echo "looking for build script to invoke..."
-build_script="${CVMFS_SOURCE_LOCATION}/ci/make_tarball.sh"
+build_script="${CVMFS_SOURCE_LOCATION}/ci/make_package.sh"
 
 # check if the script exists and is executable
 [ -f $build_script ] || die "Build script '${build_script}' not found"
