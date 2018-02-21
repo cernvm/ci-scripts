@@ -29,7 +29,7 @@ client_testee_url=""
 platform=""
 platform_run_script=""
 platform_setup_script=""
-gateway_services_url=""
+repository_gateway_url=""
 ec2_config=""
 ami_name=""
 log_destination="."
@@ -62,7 +62,7 @@ usage() {
   echo
   echo "Mandatory options:"
   echo " -u <testee URL>              URL to the nightly build directory to be tested"
-  echo " -s <CVMFS_SERVICES_URL>|NONE URL of the CVMFS Services build directory to be tests"
+  echo " -s <CVMFS_GATEWAY_URL>|NONE  URL of the CVMFS Gateway build to be tested"
   echo " -p <platform name>           name of the platform to be tested"
   echo " -b <setup script>            platform specific setup script (inside the tarball)"
   echo " -r <run script>              platform specific test script (inside the tarball)"
@@ -128,7 +128,7 @@ setup_virtual_machine() {
 run_test_cases() {
   local ip=$1
   local username=$2
-  local gateway_services_url=$3
+  local repository_gateway_url=$3
 
   local retcode
   local log_files
@@ -140,7 +140,7 @@ run_test_cases() {
       -s $server_package                                         \
       -c $client_package                                         \
       -d $devel_package                                          \
-      -g $gateway_services_url                                     \
+      -g $repository_gateway_url                                     \
       -k "$config_packages"                                      \
       -r $platform_run_script
   check_retcode $?
@@ -194,7 +194,7 @@ while getopts "r:b:u:g:p:e:a:d:m:c:l:" option; do
       testee_url=$OPTARG
       ;;
     g)
-      gateway_services_url=$OPTARG
+      repository_gateway_url=$OPTARG
       ;;
     p)
       platform=$OPTARG
@@ -281,7 +281,7 @@ wait_for_virtual_machine  $ip_address  $username  || die "Aborting..."
 setup_virtual_machine     $ip_address  $username  || die "Aborting..."
 wait_for_virtual_machine  $ip_address  $username  || die "Aborting..."
 run_test_cases            $ip_address  $username \
-                          $gateway_services_url   || die "Aborting..."
+                          $repository_gateway_url || die "Aborting..."
 get_test_results          $ip_address  $username  || die "Aborting..."
 tear_down_virtual_machine $instance_id            || die "Aborting..."
 
