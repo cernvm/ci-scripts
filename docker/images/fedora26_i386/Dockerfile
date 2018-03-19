@@ -8,6 +8,7 @@ RUN         dnf -y update && dnf -y install                     \
                                         fuse-devel              \
                                         gcc                     \
                                         gcc-c++                 \
+                                        gdb                     \
                                         git                     \
                                         gridsite                \
                                         hardlink                \
