@@ -196,5 +196,14 @@
     "setup": "fedora_setup.sh",
     "test": "fedora_test.sh",
     "user": "fedora"
+  },
+  {
+    "dist": "macos",
+    "config": "x86_64",
+    "ami": "cernvm-mac-mini",
+    "label": "osx_x86_64",
+    "setup": "macos_setup.sh",
+    "test": "macos_test.sh",
+    "user": "sftnight"
   }
 ]
