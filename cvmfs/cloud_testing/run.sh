@@ -180,6 +180,27 @@ run_test_cases() {
 }
 
 
+cleanup_test_machine() {
+  local ip=$1
+  local username=$2
+
+  local retcode
+  local log_files
+  local remote_script="${script_location}/remote_cleanup.sh"
+
+  echo -n "cleaning up test machine ($ip)... "
+
+  local args="$ip $username $remote_script"
+  run_script_on_virtual_machine $args
+
+  check_retcode $?
+
+  if [ $? -ne 0 ]; then
+    handle_test_failure $ip $username
+  fi
+}
+
+
 handle_test_failure() {
   local ip=$1
   local username=$2
@@ -321,7 +342,9 @@ run_test_cases            $ip_address  $username \
                           $repository_gateway_url   || die "Aborting..."
 get_test_results          $ip_address  $username    || die "Aborting..."
 if [ "x$platform" != "xosx_x86_64" ]; then
-  tear_down_virtual_machine $instance_id              || die "Aborting..."
+  tear_down_virtual_machine $instance_id            || die "Aborting..."
+else
+  cleanup_test_machine $ip_address $username        || die "Aborting..."
 fi
 
 echo "all done"
