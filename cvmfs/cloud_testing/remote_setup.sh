@@ -305,10 +305,10 @@ fi
 
 # run the platform specific script to perform platform specific test setups
 echo "running platform specific script $platform_script... "
-sudo -H -E -u $test_username bash $platform_script_abs -s $server_package         \
-                                                       -c $client_package         \
-                                                       -d $devel_package          \
-                                                       -g $unittest_package       \
-                                                       -k "$config_packages"      \
-                                                       -t $cvmfs_source_directory \
-                                                       -l $cvmfs_log_directory
+args="-t $cvmfs_source_directory \
+      -l $cvmfs_log_directory    \
+      -c $client_package"
+if [ "x$(uname -s)" != "xDarwin" ]; then
+  args="$args -s $server_package -d $devel_package -g $unittest_package -k \"$config_packages\""
+fi
+sudo -H -E -u $test_username bash $platform_script_abs $args
