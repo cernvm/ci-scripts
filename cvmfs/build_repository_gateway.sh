@@ -52,13 +52,10 @@ if is_docker_host; then
                     ${docker_image_name}                              \
                     $build_script                                     \
                     ${CVMFS_SOURCE_LOCATION}                          \
-                    ${CVMFS_BUILD_LOCATION}                           \
-                    $CVMFS_PACKAGE                                    \
                     $nightly_number"
 else
   echo "building bare metal for ${desired_architecture}..."
-  command_tmpl="$build_script ${CVMFS_SOURCE_LOCATION} ${CVMFS_BUILD_LOCATION} \
-                              $CVMFS_PACKAGE $nightly_number"
+  command_tmpl="$build_script ${CVMFS_SOURCE_LOCATION} $nightly_number"
 fi
 
 # run the build script
