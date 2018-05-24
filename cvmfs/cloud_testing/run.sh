@@ -317,14 +317,14 @@ if [ x"$platform" != "xosx_x86_64" ]; then
     config_package_urls="${config_package_base_url}/${config_package} $config_package_urls"
   done
   config_packages="$config_package_urls"
-
-  # load EC2 configuration
-  . $ec2_config
 else
   if [ x"$client_package" = "x" ]; then
     usage "Incomplete pkgmap file"
   fi
 fi
+
+# load EC2 configuration
+. $ec2_config
 
 # construct the full package URLs
 client_package="${ctu}/${client_package}"
