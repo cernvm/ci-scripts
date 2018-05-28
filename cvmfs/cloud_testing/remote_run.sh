@@ -17,7 +17,7 @@ usage() {
   echo "-c <client package>   CernVM-FS client package to be tested"
   echo "-d <devel package>    CernVM-FS devel package to be tested"
   echo "-g <repository_gateway_url> CernVM-FS gateway build ULR"
-  echo "-k <config packages>  CernVM-FS configuration packages to be used"
+  echo "-k <config package>   CernVM-FS configuration package to be used"
   echo
   echo "Optional parameters:"
   echo "-p <platform path>    custom search path for platform specific script"
@@ -50,7 +50,7 @@ test_username="sftnight"
 server_package=""
 client_package=""
 devel_package=""
-config_packages=""
+config_package=""
 repository_gateway_url=""
 
 # from now on everything is logged to the logfile
@@ -84,11 +84,7 @@ while getopts "r:s:c:d:g:k:p:u:" option; do
       repository_gateway_url=$OPTARG
       ;;
     k)
-      config_package_paths=""
-      for config_package in $OPTARG; do
-        config_package_paths="$(canonicalize_path $config_package) $config_package_paths"
-      done
-      config_packages="$config_package_paths"
+      config_package=$(canonicalize_path $OPTARG)
       ;;
     p)
       platform_script_path=$OPTARG
@@ -109,7 +105,7 @@ if [ "x$(uname -s)" != "xDarwin" ]; then
     [ x"$client_package"   = "x" ] ||
     [ x"$devel_package"    = "x" ] ||
     [ x"$server_package"   = "x" ] ||
-    [ x"$config_packages"  = "x" ]; then
+    [ x"$config_package"  = "x" ]; then
     usage "Missing parameter(s)"
   fi
   # check if the needed packages are downloaded
@@ -118,9 +114,9 @@ if [ "x$(uname -s)" != "xDarwin" ]; then
     [ ! -f $devel_package  ]; then
     usage "Missing package(s)"
   fi
-  for config_package in $config_packages; do
-    [ -f $config_package ] || usage "Missing config package '$config_package'"
-  done
+  if [ -f $config_package ] ; then
+    usage "Missing config package '$config_package'"
+  fi
 else
 # check if we have all bits and pieces
   if [ x"$platform_script"  = "x" ] ||
@@ -137,7 +133,7 @@ fi
 export CVMFS_CLIENT_PACKAGE=$client_package
 export CVMFS_DEVEL_PACKAGE=$devel_package
 export CVMFS_SERVER_PACKAGE=$server_package
-export CVMFS_CONFIG_PACKAGES="$config_packages"
+export CVMFS_CONFIG_PACKAGES="$config_package"
 export CVMFS_GATEWAY_URL=$repository_gateway_url
 
 # change working directory to test workspace

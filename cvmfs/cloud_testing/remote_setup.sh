@@ -18,7 +18,7 @@ usage() {
   echo "-d <cvmfs devel package>   CernVM-FS devel package to be tested (Linux only)"
   echo "-t <cvmfs source tarball>  CernVM-FS sources containing associated tests"
   echo "-g <cvmfs tests package>   CernVM-FS unit tests package (Linux only)"
-  echo "-k <cvmfs config packages> CernVM-FS config packages (Linux only)"
+  echo "-k <cvmfs config package>  CernVM-FS config package (Linux only)"
   echo "-r <setup script>          platform specific script (inside the tarball)"
   echo
   echo "Optional parameters:"
@@ -109,7 +109,7 @@ platform_script_path=""
 server_package=""
 client_package=""
 devel_package=""
-config_packages=""
+config_package=""
 source_tarball=""
 unittest_package=""
 test_username="sftnight"
@@ -184,7 +184,7 @@ while getopts "r:s:c:d:t:g:k:p:u:" option; do
       unittest_package=$OPTARG
       ;;
     k)
-      config_packages="$OPTARG"
+      config_package="$OPTARG"
       ;;
     p)
       platform_script_path=$OPTARG
@@ -208,7 +208,7 @@ if [ "x$(uname -s)" != "xDarwin" ]; then
     [ "x$server_package"   = "x" ] ||
     [ "x$client_package"   = "x" ] ||
     [ "x$devel_package"    = "x" ] ||
-    [ "x$config_packages"  = "x" ] ||
+    [ "x$config_package"  = "x" ] ||
     [ "x$source_tarball"   = "x" ] ||
     [ "x$unittest_package" = "x" ]; then
     usage "Missing parameter(s)"
@@ -240,9 +240,7 @@ download_if_used $client_package
 download_if_used $devel_package
 download_if_used $source_tarball
 download_if_used $unittest_package
-for pkg in $config_packages; do
-  download_if_used $pkg
-done
+download_if_used $config_package
 
 # get local file path of downloaded files
 if [ "x$server_package" != "x" ]; then
@@ -260,13 +258,9 @@ fi
 if [ "x$unittest_package" != "x" ]; then
   unittest_package=$(canonicalize_path $unittest_package)
 fi
-config_package_paths=""
-for config_package in $config_packages; do
-  if [ "x$config_package" != "x" ]; then
-    config_package_paths="$(canonicalize_path $config_package) $config_package_paths"
-  fi
-done
-config_packages="$config_package_paths"
+if [ "x$config_package" != "x" ]; then
+  config_package=$(canonicalize_path $config_package)
+fi
 
 # extract the source tarball
 extract_location=$(tar -tzf $source_tarball | head -n1)
@@ -309,6 +303,6 @@ args="-t $cvmfs_source_directory \
       -l $cvmfs_log_directory    \
       -c $client_package"
 if [ "x$(uname -s)" != "xDarwin" ]; then
-  args="$args -s $server_package -d $devel_package -g $unittest_package -k \"$config_packages\""
+  args="$args -s $server_package -d $devel_package -g $unittest_package -k $config_package"
 fi
 sudo -H -E -u $test_username bash $platform_script_abs $args
