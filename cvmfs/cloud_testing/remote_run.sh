@@ -114,7 +114,7 @@ if [ "x$(uname -s)" != "xDarwin" ]; then
     [ ! -f $devel_package  ]; then
     usage "Missing package(s)"
   fi
-  if [ -f $config_package ] ; then
+  if [ ! -f $config_package ] ; then
     usage "Missing config package '$config_package'"
   fi
 else
