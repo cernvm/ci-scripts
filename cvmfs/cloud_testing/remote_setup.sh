@@ -13,12 +13,12 @@ usage() {
   echo "$error_msg"
   echo
   echo "Mandatory options:"
-  echo "-s <cvmfs server package>  CernVM-FS server package to be tested"
+  echo "-s <cvmfs server package>  CernVM-FS server package to be tested (Linux only)"
   echo "-c <cvmfs client package>  CernVM-FS client package to be tested"
-  echo "-d <cvmfs devel package>   CernVM-FS devel package to be tested"
+  echo "-d <cvmfs devel package>   CernVM-FS devel package to be tested (Linux only)"
   echo "-t <cvmfs source tarball>  CernVM-FS sources containing associated tests"
-  echo "-g <cvmfs tests package>   CernVM-FS unit tests package"
-  echo "-k <cvmfs config packages> CernVM-FS config packages"
+  echo "-g <cvmfs tests package>   CernVM-FS unit tests package (Linux only)"
+  echo "-k <cvmfs config package>  CernVM-FS config package (Linux only)"
   echo "-r <setup script>          platform specific script (inside the tarball)"
   echo
   echo "Optional parameters:"
@@ -47,6 +47,11 @@ mini_which() {
   [ $found -eq 1 ]
 }
 
+download_if_used() {
+  if [ "x$1" != "x" ]; then
+    download $1
+  fi
+}
 
 download() {
   local url=$1
@@ -81,6 +86,16 @@ download() {
   fi
 }
 
+canonicalize_path() {
+  local path_name=$1
+  local system_name=`uname -s`
+  if [ "x$system_name" = "xLinux" ]; then
+    echo $(readlink -f $(basename $path_name))
+  elif [ "x$system_name" = "xDarwin" ]; then
+    echo $(/usr/local/bin/greadlink -f $(basename $path_name))
+  fi
+}
+
 export LC_ALL=C
 
 # static information (check also remote_run.sh and run.sh)
@@ -94,7 +109,7 @@ platform_script_path=""
 server_package=""
 client_package=""
 devel_package=""
-config_packages=""
+config_package=""
 source_tarball=""
 unittest_package=""
 test_username="sftnight"
@@ -169,7 +184,7 @@ while getopts "r:s:c:d:t:g:k:p:u:" option; do
       unittest_package=$OPTARG
       ;;
     k)
-      config_packages="$OPTARG"
+      config_package="$OPTARG"
       ;;
     p)
       platform_script_path=$OPTARG
@@ -188,14 +203,22 @@ done
 sudo echo "testing sudo..." || exit 2
 
 # check if we have all bits and pieces
-if [ "x$platform_script"  = "x" ] ||
-   [ "x$server_package"   = "x" ] ||
-   [ "x$client_package"   = "x" ] ||
-   [ "x$devel_package"    = "x" ] ||
-   [ "x$config_packages"  = "x" ] ||
-   [ "x$source_tarball"   = "x" ] ||
-   [ "x$unittest_package" = "x" ]; then
-  usage "Missing parameter(s)"
+if [ "x$(uname -s)" != "xDarwin" ]; then
+  if [ "x$platform_script"  = "x" ] ||
+    [ "x$server_package"   = "x" ] ||
+    [ "x$client_package"   = "x" ] ||
+    [ "x$devel_package"    = "x" ] ||
+    [ "x$config_package"  = "x" ] ||
+    [ "x$source_tarball"   = "x" ] ||
+    [ "x$unittest_package" = "x" ]; then
+    usage "Missing parameter(s)"
+  fi
+else
+  if [ "x$platform_script"  = "x" ] ||
+    [ "x$client_package"   = "x" ] ||
+    [ "x$source_tarball"   = "x" ]; then
+    usage "Missing parameter(s)"
+  fi
 fi
 
 # create test user account if necessary
@@ -212,26 +235,32 @@ fi
 
 # download the needed packages
 echo "downloading packages..."
-download $server_package
-download $client_package
-download $devel_package
-download $source_tarball
-download $unittest_package
-for pkg in $config_packages; do
-  download $pkg
-done
+download_if_used $server_package
+download_if_used $client_package
+download_if_used $devel_package
+download_if_used $source_tarball
+download_if_used $unittest_package
+download_if_used $config_package
 
 # get local file path of downloaded files
-server_package=$(readlink --canonicalize $(basename $server_package))
-client_package=$(readlink --canonicalize $(basename $client_package))
-devel_package=$(readlink --canonicalize $(basename $devel_package))
-source_tarball=$(readlink --canonicalize $(basename $source_tarball))
-unittest_package=$(readlink --canonicalize $(basename $unittest_package))
-config_package_paths=""
-for config_package in $config_packages; do
-  config_package_paths="$(readlink --canonicalize $(basename $config_package)) $config_package_paths"
-done
-config_packages="$config_package_paths"
+if [ "x$server_package" != "x" ]; then
+  server_package=$(canonicalize_path $server_package)
+fi
+if [ "x$client_package" != "x" ]; then
+  client_package=$(canonicalize_path $client_package)
+fi
+if [ "x$devel_package" != "x" ]; then
+  devel_package=$(canonicalize_path $devel_package)
+fi
+if [ "x$source_tarball" != "x" ]; then
+  source_tarball=$(canonicalize_path $source_tarball)
+fi
+if [ "x$unittest_package" != "x" ]; then
+  unittest_package=$(canonicalize_path $unittest_package)
+fi
+if [ "x$config_package" != "x" ]; then
+  config_package=$(canonicalize_path $config_package)
+fi
 
 # extract the source tarball
 extract_location=$(tar -tzf $source_tarball | head -n1)
@@ -246,7 +275,7 @@ else
   echo "done"
 fi
 echo -n "renaming $extract_location to generic name $cvmfs_source_directory... "
-mv $(readlink --canonicalize $extract_location) $cvmfs_source_directory > /dev/null 2>&1
+mv $(canonicalize_path $extract_location) $cvmfs_source_directory > /dev/null 2>&1
 if [ $? -ne 0 ]; then
   echo "fail"
   exit 6
@@ -255,7 +284,7 @@ else
 fi
 
 # chown the source tree to allow $test_username to work with it
-sudo chown -R $test_username:$test_username $cvmfs_workspace
+sudo chown -R $test_username $cvmfs_workspace
 
 # find the platform specific script
 if [ x$platform_script_path = "x" ]; then
@@ -270,10 +299,10 @@ fi
 
 # run the platform specific script to perform platform specific test setups
 echo "running platform specific script $platform_script... "
-sudo -H -E -u $test_username bash $platform_script_abs -s $server_package         \
-                                                       -c $client_package         \
-                                                       -d $devel_package          \
-                                                       -g $unittest_package       \
-                                                       -k "$config_packages"      \
-                                                       -t $cvmfs_source_directory \
-                                                       -l $cvmfs_log_directory
+args="-t $cvmfs_source_directory \
+      -l $cvmfs_log_directory    \
+      -c $client_package"
+if [ "x$(uname -s)" != "xDarwin" ]; then
+  args="$args -s $server_package -d $devel_package -g $unittest_package -k $config_package"
+fi
+sudo -H -E -u $test_username bash $platform_script_abs $args
