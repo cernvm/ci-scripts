@@ -62,13 +62,13 @@ usage() {
   echo
   echo "Mandatory options:"
   echo " -u <testee URL>              URL to the nightly build directory to be tested"
-  echo " -s <CVMFS_GATEWAY_URL>|NONE  URL of the CVMFS Gateway build to be tested"
   echo " -p <platform name>           name of the platform to be tested"
   echo " -b <setup script>            platform specific setup script (inside the tarball)"
   echo " -r <run script>              platform specific test script (inside the tarball)"
   echo " -a <AMI name>                the virtual machine image to spawn"
   echo
   echo "Optional parameters:"
+  echo " -g <gateway URL>             URL of the repository gateway build to be tested"
   echo " -e <EC2 config file>         local location of the ec2_config.sh file"
   echo " -d <results destination>     Directory to store final test session logs"
   echo " -m <ssh user name>           User name to be used for VM login (default: root)"
@@ -129,6 +129,9 @@ setup_virtual_machine() {
   if [ "x$config_packages" != "x" ]; then
     args="$args -k $config_packages"
   fi
+  if [ "x$repository_gateway_url" != "x" ]; then
+    args="$args -w $repository_gateway_url"
+  fi
   run_script_on_virtual_machine $args
 
   check_retcode $?
@@ -156,7 +159,7 @@ run_test_cases() {
   echo -n "running test cases on VM ($ip)... "
 
   local args="$ip $username $remote_run_script \
-              -g $repository_gateway_url -r $platform_run_script"
+              -r $platform_run_script"
   if [ "x$server_package" != "x" ]; then
     args="$args -s $server_package"
   fi
@@ -336,10 +339,10 @@ source_tarball="${otu}/${source_tarball}"
 # test suite on the VM.
 spawn_my_virtual_machine  $ami_name   "$userdata"   || die "Aborting..."
 wait_for_virtual_machine  $ip_address  $username    || die "Aborting..."
-setup_virtual_machine     $ip_address  $username    || die "Aborting..."
-wait_for_virtual_machine  $ip_address  $username    || die "Aborting..."
-run_test_cases            $ip_address  $username \
+setup_virtual_machine     $ip_address  $username \
                           $repository_gateway_url   || die "Aborting..."
+wait_for_virtual_machine  $ip_address  $username    || die "Aborting..."
+run_test_cases            $ip_address  $username    || die "Aborting..."
 get_test_results          $ip_address  $username    || die "Aborting..."
 if [ "x$platform" != "xosx_x86_64" ]; then
   tear_down_virtual_machine $instance_id            || die "Aborting..."

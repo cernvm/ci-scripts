@@ -16,7 +16,6 @@ usage() {
   echo "-s <server package>   CernVM-FS server package to be tested"
   echo "-c <client package>   CernVM-FS client package to be tested"
   echo "-d <devel package>    CernVM-FS devel package to be tested"
-  echo "-g <repository_gateway_url> CernVM-FS gateway build ULR"
   echo "-k <config package>   CernVM-FS configuration package to be used"
   echo
   echo "Optional parameters:"
@@ -51,7 +50,6 @@ server_package=""
 client_package=""
 devel_package=""
 config_package=""
-repository_gateway_url=""
 
 # from now on everything is logged to the logfile
 # Note: the only output of this script is the absolute path to the generated
@@ -79,9 +77,6 @@ while getopts "r:s:c:d:g:k:p:u:" option; do
       ;;
     d)
       devel_package=$(canonicalize_path $OPTARG)
-      ;;
-    g)
-      repository_gateway_url=$OPTARG
       ;;
     k)
       config_package=$(canonicalize_path $OPTARG)
@@ -134,7 +129,6 @@ export CVMFS_CLIENT_PACKAGE=$client_package
 export CVMFS_DEVEL_PACKAGE=$devel_package
 export CVMFS_SERVER_PACKAGE=$server_package
 export CVMFS_CONFIG_PACKAGES="$config_package"
-export CVMFS_GATEWAY_URL=$repository_gateway_url
 
 # change working directory to test workspace
 cd $cvmfs_workspace
