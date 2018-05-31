@@ -68,7 +68,7 @@ usage() {
   echo " -a <AMI name>                the virtual machine image to spawn"
   echo
   echo "Optional parameters:"
-  echo " -g <gateway URL>             URL of the repository gateway build to be tested"
+  echo " -w <gateway URL>             URL of the repository gateway build to be tested"
   echo " -e <EC2 config file>         local location of the ec2_config.sh file"
   echo " -d <results destination>     Directory to store final test session logs"
   echo " -m <ssh user name>           User name to be used for VM login (default: root)"
@@ -246,7 +246,7 @@ while getopts "r:b:u:g:p:e:a:d:m:c:l:" option; do
     u)
       testee_url=$OPTARG
       ;;
-    g)
+    w)
       repository_gateway_url=$OPTARG
       ;;
     p)

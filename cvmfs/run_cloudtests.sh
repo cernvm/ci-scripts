@@ -34,7 +34,7 @@ has_platform_parameter 'user'  "$vm_desc" || die "VM parameter .user missing"
 echo "Running cloud tests for $CVMFS_PLATFORM / $CVMFS_PLATFORM_CONFIG ..."
 ${SCRIPT_LOCATION}/cloud_testing/run.sh                    \
         -u $CVMFS_TESTEE_URL                               \
-        -g $repository_gateway_url                         \
+        -w $repository_gateway_url                         \
         -p  $(get_platform_parameter 'label'   "$vm_desc") \
         -b  $(get_platform_parameter 'setup'   "$vm_desc") \
         -r  $(get_platform_parameter 'test'    "$vm_desc") \
