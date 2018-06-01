@@ -309,9 +309,6 @@ args="-t $cvmfs_source_directory \
       -l $cvmfs_log_directory    \
       -c $client_package"
 if [ "x$(uname -s)" != "xDarwin" ]; then
-  args="$args -s $server_package -d $devel_package -g $unittest_package -k $config_package"
-  if [ "x$repository_gateway_url" != "x" ]; then
-    args="$args -w $repository_gateway_url"
-  fi
+  args="$args -s $server_package -d $devel_package -g $unittest_package -k $config_package -w $repository_gateway_url"
 fi
 sudo -H -E -u $test_username bash $platform_script_abs $args
