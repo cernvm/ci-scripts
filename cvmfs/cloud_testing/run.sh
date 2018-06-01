@@ -282,6 +282,7 @@ if [ x$platform_run_script   = "x" ] ||
    [ x$platform_setup_script = "x" ] ||
    [ x$platform              = "x" ] ||
    [ x$testee_url            = "x" ] ||
+   [ x$repository_gateway_url = "x" ] ||
    [ x$ami_name              = "x" ]; then
   usage "Missing parameter(s)"
 fi
@@ -339,8 +340,7 @@ source_tarball="${otu}/${source_tarball}"
 # test suite on the VM.
 spawn_my_virtual_machine  $ami_name   "$userdata"   || die "Aborting..."
 wait_for_virtual_machine  $ip_address  $username    || die "Aborting..."
-setup_virtual_machine     $ip_address  $username \
-                          $repository_gateway_url   || die "Aborting..."
+setup_virtual_machine     $ip_address  $username    || die "Aborting..."
 wait_for_virtual_machine  $ip_address  $username    || die "Aborting..."
 run_test_cases            $ip_address  $username    || die "Aborting..."
 get_test_results          $ip_address  $username    || die "Aborting..."

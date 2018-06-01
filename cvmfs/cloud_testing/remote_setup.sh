@@ -215,6 +215,7 @@ if [ "x$(uname -s)" != "xDarwin" ]; then
     [ "x$devel_package"    = "x" ] ||
     [ "x$config_package"  = "x" ] ||
     [ "x$source_tarball"   = "x" ] ||
+    [ "x$repository_gateway_url" = "x" ] ||
     [ "x$unittest_package" = "x" ]; then
     usage "Missing parameter(s)"
   fi
