@@ -37,6 +37,15 @@
   },
   {
     "dist": "el6",
+    "config": "x86_64_s3",
+    "ami": "ami-04e5c797",
+    "label": "slc6_x86_64",
+    "setup": "slc6_x86_64_setup.sh",
+    "test": "slc6_x86_64_s3_test.sh",
+    "user": "root"
+  },
+  {
+    "dist": "el6",
     "config": "x86_64_nfs",
     "ami": "ami-04e5c797",
     "label": "slc6_x86_64",
@@ -78,6 +87,18 @@
     "label": "cc7_x86_64",
     "setup": "centos7_x86_64_setup.sh",
     "test": "centos7_x86_64_test.sh",
+    "user": "root",
+    "context": "#!/bin/sh
+                 echo 'Defaults !requiretty' | tee --append /etc/sudoers
+                 echo 'Defaults visiblepw' | tee --append /etc/sudoers"
+  },
+  {
+    "dist": "el7",
+    "config": "x86_64_s3",
+    "ami": "ami-2b1e8c87",
+    "label": "cc7_x86_64",
+    "setup": "centos7_x86_64_setup.sh",
+    "test": "centos7_x86_64_s3_test.sh",
     "user": "root",
     "context": "#!/bin/sh
                  echo 'Defaults !requiretty' | tee --append /etc/sudoers
@@ -141,6 +162,15 @@
     "label": "ubuntu1604_x86_64",
     "setup": "ubuntu_setup.sh",
     "test": "ubuntu_test.sh",
+    "user": "ubuntu"
+  },
+  {
+    "dist": "ubuntu1604",
+    "config": "x86_64_s3",
+    "ami": "ami-6bb88929",
+    "label": "ubuntu1604_x86_64",
+    "setup": "ubuntu_setup.sh",
+    "test": "ubuntu_s3_test.sh",
     "user": "ubuntu"
   },
   {
