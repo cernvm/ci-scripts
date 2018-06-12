@@ -22,6 +22,7 @@ usage() {
   echo "-r <setup script>          platform specific script (inside the tarball)"
   echo
   echo "Optional parameters:"
+  echo "-w <repo gateway url>      URL of a build of the repository gateway package"
   echo "-p <platform path>         custom search path for platform specific script"
   echo "-u <user name>             user name to use for test run"
   echo
@@ -112,6 +113,7 @@ devel_package=""
 config_package=""
 source_tarball=""
 unittest_package=""
+repository_gateway_url=""
 test_username="sftnight"
 
 # RHEL (SLC) requires a tty for sudo... work around that
@@ -163,7 +165,7 @@ touch ${cvmfs_log_directory}/setup.log
 exec &> ${cvmfs_log_directory}/setup.log
 
 # read parameters
-while getopts "r:s:c:d:t:g:k:p:u:" option; do
+while getopts "r:s:c:d:t:g:k:w:p:u:" option; do
   case $option in
     r)
       platform_script=$OPTARG
@@ -185,6 +187,9 @@ while getopts "r:s:c:d:t:g:k:p:u:" option; do
       ;;
     k)
       config_package="$OPTARG"
+      ;;
+    w)
+      repository_gateway_url="$OPTARG"
       ;;
     p)
       platform_script_path=$OPTARG
@@ -210,6 +215,7 @@ if [ "x$(uname -s)" != "xDarwin" ]; then
     [ "x$devel_package"    = "x" ] ||
     [ "x$config_package"  = "x" ] ||
     [ "x$source_tarball"   = "x" ] ||
+    [ "x$repository_gateway_url" = "x" ] ||
     [ "x$unittest_package" = "x" ]; then
     usage "Missing parameter(s)"
   fi
@@ -303,6 +309,6 @@ args="-t $cvmfs_source_directory \
       -l $cvmfs_log_directory    \
       -c $client_package"
 if [ "x$(uname -s)" != "xDarwin" ]; then
-  args="$args -s $server_package -d $devel_package -g $unittest_package -k $config_package"
+  args="$args -s $server_package -d $devel_package -g $unittest_package -k $config_package -w $repository_gateway_url"
 fi
 sudo -H -E -u $test_username bash $platform_script_abs $args
