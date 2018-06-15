@@ -16,14 +16,23 @@ usage() {
   echo "-s <server package>   CernVM-FS server package to be tested"
   echo "-c <client package>   CernVM-FS client package to be tested"
   echo "-d <devel package>    CernVM-FS devel package to be tested"
-  echo "-g <repository_gateway_url> CernVM-FS gateway build ULR"
-  echo "-k <config packages>  CernVM-FS configuration packages to be used"
+  echo "-k <config package>   CernVM-FS configuration package to be used"
   echo
   echo "Optional parameters:"
   echo "-p <platform path>    custom search path for platform specific script"
   echo "-u <user name>        user name to use for test run"
 
   exit 1
+}
+
+canonicalize_path() {
+  local path_name=$1
+  local system_name=`uname -s`
+  if [ "x$system_name" = "xLinux" ]; then
+    echo $(readlink -f $(basename $path_name))
+  elif [ "x$system_name" = "xDarwin" ]; then
+    echo $(/usr/local/bin/greadlink -f $(basename $path_name))
+  fi
 }
 
 export LC_ALL=C
@@ -40,8 +49,7 @@ test_username="sftnight"
 server_package=""
 client_package=""
 devel_package=""
-config_packages=""
-repository_gateway_url=""
+config_package=""
 
 # from now on everything is logged to the logfile
 # Note: the only output of this script is the absolute path to the generated
@@ -49,7 +57,7 @@ repository_gateway_url=""
 RUN_LOGFILE="${cvmfs_log_directory}/run.log"
 sudo touch                               $RUN_LOGFILE
 sudo chmod a+w                           $RUN_LOGFILE
-sudo chown $test_username:$test_username $RUN_LOGFILE
+sudo chown $test_username                $RUN_LOGFILE
 exec &>                                  $RUN_LOGFILE
 
 # switch to working directory
@@ -62,23 +70,16 @@ while getopts "r:s:c:d:g:k:p:u:" option; do
       platform_script=$OPTARG
       ;;
     s)
-      server_package=$(readlink --canonicalize $(basename $OPTARG))
+      server_package=$(canonicalize_path $OPTARG)
       ;;
     c)
-      client_package=$(readlink --canonicalize $(basename $OPTARG))
+      client_package=$(canonicalize_path $OPTARG)
       ;;
     d)
-      devel_package=$(readlink --canonicalize $(basename $OPTARG))
-      ;;
-    g)
-      repository_gateway_url=$OPTARG
+      devel_package=$(canonicalize_path $OPTARG)
       ;;
     k)
-      config_package_paths=""
-      for config_package in $OPTARG; do
-        config_package_paths="$(readlink --canonicalize $(basename $config_package)) $config_package_paths"
-      done
-      config_packages="$config_package_paths"
+      config_package=$(canonicalize_path $OPTARG)
       ;;
     p)
       platform_script_path=$OPTARG
@@ -93,32 +94,41 @@ while getopts "r:s:c:d:g:k:p:u:" option; do
   esac
 done
 
+if [ "x$(uname -s)" != "xDarwin" ]; then
 # check if we have all bits and pieces
-if [ x"$platform_script"  = "x" ] ||
-   [ x"$client_package"   = "x" ] ||
-   [ x"$devel_package"    = "x" ] ||
-   [ x"$server_package"   = "x" ] ||
-   [ x"$config_packages"  = "x" ]; then
-  usage "Missing parameter(s)"
-fi
-
+  if [ x"$platform_script"  = "x" ] ||
+    [ x"$client_package"   = "x" ] ||
+    [ x"$devel_package"    = "x" ] ||
+    [ x"$server_package"   = "x" ] ||
+    [ x"$config_package"  = "x" ]; then
+    usage "Missing parameter(s)"
+  fi
+  # check if the needed packages are downloaded
+  if [ ! -f $server_package ] ||
+    [ ! -f $client_package ] ||
+    [ ! -f $devel_package  ]; then
+    usage "Missing package(s)"
+  fi
+  if [ ! -f $config_package ] ; then
+    usage "Missing config package '$config_package'"
+  fi
+else
+# check if we have all bits and pieces
+  if [ x"$platform_script"  = "x" ] ||
+    [ x"$client_package"   = "x" ]; then
+    usage "Missing parameter(s)"
+  fi
 # check if the needed packages are downloaded
-if [ ! -f $server_package ] ||
-   [ ! -f $client_package ] ||
-   [ ! -f $devel_package  ]; then
-  usage "Missing package(s)"
+  if [ ! -f $client_package ]; then
+    usage "Missing package(s)"
+  fi
 fi
-
-for config_package in $config_packages; do
-  [ -f $config_package ] || usage "Missing config package '$config_package'"
-done
 
 # export the location of the client, server and config packages
 export CVMFS_CLIENT_PACKAGE=$client_package
 export CVMFS_DEVEL_PACKAGE=$devel_package
 export CVMFS_SERVER_PACKAGE=$server_package
-export CVMFS_CONFIG_PACKAGES="$config_packages"
-export CVMFS_GATEWAY_URL=$repository_gateway_url
+export CVMFS_CONFIG_PACKAGES="$config_package"
 
 # change working directory to test workspace
 cd $cvmfs_workspace
@@ -136,8 +146,10 @@ fi
 
 # run the platform specific script to perform CernVM-FS tests
 echo "running platform specific script $platform_script ..."
-sudo -H -E -u $test_username bash $platform_script_abs -t $cvmfs_source_directory \
-                                                       -l $cvmfs_log_directory    \
-                                                       -s $server_package         \
-                                                       -c $client_package         \
-                                                       -d $devel_package
+args="-t $cvmfs_source_directory \
+      -l $cvmfs_log_directory    \
+      -c $client_package"
+if [ "x$(uname -s)" != "xDarwin" ]; then
+  args="$args -s $server_package -d $devel_package"
+fi
+sudo -H -E -u $test_username bash $platform_script_abs $args

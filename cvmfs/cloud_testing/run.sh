@@ -62,13 +62,13 @@ usage() {
   echo
   echo "Mandatory options:"
   echo " -u <testee URL>              URL to the nightly build directory to be tested"
-  echo " -s <CVMFS_GATEWAY_URL>|NONE  URL of the CVMFS Gateway build to be tested"
   echo " -p <platform name>           name of the platform to be tested"
   echo " -b <setup script>            platform specific setup script (inside the tarball)"
   echo " -r <run script>              platform specific test script (inside the tarball)"
   echo " -a <AMI name>                the virtual machine image to spawn"
   echo
   echo "Optional parameters:"
+  echo " -w <gateway URL>             URL of the repository gateway build to be tested"
   echo " -e <EC2 config file>         local location of the ec2_config.sh file"
   echo " -d <results destination>     Directory to store final test session logs"
   echo " -m <ssh user name>           User name to be used for VM login (default: root)"
@@ -86,6 +86,13 @@ spawn_my_virtual_machine() {
 
   local retcode
 
+  if [ x"$platform" = "xosx_x86_64" ]; then
+    ip_address=$(getent hosts $ami | awk '{ print $1}')
+    retcode=$?
+    check_retcode $retcode
+    return $retcode
+  fi
+
   echo -n "spawning virtual machine from $ami... "
   local spawn_results
   spawn_results="$(spawn_virtual_machine $ami "$userdata")"
@@ -101,18 +108,32 @@ setup_virtual_machine() {
   local ip=$1
   local username=$2
 
-  local remote_setup_script
-  remote_setup_script="${script_location}/remote_setup.sh"
+  local remote_setup_script="${script_location}/remote_setup.sh"
 
   echo -n "setting up VM ($ip) for CernVM-FS test suite... "
-  run_script_on_virtual_machine $ip $username $remote_setup_script \
-      -s $server_package                                           \
-      -c $client_package                                           \
-      -d $devel_package                                            \
-      -t $source_tarball                                           \
-      -g $unittest_package                                         \
-      -k "$config_packages"                                        \
-      -r $platform_setup_script
+
+  local args="$ip $username $remote_setup_script \
+              -t $source_tarball -r $platform_setup_script"
+  if [ "x$server_package" != "x" ]; then
+    args="$args -s $server_package"
+  fi
+  if [ "x$client_package" != "x" ]; then
+    args="$args -c $client_package"
+  fi
+  if [ "x$devel_package" != "x" ]; then
+    args="$args -d $devel_package"
+  fi
+  if [ "x$unittest_package" != "x" ]; then
+    args="$args -g $unittest_package"
+  fi
+  if [ "x$config_packages" != "x" ]; then
+    args="$args -k $config_packages"
+  fi
+  if [ "x$repository_gateway_url" != "x" ]; then
+    args="$args -w $repository_gateway_url"
+  fi
+  run_script_on_virtual_machine $args
+
   check_retcode $?
   if [ $? -ne 0 ]; then
     handle_test_failure $ip $username
@@ -136,13 +157,45 @@ run_test_cases() {
   remote_run_script="${script_location}/remote_run.sh"
 
   echo -n "running test cases on VM ($ip)... "
-  run_script_on_virtual_machine $ip $username $remote_run_script \
-      -s $server_package                                         \
-      -c $client_package                                         \
-      -d $devel_package                                          \
-      -g $repository_gateway_url                                     \
-      -k "$config_packages"                                      \
-      -r $platform_run_script
+
+  local args="$ip $username $remote_run_script \
+              -r $platform_run_script"
+  if [ "x$server_package" != "x" ]; then
+    args="$args -s $server_package"
+  fi
+  if [ "x$client_package" != "x" ]; then
+    args="$args -c $client_package"
+  fi
+  if [ "x$devel_package" != "x" ]; then
+    args="$args -d $devel_package"
+  fi
+  if [ "x$config_packages" != "x" ]; then
+    args="$args -k $config_packages"
+  fi
+
+  run_script_on_virtual_machine $args
+
+  check_retcode $?
+
+  if [ $? -ne 0 ]; then
+    handle_test_failure $ip $username
+  fi
+}
+
+
+cleanup_test_machine() {
+  local ip=$1
+  local username=$2
+
+  local retcode
+  local log_files
+  local remote_script="${script_location}/remote_cleanup.sh"
+
+  echo -n "cleaning up test machine ($ip)... "
+
+  local args="$ip $username $remote_script"
+  run_script_on_virtual_machine $args
+
   check_retcode $?
 
   if [ $? -ne 0 ]; then
@@ -182,7 +235,7 @@ get_test_results() {
 #
 
 
-while getopts "r:b:u:g:p:e:a:d:m:c:l:" option; do
+while getopts "r:b:u:w:p:e:a:d:m:c:l:" option; do
   case $option in
     r)
       platform_run_script=$OPTARG
@@ -193,7 +246,7 @@ while getopts "r:b:u:g:p:e:a:d:m:c:l:" option; do
     u)
       testee_url=$OPTARG
       ;;
-    g)
+    w)
       repository_gateway_url=$OPTARG
       ;;
     p)
@@ -229,6 +282,7 @@ if [ x$platform_run_script   = "x" ] ||
    [ x$platform_setup_script = "x" ] ||
    [ x$platform              = "x" ] ||
    [ x$testee_url            = "x" ] ||
+   [ x$repository_gateway_url = "x" ] ||
    [ x$ami_name              = "x" ]; then
   usage "Missing parameter(s)"
 fi
@@ -249,40 +303,51 @@ devel_package=$(read_package_map    ${ctu}/pkgmap "$platform" 'devel'    )
 unittest_package=$(read_package_map ${otu}/pkgmap "$platform" 'unittests')
 config_packages="$(read_package_map ${otu}/pkgmap "$platform" 'config'   )"
 
-# check if all necessary packages were found
-if [ x"$server_package"        = "x" ] ||
-   [ x"$client_package"        = "x" ] ||
-   [ x"$devel_package"         = "x" ] ||
-   [ x"$config_packages"       = "x" ] ||
-   [ x"$unittest_package"      = "x" ]; then
-  usage "Incomplete pkgmap file"
-fi
+if [ x"$platform" != "xosx_x86_64" ]; then
+  # check if all necessary packages were found
+  if [ x"$server_package"        = "x" ] ||
+    [ x"$client_package"        = "x" ] ||
+    [ x"$devel_package"         = "x" ] ||
+    [ x"$config_packages"       = "x" ] ||
+    [ x"$unittest_package"      = "x" ]; then
+    usage "Incomplete pkgmap file"
+  fi
 
-# construct the full package URLs
-client_package="${ctu}/${client_package}"
-server_package="${otu}/${server_package}"
-devel_package="${ctu}/${devel_package}"
-unittest_package="${otu}/${unittest_package}"
-source_tarball="${otu}/${source_tarball}"
-config_package_urls=""
-for config_package in $config_packages; do
-  config_package_urls="${config_package_base_url}/${config_package} $config_package_urls"
-done
-config_packages="$config_package_urls"
+  server_package="${otu}/${server_package}"
+  devel_package="${ctu}/${devel_package}"
+  unittest_package="${otu}/${unittest_package}"
+  config_package_urls=""
+  for config_package in $config_packages; do
+    config_package_urls="${config_package_base_url}/${config_package} $config_package_urls"
+  done
+  config_packages="$config_package_urls"
+else
+  if [ x"$client_package" = "x" ]; then
+    usage "Incomplete pkgmap file"
+  fi
+fi
 
 # load EC2 configuration
 . $ec2_config
 
+# construct the full package URLs
+client_package="${ctu}/${client_package}"
+source_tarball="${otu}/${source_tarball}"
+
+
 # spawn the virtual machine image, run the platform specific setup script
 # on it, wait for the spawning and setup to be complete and run the actual
 # test suite on the VM.
-spawn_my_virtual_machine  $ami_name   "$userdata" || die "Aborting..."
-wait_for_virtual_machine  $ip_address  $username  || die "Aborting..."
-setup_virtual_machine     $ip_address  $username  || die "Aborting..."
-wait_for_virtual_machine  $ip_address  $username  || die "Aborting..."
-run_test_cases            $ip_address  $username \
-                          $repository_gateway_url || die "Aborting..."
-get_test_results          $ip_address  $username  || die "Aborting..."
-tear_down_virtual_machine $instance_id            || die "Aborting..."
+spawn_my_virtual_machine  $ami_name   "$userdata"   || die "Aborting..."
+wait_for_virtual_machine  $ip_address  $username    || die "Aborting..."
+setup_virtual_machine     $ip_address  $username    || die "Aborting..."
+wait_for_virtual_machine  $ip_address  $username    || die "Aborting..."
+run_test_cases            $ip_address  $username    || die "Aborting..."
+get_test_results          $ip_address  $username    || die "Aborting..."
+if [ "x$platform" != "xosx_x86_64" ]; then
+  tear_down_virtual_machine $instance_id            || die "Aborting..."
+else
+  cleanup_test_machine $ip_address $username        || die "Aborting..."
+fi
 
 echo "all done"
