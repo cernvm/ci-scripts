@@ -44,10 +44,10 @@ ${CVMFS_SOURCE_LOCATION}/ci/run_unittests.sh \
   test/unittests/cvmfs_unittests_debug $CVMFS_XML_FILE
 
 # run gcovr to get the html
-gcovr --root=${CVMFS_SOURCE_LOCATION} --branches --filter=".*cvmfs/cvmfs.*" --print-summary \
+gcovr --root=${CVMFS_SOURCE_LOCATION} --branches --print-summary \
       --html --html-detail --output=html/coverage.html
 
 # run gcovr to get the xml
-gcovr --root=${CVMFS_SOURCE_LOCATION} --branches --filter=".*cvmfs/cvmfs.*" --print-summary \
+gcovr --root=${CVMFS_SOURCE_LOCATION} --branches --print-summary \
       --xml --xml-pretty --output=xml/coverage.xml
 
