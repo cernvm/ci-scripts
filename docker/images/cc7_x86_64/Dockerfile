@@ -39,7 +39,7 @@ RUN yum -y downgrade \
   http://ftp.scientificlinux.org/linux/scientific/7.3/x86_64/os/Packages/selinux-policy-3.13.1-102.el7.noarch.rpm
 
 RUN curl -o /tmp/esl-erlang.rpm \
-    http://ecsft.cern.ch/dist/cvmfs/builddeps/otp/esl-erlang_20.0-1~centos~7_amd64.rpm && \
+    http://ecsft.cern.ch/dist/cvmfs/builddeps/otp/esl-erlang_20.3.6-1~centos~7_amd64.rpm && \
     yum -y install /tmp/esl-erlang.rpm
 
 RUN curl -o /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3 && chmod +x /usr/local/bin/rebar3 && /usr/local/bin/rebar3 local install
