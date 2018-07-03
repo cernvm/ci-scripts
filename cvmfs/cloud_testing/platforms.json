@@ -183,6 +183,33 @@
     "user": "ubuntu"
   },
   {
+    "dist": "ubuntu1804",
+    "config": "x86_64",
+    "ami": "ami-29cb4e4d",
+    "label": "ubuntu1804_x86_64",
+    "setup": "ubuntu_setup.sh",
+    "test": "ubuntu_test.sh",
+    "user": "ubuntu"
+  },
+  {
+    "dist": "ubuntu1804",
+    "config": "x86_64_s3",
+    "ami": "ami-29cb4e4d",
+    "label": "ubuntu1804_x86_64",
+    "setup": "ubuntu_setup.sh",
+    "test": "ubuntu_s3_test.sh",
+    "user": "ubuntu"
+  },
+  {
+    "dist": "ubuntu1804",
+    "config": "x86",
+    "ami": "ami-3b887f36",
+    "label": "ubuntu1804_i386",
+    "setup": "ubuntu_setup.sh",
+    "test": "ubuntu_test.sh",
+    "user": "ubuntu"
+  },
+  {
     "dist": "fedora23",
     "config": "x86_64",
     "ami": "ami-d23bf7bc",
