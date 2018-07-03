@@ -1,7 +1,7 @@
 FROM        scratch
 MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
-ADD         ubuntu1604_x86_64.tar.gz /
+ADD         ubuntu1804_x86_64.tar.gz /
 RUN         apt-get -y update && apt-get -y upgrade
 RUN         apt-get -y update && apt-get -y install           \
                                               autotools-dev   \
@@ -26,15 +26,14 @@ RUN         apt-get -y update && apt-get -y install           \
                                               uuid-dev        \
                                               valgrind
 
-RUN apt-get -y update && apt-get -y install \
-  doxygen \
-  graphviz \
-  gsfonts
-
 RUN sed -i /etc/apt/sources.list -e 's/main$/main universe/'
+
 RUN apt-get -y update && apt-get -y install \
   autoconf \
   bison \
+  doxygen \
+  graphviz \
+  gsfonts \
   dh-systemd \
   flex \
   libhesiod-dev \
@@ -45,7 +44,7 @@ RUN apt-get -y update && apt-get -y install \
   sssd-common
 
 RUN curl -o /tmp/esl-erlang.deb \
-    http://ecsft.cern.ch/dist/cvmfs/builddeps/otp/esl-erlang_20.3.6-1~ubuntu~xenial_amd64.deb && \
+    http://ecsft.cern.ch/dist/cvmfs/builddeps/otp/esl-erlang_20.3.6-1~ubuntu~bionic_amd64.deb && \
     apt-get -y install libsctp1 libwxbase3.0-0v5 libwxgtk3.0-0v5 && \
     dpkg -i /tmp/esl-erlang.deb
 

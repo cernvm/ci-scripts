@@ -43,20 +43,22 @@ mkdir -p $DESTINATION
 echo "bootstrapping a build environment..."
 debootstrap --variant=buildd  \
             --arch=$BASE_ARCH \
-	    --force-check-gpg \
+	          --force-check-gpg \
             $UBUNTU_RELEASE   \
             $DESTINATION      \
             $REPO_BASE_URL
 
-echo "installing stretch and artful source repositories for autofs backport..."
-echo "deb-src http://ftp.debian.org/debian stretch main" > $DESTINATION/etc/apt/sources.list.d/stretch-src.list
-echo "deb-src http://archive.ubuntu.com/ubuntu/ artful main" > $DESTINATION/etc/apt/sources.list.d/artful-src.list
-keysfile_stretch="$(dirname $0)/../ubuntu_common/stretch-keys.asc"
-keysfile_artful="$(dirname $0)/../ubuntu_common/artful-keys.asc"
-cp $keysfile_stretch $DESTINATION/etc/apt/trusted.gpg.d/stretch-keys.asc
-cp $keysfile_artful $DESTINATION/etc/apt/trusted.gpg.d/artful-keys.asc
-gpg --dearmor $DESTINATION/etc/apt/trusted.gpg.d/stretch-keys.asc
-gpg --dearmor $DESTINATION/etc/apt/trusted.gpg.d/artful-keys.asc
+if [ x"$UBUNTU_RELEASE" != x"bionic" ]; then
+  echo "installing stretch and artful source repositories for autofs backport..."
+  echo "deb-src http://ftp.debian.org/debian stretch main" > $DESTINATION/etc/apt/sources.list.d/stretch-src.list
+  echo "deb-src http://archive.ubuntu.com/ubuntu/ artful main" > $DESTINATION/etc/apt/sources.list.d/artful-src.list
+  keysfile_stretch="$(dirname $0)/../ubuntu_common/stretch-keys.asc"
+  keysfile_artful="$(dirname $0)/../ubuntu_common/artful-keys.asc"
+  cp $keysfile_stretch $DESTINATION/etc/apt/trusted.gpg.d/stretch-keys.asc
+  cp $keysfile_artful $DESTINATION/etc/apt/trusted.gpg.d/artful-keys.asc
+  gpg --dearmor $DESTINATION/etc/apt/trusted.gpg.d/stretch-keys.asc
+  gpg --dearmor $DESTINATION/etc/apt/trusted.gpg.d/artful-keys.asc
+fi
 
 echo "packaging up the image..."
 tar -czf $TARBALL_NAME -C $DESTINATION .
