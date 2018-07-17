@@ -45,7 +45,5 @@ RUN curl -o /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3 && chmo
 
 RUN curl -o /tmp/togo-2.5-1.noarch.rpm http://ecsft.cern.ch/dist/cvmfs/builddeps/togo-2.5-1.noarch.rpm && rpm -i --nodeps /tmp/togo-2.5-1.noarch.rpm
 
-RUN su -c 'togo configure -n "Radu Popescu" -e "radu.popescu@cern.ch"' sftnight
-
 USER        sftnight
 WORKDIR     /home/sftnight
