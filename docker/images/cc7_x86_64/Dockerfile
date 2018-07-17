@@ -44,5 +44,7 @@ RUN curl -o /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3 && chmo
 
 RUN yum -y install http://ecsft.cern.ch/dist/cvmfs/builddeps/togo-2.5-1.noarch.rpm
 
+RUN togo configure -n "Radu Popescu" -e "radu.popescu@cern.ch"
+
 USER        sftnight
 WORKDIR     /home/sftnight
