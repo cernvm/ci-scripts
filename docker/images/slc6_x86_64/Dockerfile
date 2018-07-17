@@ -45,7 +45,7 @@ RUN curl -o /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3 && chmo
 
 RUN curl -o /tmp/togo-2.5-1.noarch.rpm http://ecsft.cern.ch/dist/cvmfs/builddeps/togo-2.5-1.noarch.rpm && rpm -i --nodeps /tmp/togo-2.5-1.noarch.rpm
 
-RUN mkdir -p /home/sftnight/.togo && chown sftnight /home/sftnight/.togo && chmod ugo+rwx /home/sftnight/.togo
+RUN for dir in .togo .rpmmacros ; do mkdir -p /home/sftnight/$dir && chown sftnight /home/sftnight/$dir && chmod ugo+rwx /home/sftnight/$dir ; done
 
 USER        sftnight
 WORKDIR     /home/sftnight
