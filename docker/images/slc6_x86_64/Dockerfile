@@ -34,17 +34,16 @@ RUN         yum -y update && yum -y install                     \
                                         which                   \
                                         zlib-devel              \
                                         python-pip              \
-            && pip install --upgrade pip gcovr
+                                        python-argparse         \
+            && pip install --upgrade gcovr SQLObject==3.3.0
 
 RUN         useradd sftnight
 
-RUN curl -o /tmp/esl-erlang.rpm \
-    http://ecsft.cern.ch/dist/cvmfs/builddeps/otp/esl-erlang_20.3.6-1~centos~6_amd64.rpm && \
-    yum -y install /tmp/esl-erlang.rpm
+RUN yum -y install http://ecsft.cern.ch/dist/cvmfs/builddeps/otp/esl-erlang_20.3.6-1~centos~6_amd64.rpm
 
 RUN curl -o /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3 && chmod +x /usr/local/bin/rebar3 && /usr/local/bin/rebar3 local install
 
-RUN curl -sSL  https://rvm.io/mpapis.asc | gpg2 --import - && curl -L https://get.rvm.io | bash -s stable && /bin/bash -l -c "rvm requirements" && /bin/bash -l -c "rvm install 1.9.3" && /bin/bash -l -c "gem install fpm --no-ri --no-rdoc"
+RUN curl -o /tmp/togo-2.5-1.noarch.rpm http://ecsft.cern.ch/dist/cvmfs/builddeps/togo-2.5-1.noarch.rpm && rpm -i --nodeps /tmp/togo-2.5-1.noarch.rpm
 
 USER        sftnight
 WORKDIR     /home/sftnight
