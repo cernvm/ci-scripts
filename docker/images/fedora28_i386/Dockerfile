@@ -21,6 +21,7 @@ RUN         dnf -y update && dnf -y install                     \
                                         perl-IO-Interface       \
                                         policycoreutils-python  \
                                         python-devel            \
+                                        python-setuptools       \
                                         rpm-build               \
                                         selinux-policy-devel    \
                                         selinux-policy-targeted \

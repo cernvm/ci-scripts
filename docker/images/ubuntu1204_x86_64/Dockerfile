@@ -7,6 +7,7 @@ RUN         apt-get -y update && apt-get -y upgrade
 RUN         apt-get -y update && apt-get -y install                        \
                                               autotools-dev                \
                                               cmake                        \
+                                              cpio                         \
                                               debhelper                    \
                                               devscripts                   \
                                               gdb                          \
@@ -21,6 +22,7 @@ RUN         apt-get -y update && apt-get -y install                        \
                                               libssl-dev                   \
                                               pkg-config                   \
                                               python-dev                   \
+                                              python-setuptools            \
                                               unzip                        \
                                               uuid-dev                     \
                                               valgrind                     \

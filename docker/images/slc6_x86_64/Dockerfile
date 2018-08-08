@@ -24,6 +24,7 @@ RUN         yum -y update && yum -y install                     \
                                         openssl-devel           \
                                         policycoreutils-python  \
                                         python-devel            \
+                                        python-setuptools       \
                                         rpm-build               \
                                         ruby-devel              \
                                         selinux-policy-devel    \

@@ -47,6 +47,7 @@ RUN        yum -y update && yum -y install                      \
                                         perl                    \
                                         pkgconfig               \
                                         python-devel            \
+                                        python-setuptools       \
                                         rpm-build               \
                                         sed                     \
                                         selinux-policy-targeted \

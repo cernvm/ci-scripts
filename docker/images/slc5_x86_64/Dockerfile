@@ -23,6 +23,7 @@ RUN         yum -y update && yum -y install                     \
                                         make                    \
                                         openssl-devel           \
                                         python-devel            \
+                                        python-setuptools       \
                                         rpm-build               \
                                         SysVinit                \
                                         selinux-policy-devel    \

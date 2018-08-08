@@ -17,6 +17,7 @@ RUN         yum -y update && yum -y install                     \
                                         openssl-devel           \
                                         policycoreutils-python  \
                                         python-devel            \
+                                        python-setuptools       \
                                         rpm-build               \
                                         selinux-policy-devel    \
                                         selinux-policy-targeted \

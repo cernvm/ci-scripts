@@ -3,27 +3,29 @@ MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
 ADD         ubuntu1804_x86_64.tar.gz /
 RUN         apt-get -y update && apt-get -y upgrade
-RUN         apt-get -y update && apt-get -y install           \
-                                              autotools-dev   \
-                                              build-essential \
-                                              cmake           \
-                                              debhelper       \
-                                              devscripts      \
-                                              gdb             \
-                                              gcc             \
-                                              git             \
-                                              libattr1-dev    \
-                                              libcap-dev      \
-                                              libffi-dev      \
-                                              libfuse-dev     \
-                                              libssl-dev      \
-                                              pkg-config      \
-                                              python-dev      \
-                                              ruby            \
-                                              ruby-dev        \
-                                              rubygems        \
-                                              unzip           \
-                                              uuid-dev        \
+RUN         apt-get -y update && apt-get -y install             \
+                                              autotools-dev     \
+                                              build-essential   \
+                                              cmake             \
+                                              cpio              \
+                                              debhelper         \
+                                              devscripts        \
+                                              gdb               \
+                                              gcc               \
+                                              git               \
+                                              libattr1-dev      \
+                                              libcap-dev        \
+                                              libffi-dev        \
+                                              libfuse-dev       \
+                                              libssl-dev        \
+                                              pkg-config        \
+                                              python-dev        \
+                                              python-setuptools \
+                                              ruby              \
+                                              ruby-dev          \
+                                              rubygems          \
+                                              unzip             \
+                                              uuid-dev          \
                                               valgrind
 
 RUN sed -i /etc/apt/sources.list -e 's/main$/main universe/'
