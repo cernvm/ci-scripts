@@ -75,6 +75,8 @@ zypper --non-interactive     \
        --root ${DESTINATION} \
        install sles-release zypper
 
+echo "found the following public keys: "
+rpm -qa | grep gpg-pubkey
 echo "checking for expected public key..."
 expected_pubkey1="gpg-pubkey-3dbdc284-53674dd4"
 expected_pubkey2="gpg-pubkey-307e3d54-5aaa90a5"
