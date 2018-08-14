@@ -2,7 +2,9 @@ FROM        scratch
 MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
 ADD         cc7_x86_64.tar.gz /
-RUN         yum -y update && yum -y install epel-release
+RUN         yum -y update
+RUN         yum -y install filesystem
+RUN         yum -y install epel-release
 RUN         yum -y install                     \
                        cmake                   \
                        curl-devel              \
