@@ -65,7 +65,7 @@ expected_pubkey2="gpg-pubkey-307e3d54-4be01a65"
 expected_pubkey3="gpg-pubkey-39db7c82-510a966b"
 echo "*** Public Keys ***"
 rpm -qa | grep gpg-pubkey
-[ $(rpm -qa | grep gpg-pubkey | wc -l) -gt 2 ] || { echo "more than two keys found"; exit 1; }
+[ $(rpm -qa | grep gpg-pubkey | wc -l) -le 2 ] || { echo "more than two keys found"; exit 1; }
 if [ $(rpm -qa | grep gpg-pubkey | wc -l) -eq 2 ]; then
   rpm -qa | grep $expected_pubkey1               || { echo "public key doesn't match ($expected_pubkey1)"; exit 1; }
   rpm -qa | grep $expected_pubkey2               || { echo "public key doesn't match ($expected_pubkey2)"; exit 1; }
