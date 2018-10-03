@@ -26,6 +26,11 @@ has_platform_parameter 'test'  "$vm_desc" || die "VM parameter .test missing"
 has_platform_parameter 'ami'   "$vm_desc" || die "VM parameter .ami missing"
 has_platform_parameter 'user'  "$vm_desc" || die "VM parameter .user missing"
 
+suites=
+if [ "x${CVMFS_QUICK_TESTS} = xtrue" ]; then
+  suites="-s quick"
+fi
+
 echo "Running cloud tests for $CVMFS_PLATFORM / $CVMFS_PLATFORM_CONFIG ..."
 ${SCRIPT_LOCATION}/cloud_testing/run.sh                    \
         -u $CVMFS_TESTEE_URL                               \
@@ -37,4 +42,6 @@ ${SCRIPT_LOCATION}/cloud_testing/run.sh                    \
         -a  $(get_platform_parameter 'ami'     "$vm_desc") \
         -m  $(get_platform_parameter 'user'    "$vm_desc") \
         -c "$(get_platform_parameter 'context' "$vm_desc")"\
-        -l "$CVMFS_CLIENT_TESTEE_URL"
+        -l "$CVMFS_CLIENT_TESTEE_URL"                      \
+        $suites
+

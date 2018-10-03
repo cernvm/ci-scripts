@@ -44,6 +44,8 @@ config_packages=""  # might be more than one... BEWARE OF SPACES!!
 unittest_package=""
 source_tarball="source.tar.gz" # will be prepended by ${testee_url} later
 
+suites=""
+
 # global variables (get filled by spawn_virtual_machine)
 ip_address=""
 instance_id=""
@@ -75,6 +77,7 @@ usage() {
   echo " -c <cloud init userdata>     User data string to be passed to the new instance"
   echo
   echo " -l <custom client URL>       URL to a nightly build for a custom CVMFS client"
+  echo " -s <test suite labels>       Restrict tests to given suite names"
 
   exit 1
 }
@@ -172,6 +175,9 @@ run_test_cases() {
   if [ "x$config_packages" != "x" ]; then
     args="$args -k $config_packages"
   fi
+  if [ "x$suites" != "x" ]; then
+    args="$args -S $suites"
+  fi
 
   run_script_on_virtual_machine $args
 
@@ -235,7 +241,7 @@ get_test_results() {
 #
 
 
-while getopts "r:b:u:w:p:e:a:d:m:c:l:" option; do
+while getopts "r:b:u:w:p:e:a:d:m:c:l:s:" option; do
   case $option in
     r)
       platform_run_script=$OPTARG
@@ -269,6 +275,9 @@ while getopts "r:b:u:w:p:e:a:d:m:c:l:" option; do
       ;;
     l)
       client_testee_url=$OPTARG
+      ;;
+    s)
+      suites="$OPTARG"
       ;;
     ?)
       shift $(($OPTIND-2))

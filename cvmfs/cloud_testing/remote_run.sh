@@ -19,8 +19,9 @@ usage() {
   echo "-k <config package>   CernVM-FS configuration package to be used"
   echo
   echo "Optional parameters:"
-  echo "-p <platform path>    custom search path for platform specific script"
-  echo "-u <user name>        user name to use for test run"
+  echo "-p <platform path>      custom search path for platform specific script"
+  echo "-u <user name>          user name to use for test run"
+  echo "-S <test suite labels>  Restrict tests to given suite names"
 
   exit 1
 }
@@ -50,6 +51,7 @@ server_package=""
 client_package=""
 devel_package=""
 config_package=""
+suites=""
 
 # from now on everything is logged to the logfile
 # Note: the only output of this script is the absolute path to the generated
@@ -64,7 +66,7 @@ exec &>                                  $RUN_LOGFILE
 cd $cvmfs_workspace
 
 # read parameters
-while getopts "r:s:c:d:g:k:p:u:" option; do
+while getopts "r:s:c:d:g:k:p:u:S:" option; do
   case $option in
     r)
       platform_script=$OPTARG
@@ -86,6 +88,9 @@ while getopts "r:s:c:d:g:k:p:u:" option; do
       ;;
     u)
       test_username=$OPTARG
+      ;;
+    S)
+      suites="$OPTARG"
       ;;
     ?)
       shift $(($OPTIND-2))
@@ -152,4 +157,8 @@ args="-t $cvmfs_source_directory \
 if [ "x$(uname -s)" != "xDarwin" ]; then
   args="$args -s $server_package -d $devel_package"
 fi
+if [ "x$suites" != "x" ]; then
+  args="$args -S $suites"
+fi
+
 sudo -H -E -u $test_username bash $platform_script_abs $args
