@@ -11,6 +11,7 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 [ ! -z $CVMFS_SOURCE_LOCATION ]                  || die "CVMFS_SOURCE_LOCATION missing"
 [ ! -z $CVMFS_RUN_UNITTESTS ]                    || die "CVMFS_RUN_UNITTESTS missing"
 [ ! -z $CVMFS_UNITTESTS_BINARY ]                 || die "CVMFS_UNITTESTS_BINARY missing"
+[ ! -z $CVMFS_SHRINKWRAP_TEST_BINARY ]           || die "CVMFS_SHRINKWRAP_TEST_BINARY missing"
 [ ! -z $CVMFS_UNITTESTS_RESULT_LOCATION ]        || die "CVMFS_UNITTESTS_RESULT_LOCATION missing"
 [ ! -z $CERNVM_CI_SCRIPT_LOCATION ]              || die "CERNVM_CI_SCRIPT_LOCATION missing"
 
