@@ -45,10 +45,11 @@ if is_docker_host; then
                     ${docker_image_name}                              \
                     $build_script                                     \
                     ${DUCC_SOURCE_LOCATION}                           \
+                    ${GOPATH}                                         \
                     $nightly_number"
 else
   echo "building bare metal for ${desired_architecture}..."
-  command_tmpl="$build_script ${DUCC_SOURCE_LOCATION} $nightly_number"
+  command_tmpl="$build_script ${DUCC_SOURCE_LOCATION} ${GOPATH} $nightly_number"
 fi
 
 # run the build script
