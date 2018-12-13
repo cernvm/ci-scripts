@@ -4,7 +4,7 @@ set -e
 
 BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 . ${BUILD_SCRIPT_LOCATION}/../jenkins/common.sh
-. ${BUILD_SCRIPT_LOCATION}/common.sh
+. ${BUILD_SCRIPT_LOCATION}/../cvmfs/common.sh
 
 # sanity checks
 [ ! -z $WORKSPACE                 ] || die "WORKSPACE missing"
