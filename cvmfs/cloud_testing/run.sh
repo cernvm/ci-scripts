@@ -129,6 +129,9 @@ setup_virtual_machine() {
   if [ "x$unittest_package" != "x" ]; then
     args="$args -g $unittest_package"
   fi
+  if [ "x$shrinkwrap_package" != "x" ]; then
+    args="$args -e $shrinkwrap_package"
+  fi
   if [ "x$config_packages" != "x" ]; then
     args="$args -k $config_packages"
   fi
@@ -306,11 +309,12 @@ fi
 # figure out which packages need to be downloaded
 ctu="$client_testee_url"
 otu="$testee_url"
-client_package=$(read_package_map   ${ctu}/pkgmap "$platform" 'client'   )
-server_package=$(read_package_map   ${otu}/pkgmap "$platform" 'server'   )
-devel_package=$(read_package_map    ${ctu}/pkgmap "$platform" 'devel'    )
-unittest_package=$(read_package_map ${otu}/pkgmap "$platform" 'unittests')
-config_packages="$(read_package_map ${otu}/pkgmap "$platform" 'config'   )"
+client_package=$(read_package_map     ${ctu}/pkgmap "$platform" 'client'    )
+server_package=$(read_package_map     ${otu}/pkgmap "$platform" 'server'    )
+devel_package=$(read_package_map      ${ctu}/pkgmap "$platform" 'devel'     )
+unittest_package=$(read_package_map   ${otu}/pkgmap "$platform" 'unittests' )
+shrinkwrap_package=$(read_package_map ${otu}/pkgmap "$platform" 'shrinkwrap')
+config_packages="$(read_package_map   ${otu}/pkgmap "$platform" 'config'    )"
 
 if [ x"$platform" != "xosx_x86_64" ]; then
   # check if all necessary packages were found
@@ -318,13 +322,15 @@ if [ x"$platform" != "xosx_x86_64" ]; then
     [ x"$client_package"        = "x" ] ||
     [ x"$devel_package"         = "x" ] ||
     [ x"$config_packages"       = "x" ] ||
-    [ x"$unittest_package"      = "x" ]; then
+    [ x"$unittest_package"      = "x" ] ||
+    [ x"$shrinkwrap_package"    = "x" ]; then
     usage "Incomplete pkgmap file"
   fi
 
   server_package="${otu}/${server_package}"
   devel_package="${ctu}/${devel_package}"
   unittest_package="${otu}/${unittest_package}"
+  shrinkwrap_package="${otu}/${shrinkwrap_package}"
   config_package_urls=""
   for config_package in $config_packages; do
     config_package_urls="${config_package_base_url}/${config_package} $config_package_urls"

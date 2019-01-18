@@ -18,6 +18,7 @@ usage() {
   echo "-d <cvmfs devel package>   CernVM-FS devel package to be tested (Linux only)"
   echo "-t <cvmfs source tarball>  CernVM-FS sources containing associated tests"
   echo "-g <cvmfs tests package>   CernVM-FS unit tests package (Linux only)"
+  echo "-e <shrinkwrap package>    CernVM-FS shrinkwrap package (Linux only)"
   echo "-k <cvmfs config package>  CernVM-FS config package (Linux only)"
   echo "-r <setup script>          platform specific script (inside the tarball)"
   echo
@@ -113,6 +114,7 @@ devel_package=""
 config_package=""
 source_tarball=""
 unittest_package=""
+shrinkwrap_package=""
 repository_gateway_url=""
 test_username="sftnight"
 
@@ -165,7 +167,7 @@ touch ${cvmfs_log_directory}/setup.log
 exec &> ${cvmfs_log_directory}/setup.log
 
 # read parameters
-while getopts "r:s:c:d:t:g:k:w:p:u:" option; do
+while getopts "r:s:c:d:t:g:k:w:p:u:e:" option; do
   case $option in
     r)
       platform_script=$OPTARG
@@ -184,6 +186,9 @@ while getopts "r:s:c:d:t:g:k:w:p:u:" option; do
       ;;
     g)
       unittest_package=$OPTARG
+      ;;
+    e)
+      shrinkwrap_package=$OPTARG
       ;;
     k)
       config_package="$OPTARG"
@@ -216,7 +221,8 @@ if [ "x$(uname -s)" != "xDarwin" ]; then
     [ "x$config_package"  = "x" ] ||
     [ "x$source_tarball"   = "x" ] ||
     [ "x$repository_gateway_url" = "x" ] ||
-    [ "x$unittest_package" = "x" ]; then
+    [ "x$unittest_package" = "x" ] ||
+    [ "x$shrinkwrap_package" = "x" ]; then
     usage "Missing parameter(s)"
   fi
 else
@@ -246,6 +252,7 @@ download_if_used $client_package
 download_if_used $devel_package
 download_if_used $source_tarball
 download_if_used $unittest_package
+download_if_used $shrinkwrap_package
 download_if_used $config_package
 
 # get local file path of downloaded files
@@ -263,6 +270,9 @@ if [ "x$source_tarball" != "x" ]; then
 fi
 if [ "x$unittest_package" != "x" ]; then
   unittest_package=$(canonicalize_path $unittest_package)
+fi
+if [ "x$shrinkwrap_package" != "x" ]; then
+  shrinkwrap_package=$(canonicalize_path $shrinkwrap_package)
 fi
 if [ "x$config_package" != "x" ]; then
   config_package=$(canonicalize_path $config_package)
@@ -309,6 +319,6 @@ args="-t $cvmfs_source_directory \
       -l $cvmfs_log_directory    \
       -c $client_package"
 if [ "x$(uname -s)" != "xDarwin" ]; then
-  args="$args -s $server_package -d $devel_package -g $unittest_package -k $config_package -w $repository_gateway_url"
+  args="$args -s $server_package -d $devel_package -g $unittest_package -p $shrinkwrap_package -k $config_package -w $repository_gateway_url"
 fi
 sudo -H -E -u $test_username bash $platform_script_abs $args
