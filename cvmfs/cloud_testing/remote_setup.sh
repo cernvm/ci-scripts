@@ -100,8 +100,6 @@ canonicalize_path() {
 
 export LC_ALL=C
 
-echo "*** Called remote_setup.sh with options $@"
-
 # static information (check also remote_run.sh and run.sh)
 cvmfs_workspace="/tmp/cvmfs-test-workspace"
 cvmfs_source_directory="${cvmfs_workspace}/cvmfs-source"
@@ -167,6 +165,8 @@ mkdir -p $cvmfs_log_directory
 #       log files
 touch ${cvmfs_log_directory}/setup.log
 exec &> ${cvmfs_log_directory}/setup.log
+
+echo "*** Called remote_setup.sh with options $@"
 
 # read parameters
 while getopts "r:s:c:d:t:g:k:w:p:u:e:" option; do
