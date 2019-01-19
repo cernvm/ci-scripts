@@ -100,6 +100,8 @@ canonicalize_path() {
 
 export LC_ALL=C
 
+echo "*** Called remote_setup.sh with options $@"
+
 # static information (check also remote_run.sh and run.sh)
 cvmfs_workspace="/tmp/cvmfs-test-workspace"
 cvmfs_source_directory="${cvmfs_workspace}/cvmfs-source"
@@ -208,6 +210,10 @@ while getopts "r:s:c:d:t:g:k:w:p:u:e:" option; do
       ;;
   esac
 done
+
+echo "*** Environment Rundown ***"
+env
+echo "***************************"
 
 # check that sudo works as expected
 sudo echo "testing sudo..." || exit 2
