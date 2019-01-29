@@ -275,7 +275,7 @@
   {
     "dist": "macos",
     "config": "x86_64",
-    "ami": "cernvm-mac-mini",
+    "ami": "cernvm-mac-mini-1",
     "label": "osx_x86_64",
     "setup": "macos_setup.sh",
     "test": "macos_test.sh",
