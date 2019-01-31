@@ -12,7 +12,6 @@ RUN         yum -y install                     \
                        gcc                     \
                        gcc-c++                 \
                        git                     \
-                       golang                  \
                        hardlink                \
                        libattr-devel           \
                        libcap-devel            \
@@ -32,8 +31,17 @@ RUN         yum -y install                     \
                        valgrind-devel          \
                        voms-devel              \
                        zlib-devel
-
 RUN         useradd sftnight
+
+# A modern (> 1.11.5) golang is necessary to compile ducc, the standard installation procedure 
+# is to untar the binaries into the installation directory, in our case /usr/local/bin
+# unfortunately is not enough and is necessary to also re-set the PATH.
+# Eventually we will remove this lines and just add the go compiler from repository
+RUN curl -o go1.11.5.tar.gz https://dl.google.com/go/go1.11.5.linux-amd64.tar.gz && \
+        tar -C /usr/local/bin -xzf go1.11.5.tar.gz && \
+        rm -f go1.11.5.tar.gz && \
+        chown -R sftnight /usr/local/bin/go
+ENV PATH="${PATH}:/usr/local/bin/go/bin"
 
 # Relieve a bit the version requirement of selinux-policy
 RUN yum -y downgrade \
