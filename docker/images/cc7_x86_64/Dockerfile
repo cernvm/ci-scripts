@@ -12,7 +12,7 @@ RUN         yum -y install                     \
                        gcc                     \
                        gcc-c++                 \
                        git                     \
-                       golang                  \
+                       golang-1.11.4           \
                        hardlink                \
                        libattr-devel           \
                        libcap-devel            \
