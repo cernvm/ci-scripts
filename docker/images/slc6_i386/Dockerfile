@@ -9,6 +9,7 @@ RUN         yum -y update && yum -y install                     \
                                         gcc                     \
                                         gcc-c++                 \
                                         git                     \
+                                        golang                  \
                                         hardlink                \
                                         libattr-devel           \
                                         libcap-devel            \
