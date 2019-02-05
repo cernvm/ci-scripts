@@ -10,6 +10,7 @@ RUN         dnf -y update && dnf -y install                     \
                                         gcc-c++                 \
                                         gdb                     \
                                         git                     \
+                                        golang                  \
                                         gridsite                \
                                         hardlink                \
                                         libattr-devel           \
