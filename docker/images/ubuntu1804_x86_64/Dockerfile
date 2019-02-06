@@ -46,7 +46,7 @@ RUN apt-get -y update && apt-get -y install \
   sssd-common
 
 RUN curl -o /tmp/esl-erlang.deb \
-    http://ecsft.cern.ch/dist/cvmfs/builddeps/otp/esl-erlang_20.3.8.6-1~ubuntu~bionic_amd64.deb && \
+    http://ecsft.cern.ch/dist/cvmfs/builddeps/otp/esl-erlang_21.2.5-1~ubuntu~bionic_amd64.deb && \
     apt-get -y install libsctp1 libwxbase3.0-0v5 libwxgtk3.0-0v5 && \
     dpkg -i /tmp/esl-erlang.deb
 
