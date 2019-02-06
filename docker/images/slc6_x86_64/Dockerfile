@@ -36,8 +36,7 @@ RUN         yum -y update && yum -y install                         \
                                         which                       \
                                         zlib-devel                  \
                                         python-pip                  \
-                                        python-argparse             \
-            && pip install --upgrade gcovr SQLObject==3.3.0
+                                        python-argparse
 
 RUN         useradd sftnight
 
