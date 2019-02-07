@@ -38,6 +38,8 @@ RUN         yum -y update && yum -y install                         \
                                         python-pip                  \
                                         python-argparse
 
+RUN pip install sqlobject==3.3.0
+
 RUN         useradd sftnight
 
 RUN yum -y install http://ecsft.cern.ch/dist/cvmfs/builddeps/otp/esl-erlang_21.2.5-1~centos~6_amd64.rpm
