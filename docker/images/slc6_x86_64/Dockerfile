@@ -38,9 +38,12 @@ RUN         yum -y update && yum -y install                         \
                                         python-pip                  \
                                         python-argparse
 
-RUN pip install sqlobject==3.3.0
 
 RUN         useradd sftnight
+
+# Erlang part below
+
+RUN pip install sqlobject==3.3.0
 
 RUN yum -y install http://ecsft.cern.ch/dist/cvmfs/builddeps/otp/esl-erlang_21.2.5-1~centos~6_amd64.rpm
 
@@ -50,6 +53,8 @@ RUN curl -o /tmp/togo-2.5-1.noarch.rpm http://ecsft.cern.ch/dist/cvmfs/builddeps
 
 RUN mkdir -p /home/sftnight/.togo && chown sftnight /home/sftnight/.togo && chmod ugo+rwx /home/sftnight/.togo
 RUN touch /home/sftnight/.rpmmacros && chown sftnight /home/sftnight/.rpmmacros && chmod ugo+rw /home/sftnight/.rpmmacros
+
+# End of Erlang part
 
 USER        sftnight
 WORKDIR     /home/sftnight
