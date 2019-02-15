@@ -21,9 +21,10 @@ usage() {
   echo "-e <shrinkwrap package>    CernVM-FS shrinkwrap package (Linux only)"
   echo "-k <cvmfs config package>  CernVM-FS config package (Linux only)"
   echo "-r <setup script>          platform specific script (inside the tarball)"
+  echo "-w <repo gateway url>      URL of a build of the repository gateway package"
+  echo "-n <notify pkg url>        URL of a notification server build to use"
   echo
   echo "Optional parameters:"
-  echo "-w <repo gateway url>      URL of a build of the repository gateway package"
   echo "-p <platform path>         custom search path for platform specific script"
   echo "-u <user name>             user name to use for test run"
   echo
@@ -115,7 +116,8 @@ config_package=""
 source_tarball=""
 unittest_package=""
 shrinkwrap_package=""
-repository_gateway_url=""
+gateway_pkg_url=""
+notify_pkg_url=""
 test_username="sftnight"
 
 # RHEL (SLC) requires a tty for sudo... work around that
@@ -196,7 +198,10 @@ while getopts "r:s:c:d:t:g:k:w:p:u:e:" option; do
       config_package="$OPTARG"
       ;;
     w)
-      repository_gateway_url="$OPTARG"
+      gateway_pkg_url="$OPTARG"
+      ;;
+    n)
+      notify_pkg_url="$OPTARG"
       ;;
     p)
       platform_script_path=$OPTARG
@@ -226,7 +231,8 @@ if [ "x$(uname -s)" != "xDarwin" ]; then
     [ "x$devel_package"    = "x" ] ||
     [ "x$config_package"  = "x" ] ||
     [ "x$source_tarball"   = "x" ] ||
-    [ "x$repository_gateway_url" = "x" ] ||
+    [ "x$gateway_pkg_url" = "x" ] ||
+    [ "x$notify_pkg_url" = "x" ] ||
     [ "x$unittest_package" = "x" ] ||
     [ "x$shrinkwrap_package" = "x" ]; then
     usage "Missing parameter(s)"
@@ -325,6 +331,6 @@ args="-t $cvmfs_source_directory \
       -l $cvmfs_log_directory    \
       -c $client_package"
 if [ "x$(uname -s)" != "xDarwin" ]; then
-  args="$args -s $server_package -d $devel_package -g $unittest_package -p $shrinkwrap_package -k $config_package -w $repository_gateway_url"
+  args="$args -s $server_package -d $devel_package -g $unittest_package -p $shrinkwrap_package -k $config_package -w $gateway_pkg_url" -n $notify_pkg_url
 fi
 sudo -H -E -u $test_username bash $platform_script_abs $args

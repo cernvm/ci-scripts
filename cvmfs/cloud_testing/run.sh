@@ -29,7 +29,8 @@ client_testee_url=""
 platform=""
 platform_run_script=""
 platform_setup_script=""
-repository_gateway_url=""
+gateway_pkg_url=""
+notify_pkg_url=""
 ec2_config=""
 ami_name=""
 log_destination="."
@@ -71,6 +72,7 @@ usage() {
   echo
   echo "Optional parameters:"
   echo " -w <gateway URL>             URL of the repository gateway build to be tested"
+  echo " -n <notify URL>              URL of the notification server package to be used"
   echo " -e <EC2 config file>         local location of the ec2_config.sh file"
   echo " -d <results destination>     Directory to store final test session logs"
   echo " -m <ssh user name>           User name to be used for VM login (default: root)"
@@ -135,8 +137,11 @@ setup_virtual_machine() {
   if [ "x$config_packages" != "x" ]; then
     args="$args -k $config_packages"
   fi
-  if [ "x$repository_gateway_url" != "x" ]; then
-    args="$args -w $repository_gateway_url"
+  if [ "x$gateway_pkg_url" != "x" ]; then
+    args="$args -w $gateway_pkg_url"
+  fi
+  if [ "x$notify_pkg_url" != "x" ]; then
+    args="$args -n $notify_pkg_url"
   fi
   run_script_on_virtual_machine $args
 
@@ -155,7 +160,6 @@ setup_virtual_machine() {
 run_test_cases() {
   local ip=$1
   local username=$2
-  local repository_gateway_url=$3
 
   local retcode
   local log_files
@@ -256,7 +260,10 @@ while getopts "r:b:u:w:p:e:a:d:m:c:l:s:" option; do
       testee_url=$OPTARG
       ;;
     w)
-      repository_gateway_url=$OPTARG
+      gateway_pkg_url=$OPTARG
+      ;;
+    n)
+      notify_pkg_url=$OPTARG
       ;;
     p)
       platform=$OPTARG
@@ -294,7 +301,8 @@ if [ x$platform_run_script   = "x" ] ||
    [ x$platform_setup_script = "x" ] ||
    [ x$platform              = "x" ] ||
    [ x$testee_url            = "x" ] ||
-   [ x$repository_gateway_url = "x" ] ||
+   [ x$gateway_pkg_url = "x" ] ||
+   [ x$notify_pkg_url = "x" ] ||
    [ x$ami_name              = "x" ]; then
   usage "Missing parameter(s)"
 fi

@@ -46,11 +46,14 @@ RUN apt-get -y update && apt-get -y install \
   libxml2-dev \
   sssd-common
 
+# Erlang part below
+
 RUN curl -o /tmp/esl-erlang.deb \
-    http://ecsft.cern.ch/dist/cvmfs/builddeps/otp/esl-erlang_20.3.8.6-1~ubuntu~xenial_amd64.deb && \
+    http://ecsft.cern.ch/dist/cvmfs/builddeps/otp/esl-erlang_21.2.5-1~ubuntu~xenial_amd64.deb && \
     apt-get -y install libsctp1 libwxbase3.0-0v5 libwxgtk3.0-0v5 && \
     dpkg -i /tmp/esl-erlang.deb
 
 RUN curl -o /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3 && chmod +x /usr/local/bin/rebar3 && /usr/local/bin/rebar3 local install
+# End of Erlang part
 
 RUN gem install --no-ri --no-rdoc fpm
