@@ -35,8 +35,8 @@ fi
 echo "Running cloud tests for $CVMFS_PLATFORM / $CVMFS_PLATFORM_CONFIG ..."
 ${SCRIPT_LOCATION}/cloud_testing/run.sh                    \
         -u $CVMFS_TESTEE_URL                               \
-        -w $CVMFS_GATEWAY_URL
-        -n $CVMFS_NOTIFY_URL                           \
+        -w $CVMFS_GATEWAY_URL                              \
+        -n $CVMFS_NOTIFY_URL                               \
         -p  $(get_platform_parameter 'label'   "$vm_desc") \
         -b  $(get_platform_parameter 'setup'   "$vm_desc") \
         -r  $(get_platform_parameter 'test'    "$vm_desc") \
