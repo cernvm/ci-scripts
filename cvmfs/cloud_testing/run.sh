@@ -248,7 +248,7 @@ get_test_results() {
 #
 
 
-while getopts "r:b:u:w:p:e:a:d:m:c:l:s:" option; do
+while getopts "r:b:u:w:n:p:e:a:d:m:c:l:s:" option; do
   case $option in
     r)
       platform_run_script=$OPTARG
@@ -301,8 +301,8 @@ if [ x$platform_run_script   = "x" ] ||
    [ x$platform_setup_script = "x" ] ||
    [ x$platform              = "x" ] ||
    [ x$testee_url            = "x" ] ||
-   [ x$gateway_pkg_url = "x" ] ||
-   [ x$notify_pkg_url = "x" ] ||
+   [ x$gateway_pkg_url       = "x" ] ||
+   [ x$notify_pkg_url        = "x" ] ||
    [ x$ami_name              = "x" ]; then
   usage "Missing parameter(s)"
 fi
