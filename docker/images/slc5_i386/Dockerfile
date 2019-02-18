@@ -1,8 +1,8 @@
 FROM        scratch
-MAINTAINER  Rene Meusel <rene.meusel@cern.ch>
+MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
 ADD         slc5_i386.tar.gz /
-RUN         yum -y update && yum -y install                     \
+RUN         yum -y update && yumdownloader -y --resolve         \
                                         buildsys-macros         \
                                         cmake                   \
                                         curl-devel              \
@@ -27,6 +27,7 @@ RUN         yum -y update && yum -y install                     \
                                         which                   \
                                         valgrind-devel          \
                                         zlib-devel
+RUN         rpm --rebuilddb && rpm -vhU --replacepkgs --nocontexts *.rpm
 
 RUN         useradd sftnight
 USER        sftnight

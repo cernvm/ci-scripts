@@ -1,7 +1,6 @@
 FROM        scratch
 MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
-# 2019-02-05 11:36  - dummy comment to trigger installation of latest golang compiler
 ADD         cc7_x86_64.tar.gz /
 RUN         yum -y update
 RUN         yum -y install filesystem

@@ -7,8 +7,8 @@ SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 
 SYSTEM_NAME="cc7"
 BASE_ARCH="x86_64"
-REPO_BASE_URL="http://linuxsoft.cern.ch/cern/centos/7.3/os/$BASE_ARCH/"
+REPO_BASE_URL="http://linuxsoft.cern.ch/cern/centos/7.6/os/$BASE_ARCH/"
 GPG_KEY_PATHS="file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7"
-BASE_PACKAGES="centos-release coreutils tar iputils rpm yum"
+BASE_PACKAGES="centos-release coreutils tar iputils rpm yum yum-plugin-ovl"
 
 . ${SCRIPT_LOCATION}/../rhel_common/build.sh

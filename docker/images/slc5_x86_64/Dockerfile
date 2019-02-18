@@ -1,8 +1,8 @@
 FROM        scratch
-MAINTAINER  Rene Meusel <rene.meusel@cern.ch>
+MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
 ADD         slc5_x86_64.tar.gz /
-RUN         yum -y update && yum -y install                     \
+RUN         yum -y update && yumdownloader -y --resolve  \
                                         buildsys-macros         \
                                         cmake                   \
                                         curl-devel              \
@@ -25,13 +25,14 @@ RUN         yum -y update && yum -y install                     \
                                         python-devel            \
                                         python-setuptools       \
                                         rpm-build               \
-                                        SysVinit                \
                                         selinux-policy-devel    \
-                                        selinux-policy-targeted \
+					selinux-policy-targeted \
+					SysVinit                \
                                         which                   \
                                         voms-devel              \
                                         valgrind-devel          \
                                         zlib-devel
+RUN         rpm --rebuilddb && rpm -vhU --replacepkgs --nocontexts *.rpm
 
 RUN         useradd sftnight
 USER        sftnight

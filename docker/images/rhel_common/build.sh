@@ -24,7 +24,7 @@ set -e
 
 TARBALL_NAME="${SYSTEM_NAME}_${BASE_ARCH}.tar.gz"
 DESTINATION="$(mktemp -d)"
-YUM_REPO_CFG=/etc/yum/repos.d/${SYSTEM_NAME}_${BASE_ARCH}-bootstrap.repo
+YUM_REPO_CFG=/etc/yum.repos.d/${SYSTEM_NAME}_${BASE_ARCH}-bootstrap.repo
 YUM_REPO_NAME=${SYSTEM_NAME}-${BASE_ARCH}-os-bootstrap
 PACKAGE_MGR=${PACKAGE_MGR:=yum}
 
@@ -51,6 +51,7 @@ baseurl=$REPO_BASE_URL
 gpgkey=$GPG_KEY_PATHS
 gpgcheck=1
 enabled=0
+keepcache=1
 EOF
 
 echo "creating chroot dir..."
@@ -89,10 +90,13 @@ mkdir -p ${DESTINATION}/dev ${DESTINATION}/sys ${DESTINATION}/proc
 mount --bind /dev ${DESTINATION}/dev
 mount -t sysfs sys ${DESTINATION}/sys/
 
-echo "recreating RPM database with chroot'ed RPM version..."
-rm -fR $rpm_db_dir && mkdir -p $rpm_db_dir
+echo "recreating RPM database with chroot'ed RPM version in ${rpm_db_dir}..."
+rm -fR $rpm_db_dir
 chroot $DESTINATION /bin/rpm --initdb
-chroot $DESTINATION /bin/rpm -ivh --justdb '/var/cache/yum/*/packages/*.rpm'
+pkgdir=$(cd $DESTINATION && find var/cache/yum -type d -name packages)
+echo "re-register: $pkgdir"
+chroot $DESTINATION /bin/rpm -ivh --justdb /$pkgdir/*
+chroot $DESTINATION /bin/rpm --rebuilddb
 rm -r ${DESTINATION}/var/cache/yum/
 
 echo "doing final housekeeping..."

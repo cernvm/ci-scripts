@@ -9,6 +9,6 @@ SYSTEM_NAME="slc6"
 BASE_ARCH="i386"
 REPO_BASE_URL="http://linuxsoft.cern.ch/cern/slc6X/$BASE_ARCH/yum/os/"
 GPG_KEY_PATHS="file:///etc/pki/rpm-gpg/RPM-GPG-KEY-cern"
-BASE_PACKAGES="sl-release coreutils tar iputils rpm yum yum-conf"
+BASE_PACKAGES="sl-release coreutils tar iputils rpm yum yum-conf yum-plugin-ovl"
 
 . ${SCRIPT_LOCATION}/../rhel_common/build.sh

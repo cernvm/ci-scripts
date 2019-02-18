@@ -2,7 +2,9 @@ FROM        scratch
 MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
 ADD         fedora28_i386.tar.gz /
-RUN         dnf -y update && dnf -y install                     \
+RUN         dnf -y install tzdata
+RUN         dnf -y update
+RUN         dnf -y install                     \
                                         cmake                   \
                                         curl-devel              \
                                         fuse-devel              \
