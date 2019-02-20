@@ -30,4 +30,7 @@ RUN         yum -y update && yum -y install                     \
 
 RUN         useradd sftnight
 USER        sftnight
+
+RUN go get github.com/jstemmer/go-junit-report
+
 WORKDIR     /home/sftnight
