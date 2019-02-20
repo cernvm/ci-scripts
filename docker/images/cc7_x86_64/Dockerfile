@@ -55,8 +55,8 @@ RUN touch /home/sftnight/.rpmmacros && chown sftnight /home/sftnight/.rpmmacros 
 
 # End of Erlang part
 
-USER        sftnight
-
 RUN go get github.com/jstemmer/go-junit-report
+
+USER        sftnight
 
 WORKDIR     /home/sftnight
