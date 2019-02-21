@@ -57,6 +57,8 @@ RUN touch /home/sftnight/.rpmmacros && chown sftnight /home/sftnight/.rpmmacros 
 
 RUN go get github.com/jstemmer/go-junit-report
 
+ENV PATH=$PATH:/root/go/bin
+
 USER        sftnight
 
 WORKDIR     /home/sftnight
