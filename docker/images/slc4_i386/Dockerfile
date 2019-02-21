@@ -63,5 +63,7 @@ RUN        sed -i -e 's/^\(%_sysconfdir[[:space:]]\+\).*$/\1\/etc/g'            
            sed -i -e 's/^\(%_defaultdocdir[[:space:]]\+\).*$/\1%{_usr}\/share\/doc/g' /usr/lib/rpm/macros
 
 RUN         useradd sftnight
+RUN         rm -rf /home/sftnight
+
 USER        sftnight
 WORKDIR     /home

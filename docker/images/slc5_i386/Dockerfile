@@ -30,5 +30,7 @@ RUN         yum -y update && yumdownloader -y --resolve         \
 RUN         rpm --rebuilddb && rpm -vhU --replacepkgs --nocontexts *.rpm
 
 RUN         useradd sftnight
+RUN         rm -rf /home/sftnight
+
 USER        sftnight
 WORKDIR     /home

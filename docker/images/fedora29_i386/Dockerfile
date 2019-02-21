@@ -34,5 +34,7 @@ RUN         dnf -y update && dnf -y install                     \
                                         zlib-devel
 
 RUN         useradd sftnight
+RUN         rm -rf /home/sftnight
+
 USER        sftnight
 WORKDIR     /home

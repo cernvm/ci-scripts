@@ -50,5 +50,7 @@ RUN mkdir -p /home/sftnight/.togo && chown sftnight /home/sftnight/.togo && chmo
 RUN touch /home/sftnight/.rpmmacros && chown sftnight /home/sftnight/.rpmmacros && chmod ugo+rw /home/sftnight/.rpmmacros
 
 RUN         useradd sftnight
+RUN         rm -rf /home/sftnight
+
 USER        sftnight
 WORKDIR     /home
