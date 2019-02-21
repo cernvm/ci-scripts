@@ -1,7 +1,7 @@
 ## See README.md, build.sh and ../build_on_docker.sh
 
 FROM       scratch
-MAINTAINER Rene Meusel <rene.meusel@cern.ch>
+MAINTAINER Jakob Blomer <jblomer@cern.ch>
 
 ADD        slc4_i386.tar.gz /
 
@@ -61,3 +61,7 @@ RUN        yum -y update && yum -y install                      \
 # fix bogus %{_sysconfdir} and %{_defaultdocdir} RPM macro definitions
 RUN        sed -i -e 's/^\(%_sysconfdir[[:space:]]\+\).*$/\1\/etc/g'                  /usr/lib/rpm/macros && \
            sed -i -e 's/^\(%_defaultdocdir[[:space:]]\+\).*$/\1%{_usr}\/share\/doc/g' /usr/lib/rpm/macros
+
+RUN         useradd sftnight
+USER        sftnight
+WORKDIR     /home

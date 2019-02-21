@@ -1,5 +1,5 @@
 FROM        scratch
-MAINTAINER  Rene Meusel <rene.meusel@cern.ch>
+MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
 ADD         slc6_x86_64.tar.gz /
 RUN         yum -y update && yum -y install                         \
@@ -49,5 +49,6 @@ RUN curl -o /tmp/togo-2.5-1.noarch.rpm http://ecsft.cern.ch/dist/cvmfs/builddeps
 RUN mkdir -p /home/sftnight/.togo && chown sftnight /home/sftnight/.togo && chmod ugo+rwx /home/sftnight/.togo
 RUN touch /home/sftnight/.rpmmacros && chown sftnight /home/sftnight/.rpmmacros && chmod ugo+rw /home/sftnight/.rpmmacros
 
+RUN         useradd sftnight
 USER        sftnight
-WORKDIR     /home/sftnight
+WORKDIR     /home

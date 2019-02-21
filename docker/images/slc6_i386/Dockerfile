@@ -1,5 +1,5 @@
 FROM        scratch
-MAINTAINER  Rene Meusel <rene.meusel@cern.ch>
+MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
 ADD         slc6_i386.tar.gz /
 RUN         yum -y update && yum -y install                     \
@@ -30,4 +30,4 @@ RUN         yum -y update && yum -y install                     \
 
 RUN         useradd sftnight
 USER        sftnight
-WORKDIR     /home/sftnight
+WORKDIR     /home

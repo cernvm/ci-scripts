@@ -32,4 +32,4 @@ RUN        ln -s /usr/bin/unzip-plain /etc/alternatives/unzip
 
 RUN        useradd sftnight
 USER       sftnight
-WORKDIR    /home/sftnight
+WORKDIR    /home

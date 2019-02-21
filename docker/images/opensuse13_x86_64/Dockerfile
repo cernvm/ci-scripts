@@ -1,7 +1,7 @@
 ## See README.md, build.sh and ../build_on_docker.sh
 
 FROM       scratch
-MAINTAINER Rene Meusel <rene.meusel@cern.ch>
+MAINTAINER Jakob Blomer <jblomer@cern.ch>
 
 ADD        opensuse13_x86_64.tar.gz /
 RUN        zypper -n update && zypper -n install          \
@@ -29,4 +29,4 @@ RUN        zypper -n update && zypper -n install          \
 
 RUN        useradd sftnight
 USER       sftnight
-WORKDIR    /home/sftnight
+WORKDIR    /home

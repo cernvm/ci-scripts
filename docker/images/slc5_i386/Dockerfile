@@ -31,4 +31,4 @@ RUN         rpm --rebuilddb && rpm -vhU --replacepkgs --nocontexts *.rpm
 
 RUN         useradd sftnight
 USER        sftnight
-WORKDIR     /home/sftnight
+WORKDIR     /home

@@ -35,4 +35,4 @@ RUN         dnf -y update && dnf -y install                     \
 
 RUN         useradd sftnight
 USER        sftnight
-WORKDIR     /home/sftnight
+WORKDIR     /home
