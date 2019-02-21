@@ -161,10 +161,8 @@ uid=$(id -u)
 gid=$(id -g)
 echo "++ $@"
 sudo docker run --volume="$WORKSPACE":"$WORKSPACE"           \
-                --volume=/etc/passwd:/etc/passwd             \
-                --volume=/etc/group:/etc/group               \
                 --volume="$OUTPUT_POOL_DIR:$OUTPUT_POOL_DIR" \
-                --user=${uid}:${gid}                         \
+                --user=$USER                                 \
                 --rm=true                                    \
                 --privileged=true                            \
                 $args $image_name                            \
