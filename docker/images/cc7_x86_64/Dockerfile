@@ -55,9 +55,7 @@ RUN touch /home/sftnight/.rpmmacros && chown sftnight /home/sftnight/.rpmmacros 
 
 # End of Erlang part
 
-RUN go get github.com/jstemmer/go-junit-report
-
-ENV PATH=$PATH:/root/go/bin
+RUN GOPATH=/usr/bin/go go get github.com/jstemmer/go-junit-report
 
 USER        sftnight
 
