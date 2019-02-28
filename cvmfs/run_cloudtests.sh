@@ -28,7 +28,7 @@ has_platform_parameter 'ami'   "$vm_desc" || die "VM parameter .ami missing"
 has_platform_parameter 'user'  "$vm_desc" || die "VM parameter .user missing"
 
 suites=
-if [ "x${CVMFS_QUICK_TESTS} = xtrue" ]; then
+if [ "x${CVMFS_QUICK_TESTS}" = "xtrue" ]; then
   suites="-s quick"
 fi
 
