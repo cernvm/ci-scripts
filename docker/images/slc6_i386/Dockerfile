@@ -28,6 +28,8 @@ RUN         yum -y update && yum -y install                     \
                                         which                   \
                                         zlib-devel
 
+RUN go get github.com/jstemmer/go-junit-report
+
 RUN         useradd sftnight
 USER        sftnight
 WORKDIR     /home/sftnight

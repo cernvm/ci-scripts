@@ -67,12 +67,12 @@ usage() {
   echo " -u <testee URL>              URL to the nightly build directory to be tested"
   echo " -p <platform name>           name of the platform to be tested"
   echo " -b <setup script>            platform specific setup script (inside the tarball)"
+  echo " -w <gateway URL>             URL of the repository gateway build to be tested"
+  echo " -n <notify URL>              URL of the notification server package to be used"
   echo " -r <run script>              platform specific test script (inside the tarball)"
   echo " -a <AMI name>                the virtual machine image to spawn"
   echo
   echo "Optional parameters:"
-  echo " -w <gateway URL>             URL of the repository gateway build to be tested"
-  echo " -n <notify URL>              URL of the notification server package to be used"
   echo " -e <EC2 config file>         local location of the ec2_config.sh file"
   echo " -d <results destination>     Directory to store final test session logs"
   echo " -m <ssh user name>           User name to be used for VM login (default: root)"
@@ -248,7 +248,7 @@ get_test_results() {
 #
 
 
-while getopts "r:b:u:w:p:e:a:d:m:c:l:s:" option; do
+while getopts "r:b:u:w:n:p:e:a:d:m:c:l:s:" option; do
   case $option in
     r)
       platform_run_script=$OPTARG
@@ -301,8 +301,8 @@ if [ x$platform_run_script   = "x" ] ||
    [ x$platform_setup_script = "x" ] ||
    [ x$platform              = "x" ] ||
    [ x$testee_url            = "x" ] ||
-   [ x$gateway_pkg_url = "x" ] ||
-   [ x$notify_pkg_url = "x" ] ||
+   [ x$gateway_pkg_url       = "x" ] ||
+   [ x$notify_pkg_url        = "x" ] ||
    [ x$ami_name              = "x" ]; then
   usage "Missing parameter(s)"
 fi

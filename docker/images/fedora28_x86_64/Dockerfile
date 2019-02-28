@@ -33,6 +33,9 @@ RUN         dnf -y update && dnf -y install                     \
                                         valgrind-devel          \
                                         zlib-devel
 
+
+RUN go get github.com/jstemmer/go-junit-report
+
 RUN         useradd sftnight
 USER        sftnight
 WORKDIR     /home/sftnight

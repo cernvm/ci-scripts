@@ -171,7 +171,7 @@ exec &> ${cvmfs_log_directory}/setup.log
 echo "*** Called remote_setup.sh with options $@"
 
 # read parameters
-while getopts "r:s:c:d:t:g:k:w:p:u:e:" option; do
+while getopts "r:s:c:d:t:g:k:w:n:p:u:e:" option; do
   case $option in
     r)
       platform_script=$OPTARG
@@ -331,6 +331,6 @@ args="-t $cvmfs_source_directory \
       -l $cvmfs_log_directory    \
       -c $client_package"
 if [ "x$(uname -s)" != "xDarwin" ]; then
-  args="$args -s $server_package -d $devel_package -g $unittest_package -p $shrinkwrap_package -k $config_package -w $gateway_pkg_url" -n $notify_pkg_url
+  args="$args -s $server_package -d $devel_package -g $unittest_package -p $shrinkwrap_package -k $config_package -w $gateway_pkg_url -n $notify_pkg_url"
 fi
 sudo -H -E -u $test_username bash $platform_script_abs $args
