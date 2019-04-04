@@ -6,7 +6,8 @@ RUN         dnf -y update && dnf -y install                     \
                                         cmake                   \
                                         curl-devel              \
                                         fuse-devel              \
-                                        gcc                     \
+                                        fuse3-devel             \
+					gcc                     \
                                         gcc-c++                 \
                                         gdb                     \
                                         git                     \
