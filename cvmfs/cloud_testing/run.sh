@@ -339,6 +339,10 @@ if [ x"$platform" != "xosx_x86_64" ]; then
     usage "Incomplete pkgmap file"
   fi
 
+  if [ "x$fuse3_package" != "x" ]; then
+    fuse3_package="${ctu}/${fuse3_package}"
+  fi
+
   server_package="${otu}/${server_package}"
   devel_package="${ctu}/${devel_package}"
   unittest_package="${otu}/${unittest_package}"
