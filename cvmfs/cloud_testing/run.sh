@@ -125,6 +125,9 @@ setup_virtual_machine() {
   if [ "x$client_package" != "x" ]; then
     args="$args -c $client_package"
   fi
+  if [ "x$fuse3_package" != "x" ]; then
+    args="$args -f $fuse3_package"
+  fi
   if [ "x$devel_package" != "x" ]; then
     args="$args -d $devel_package"
   fi
@@ -318,6 +321,7 @@ fi
 ctu="$client_testee_url"
 otu="$testee_url"
 client_package=$(read_package_map     ${ctu}/pkgmap "$platform" 'client'    )
+fuse3_package=$(read_package_map      ${ctu}/pkgmap "$platform" 'fuse3'     )
 server_package=$(read_package_map     ${otu}/pkgmap "$platform" 'server'    )
 devel_package=$(read_package_map      ${ctu}/pkgmap "$platform" 'devel'     )
 unittest_package=$(read_package_map   ${otu}/pkgmap "$platform" 'unittests' )

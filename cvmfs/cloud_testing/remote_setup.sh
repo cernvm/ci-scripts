@@ -15,6 +15,7 @@ usage() {
   echo "Mandatory options:"
   echo "-s <cvmfs server package>  CernVM-FS server package to be tested (Linux only)"
   echo "-c <cvmfs client package>  CernVM-FS client package to be tested"
+  echo "-f <cvmfs_fuse3 package>   cvmfs_libfuse3 package to be tested"
   echo "-d <cvmfs devel package>   CernVM-FS devel package to be tested (Linux only)"
   echo "-t <cvmfs source tarball>  CernVM-FS sources containing associated tests"
   echo "-g <cvmfs tests package>   CernVM-FS unit tests package (Linux only)"
@@ -111,6 +112,7 @@ platform_script=""
 platform_script_path=""
 server_package=""
 client_package=""
+fuse3_package=""
 devel_package=""
 config_package=""
 source_tarball=""
@@ -171,7 +173,7 @@ exec &> ${cvmfs_log_directory}/setup.log
 echo "*** Called remote_setup.sh with options $@"
 
 # read parameters
-while getopts "r:s:c:d:t:g:k:w:n:p:u:e:" option; do
+while getopts "r:s:c:d:t:g:k:w:n:p:u:e:f:" option; do
   case $option in
     r)
       platform_script=$OPTARG
@@ -181,6 +183,9 @@ while getopts "r:s:c:d:t:g:k:w:n:p:u:e:" option; do
       ;;
     c)
       client_package=$OPTARG
+      ;;
+    f)
+      fuse3_package=$OPTARG
       ;;
     d)
       devel_package=$OPTARG
@@ -261,6 +266,7 @@ fi
 echo "downloading packages..."
 download_if_used $server_package
 download_if_used $client_package
+download_if_used $fuse3_package
 download_if_used $devel_package
 download_if_used $source_tarball
 download_if_used $unittest_package
@@ -273,6 +279,9 @@ if [ "x$server_package" != "x" ]; then
 fi
 if [ "x$client_package" != "x" ]; then
   client_package=$(canonicalize_path $client_package)
+fi
+if [ "x$fuse3_package" != "x" ]; then
+  fuse3_package=$(canonicalize_path $fuse3_package)
 fi
 if [ "x$devel_package" != "x" ]; then
   devel_package=$(canonicalize_path $devel_package)
@@ -332,5 +341,8 @@ args="-t $cvmfs_source_directory \
       -c $client_package"
 if [ "x$(uname -s)" != "xDarwin" ]; then
   args="$args -s $server_package -d $devel_package -g $unittest_package -p $shrinkwrap_package -k $config_package -w $gateway_pkg_url -n $notify_pkg_url"
+fi
+if [ x"$fuse3_package" != "x" ]; then
+  args="$args -f $fuse3_package"
 fi
 sudo -H -E -u $test_username bash $platform_script_abs $args
