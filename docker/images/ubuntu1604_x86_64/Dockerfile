@@ -56,4 +56,9 @@ RUN curl -o /tmp/esl-erlang.deb \
 RUN curl -o /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3 && chmod +x /usr/local/bin/rebar3 && /usr/local/bin/rebar3 local install
 # End of Erlang part
 
+# Golang >= 11.5 is needed for cvmfs-gateway
+RUN curl -o /tmp/go.tar.gz https://dl.google.com/go/go1.12.4.linux-amd64.tar.gz && \
+    tar -C /usr/local -xzf /tmp/go.tar.gz && rm /tmp/go.tar.gz
+ENV PATH="/usr/local/go/bin:${PATH}"
+
 RUN gem install --no-ri --no-rdoc fpm
