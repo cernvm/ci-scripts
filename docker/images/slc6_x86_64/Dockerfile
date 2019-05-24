@@ -6,6 +6,7 @@ RUN         yum -y update && yum -y install                         \
                                         cmake                       \
                                         curl-devel                  \
                                         fuse-devel                  \
+                                        fuse3-devel                 \
                                         gcc                         \
                                         gcc-c++                     \
                                         git                         \
