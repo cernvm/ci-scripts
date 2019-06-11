@@ -285,6 +285,15 @@
     "user": "fedora"
   },
   {
+    "dist": "fedora30",
+    "config": "x86_64",
+    "ami": "ami-fb71a29d",
+    "label": "fedora30_x86_64",
+    "setup": "fedora_setup.sh",
+    "test": "fedora_test.sh",
+    "user": "fedora"
+  },
+  {
     "dist": "macos",
     "config": "x86_64",
     "ami": "cernvm-mac-mini-1",
