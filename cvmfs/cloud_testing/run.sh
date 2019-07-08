@@ -30,7 +30,6 @@ platform=""
 platform_run_script=""
 platform_setup_script=""
 gateway_pkg_url=""
-notify_pkg_url=""
 ec2_config=""
 ami_name=""
 log_destination="."
@@ -68,7 +67,6 @@ usage() {
   echo " -p <platform name>           name of the platform to be tested"
   echo " -b <setup script>            platform specific setup script (inside the tarball)"
   echo " -w <gateway URL>             URL of the repository gateway build to be tested"
-  echo " -n <notify URL>              URL of the notification server package to be used"
   echo " -r <run script>              platform specific test script (inside the tarball)"
   echo " -a <AMI name>                the virtual machine image to spawn"
   echo
@@ -142,9 +140,6 @@ setup_virtual_machine() {
   fi
   if [ "x$gateway_pkg_url" != "x" ]; then
     args="$args -w $gateway_pkg_url"
-  fi
-  if [ "x$notify_pkg_url" != "x" ]; then
-    args="$args -n $notify_pkg_url"
   fi
   run_script_on_virtual_machine $args
 
@@ -265,9 +260,6 @@ while getopts "r:b:u:w:n:p:e:a:d:m:c:l:s:" option; do
     w)
       gateway_pkg_url=$OPTARG
       ;;
-    n)
-      notify_pkg_url=$OPTARG
-      ;;
     p)
       platform=$OPTARG
       ;;
@@ -305,7 +297,6 @@ if [ x$platform_run_script   = "x" ] ||
    [ x$platform              = "x" ] ||
    [ x$testee_url            = "x" ] ||
    [ x$gateway_pkg_url       = "x" ] ||
-   [ x$notify_pkg_url        = "x" ] ||
    [ x$ami_name              = "x" ]; then
   usage "Missing parameter(s)"
 fi

@@ -14,7 +14,6 @@ EC2_CONFIG="/etc/cvmfs-testing/ec2_config.sh"
 [ ! -z $CVMFS_PLATFORM_CONFIG ] || die "CVMFS_PLATFORM_CONFIG missing"
 [ ! -z $CVMFS_TESTEE_URL ]      || die "CVMFS_TESTEE_URL missing"
 [ ! -z $CVMFS_GATEWAY_URL ]     || die "CVMFS_GATEWAY_URL missing"
-[ ! -z $CVMFS_NOTIFY_URL ]     || die "CVMFS_NOTIFY_URL missing"
 which jq > /dev/null 2>&1       || die "jq utility missing"
 
 vm_desc="$(get_platform_description $CVMFS_PLATFORM $CVMFS_PLATFORM_CONFIG)"
@@ -36,7 +35,6 @@ echo "Running cloud tests for $CVMFS_PLATFORM / $CVMFS_PLATFORM_CONFIG ..."
 ${SCRIPT_LOCATION}/cloud_testing/run.sh                    \
         -u $CVMFS_TESTEE_URL                               \
         -w $CVMFS_GATEWAY_URL                              \
-        -n $CVMFS_NOTIFY_URL                               \
         -p  $(get_platform_parameter 'label'   "$vm_desc") \
         -b  $(get_platform_parameter 'setup'   "$vm_desc") \
         -r  $(get_platform_parameter 'test'    "$vm_desc") \
