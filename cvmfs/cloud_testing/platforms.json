@@ -64,11 +64,11 @@
   },
   {
     "dist": "el6",
-    "config": "x86_64_infoheader",
+    "config": "x86_64_fuse3",
     "ami": "ami-04e5c797",
     "label": "slc6_x86_64",
-    "setup": "slc6_x86_64-INFOHEADER_setup.sh",
-    "test": "slc6_x86_64-INFOHEADER_test.sh",
+    "setup": "slc6_x86_64-FUSE3_setup.sh",
+    "test": "slc6_x86_64-FUSE3_test.sh",
     "user": "root"
   },
   {
@@ -123,6 +123,18 @@
     "label": "cc7_x86_64",
     "setup": "centos7_x86_64-NFS_setup.sh",
     "test": "centos7_x86_64-NFS_test.sh",
+    "user": "centos",
+    "context": "#!/bin/sh
+                 echo 'Defaults !requiretty' | tee --append /etc/sudoers
+                 echo 'Defaults visiblepw' | tee --append /etc/sudoers"
+  },
+  {
+    "dist": "el7",
+    "config": "x86_64_fuse3",
+    "ami": "ami-2170c9fc",
+    "label": "cc7_x86_64",
+    "setup": "centos7_x86_64-FUSE3_setup.sh",
+    "test": "centos7_x86_64-FUSE3_test.sh",
     "user": "centos",
     "context": "#!/bin/sh
                  echo 'Defaults !requiretty' | tee --append /etc/sudoers
@@ -268,6 +280,15 @@
     "config": "x86_64",
     "ami": "ami-1659d06c",
     "label": "fedora29_x86_64",
+    "setup": "fedora_setup.sh",
+    "test": "fedora_test.sh",
+    "user": "fedora"
+  },
+  {
+    "dist": "fedora30",
+    "config": "x86_64",
+    "ami": "ami-fb71a29d",
+    "label": "fedora30_x86_64",
     "setup": "fedora_setup.sh",
     "test": "fedora_test.sh",
     "user": "fedora"

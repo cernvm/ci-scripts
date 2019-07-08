@@ -1,33 +1,39 @@
 FROM        scratch
-MAINTAINER  Rene Meusel <rene.meusel@cern.ch>
+MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
-ADD         slc6_i386.tar.gz /
-RUN         yum -y update && yum -y install                     \
+ADD         fedora30_x86_64.tar.gz /
+RUN         dnf -y update && dnf -y install                     \
                                         cmake                   \
                                         curl-devel              \
                                         fuse-devel              \
                                         fuse3-devel             \
-                                        gcc                     \
+					gcc                     \
                                         gcc-c++                 \
+                                        gdb                     \
                                         git                     \
                                         golang                  \
+                                        gridsite                \
                                         hardlink                \
                                         libattr-devel           \
                                         libcap-devel            \
                                         libuuid-devel           \
                                         make                    \
+                                        nfs-utils               \
                                         openssl-devel           \
+                                        perl-IO-Interface       \
                                         policycoreutils-python  \
                                         python-devel            \
                                         python-setuptools       \
                                         rpm-build               \
                                         selinux-policy-devel    \
                                         selinux-policy-targeted \
-                                        sysvinit-tools          \
-                                        valgrind-devel          \
+                                        sudo                    \
+                                        tree                    \
                                         voms-devel              \
                                         which                   \
+                                        valgrind-devel          \
                                         zlib-devel
+
 
 RUN go get github.com/jstemmer/go-junit-report
 
