@@ -246,7 +246,7 @@ get_test_results() {
 #
 
 
-while getopts "r:b:u:w:n:p:e:a:d:m:c:l:s:" option; do
+while getopts "r:b:u:w:p:e:a:d:m:c:l:s:" option; do
   case $option in
     r)
       platform_run_script=$OPTARG
