@@ -153,7 +153,7 @@ for var in $(env | grep -ohe "^\(CVMFS\|CERNVM\)_[^=]*"); do
   fi
   args="--env $var=$(eval "echo \$$var") $args"
 done
-args="--env GOCACHE=$WORKSPACE/.gocache $args"
+#args="--env GOCACHE=$WORKSPACE/.gocache $args"
 
 # run provided script inside the docker container
 # Note: Workaround for stdout/stderr redirection in conjunction with
