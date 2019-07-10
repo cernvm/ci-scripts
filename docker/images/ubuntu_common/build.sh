@@ -42,13 +42,15 @@ mkdir -p $DESTINATION
 
 echo "bootstrapping a build environment..."
 debootstrap --variant=buildd  \
+            # following line fixes deboostrap for buster, possible to delete if it works without it
+            --include="perl"  \
             --arch=$BASE_ARCH \
 	          --force-check-gpg \
             $UBUNTU_RELEASE   \
             $DESTINATION      \
             $REPO_BASE_URL
 
-if [ x"$UBUNTU_RELEASE" != x"bionic" ]; then
+if [ x"$UBUNTU_RELEASE" != x"bionic" ] && [ x"$UBUNTU_RELEASE" != x"buster" ] ; then
   echo "installing stretch and artful source repositories for autofs backport..."
   echo "deb-src http://ftp.debian.org/debian stretch main" > $DESTINATION/etc/apt/sources.list.d/stretch-src.list
   echo "deb-src http://archive.ubuntu.com/ubuntu/ artful main" > $DESTINATION/etc/apt/sources.list.d/artful-src.list
