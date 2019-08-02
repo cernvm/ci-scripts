@@ -40,9 +40,9 @@ echo "creating chroot dir..."
 [ ! -d $DESTINATION ] || rm -fR $DESTINATION
 mkdir -p $DESTINATION
 
+# the include="perl" line fixes deboostrap for buster; if it works without it in the future, remove the line
 echo "bootstrapping a build environment..."
 debootstrap --variant=buildd  \
-            # following line fixes deboostrap for buster, possible to delete if it works without it
             --include="perl"  \
             --arch=$BASE_ARCH \
 	          --force-check-gpg \
