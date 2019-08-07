@@ -21,4 +21,5 @@ sudo make install
 cd ${CVMFS_TEST_LOCATION}
 ./run.sh ${CVMFS_DATA_LOCATION}/benchmark.log -o ${CVMFS_DATA_LOCATION}/benchmark.xml benchmarks/*
 cp -r /tmp/cvmfs_benchmarks ${CVMFS_DATA_LOCATION}
+cd ${WORKSPACE}
 python2.7 ${CVMFS_PYTHON_LOCATION}/statistics_collector.py ${CVMFS_DATA_LOCATION}/cvmfs_benchmarks/*/*.data
