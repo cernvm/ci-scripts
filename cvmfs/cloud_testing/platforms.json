@@ -303,7 +303,7 @@
     "user": "sftnight"
   },
   {
-    "dist": "centos7",
+    "dist": "el7",
     "config": "x86_64_yubikey",
     "ami": "cvm-yubikey01",
     "label": "centos7_x86_64_yubikey",
