@@ -89,7 +89,7 @@ spawn_my_virtual_machine() {
 
   local retcode
 
-  if [ x"$platform" = "xosx_x86_64" ] || [ x"$platform" = "xcentos7_x86_64_yubikey" ]; then
+  if [ x"$platform" = "xosx_x86_64" ] || [ x"$ami_name" = "xcvm-yubikey01" ]; then
     ip_address=$(getent hosts $ami | awk '{ print $1}')
     retcode=$?
     check_retcode $retcode
