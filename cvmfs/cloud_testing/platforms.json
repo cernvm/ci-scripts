@@ -301,5 +301,14 @@
     "setup": "macos_setup.sh",
     "test": "macos_test.sh",
     "user": "sftnight"
+  },
+  {
+    "dist": "centos7",
+    "config": "x86_64_yubikey",
+    "ami": "cvm-yubikey01",
+    "label": "centos7_x86_64_yubikey",
+    "setup": "yubikey_setup.sh",
+    "test": "yubikey_test.sh",
+    "user": "vmforwarduser"
   }
 ]
