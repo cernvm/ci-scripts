@@ -123,7 +123,7 @@ spawn_virtual_machine() {
 wait_for_virtual_machine() {
   local ip=$1
   local username=$2
-  local port=${CUSTOM_SSH_PORT:-22}
+  local port=${CLOUD_TESTING_SSH_PORT:-22}
 
   # wait for the virtual machine to respond to pings
   echo -n "waiting for IP ($ip) to become reachable... "
@@ -170,7 +170,7 @@ run_script_on_virtual_machine() {
   local script_path=$3
   shift 3
 
-  local port=${CUSTOM_SSH_PORT:-22}
+  local port=${CLOUD_TESTING_SSH_PORT:-22}
 
   args=""
   while [ $# -gt 0 ]; do
@@ -195,7 +195,8 @@ retrieve_file_from_virtual_machine() {
   local username=$2
   local file_path=$3
   local dest_path=$4
+  local port=${CLOUD_TESTING_SSH_PORT:-22}
 
-  scp -i $EC2_KEY_LOCATION -o StrictHostKeyChecking=no \
+  scp -i $EC2_KEY_LOCATION -o StrictHostKeyChecking=no -P $port\
       $username@${ip}:${file_path} ${dest_path} > /dev/null 2>&1
 }

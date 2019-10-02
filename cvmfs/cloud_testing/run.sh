@@ -23,6 +23,11 @@ cvmfs_workspace="/tmp/cvmfs-test-workspace"
 cvmfs_source_directory="${cvmfs_workspace}/cvmfs-source"
 cvmfs_log_directory="${cvmfs_workspace}/logs"
 
+# yubikey test node specific information
+YUBIKEY_SSH_PORT=2222
+YUBIKEY_VM_STARTUP_SCRIPT='/root/centos7-cloudtesting_start.sh'
+YUBIKEY_VM_TEARDOWN_SCRIPT='/root/centos7-cloudtesting_teardown.sh'
+
 # global variables for external script parameters
 testee_url=""
 client_testee_url=""
@@ -89,10 +94,18 @@ spawn_my_virtual_machine() {
 
   local retcode
 
-  if [ x"$platform" = "xosx_x86_64" ] || [ x"$ami_name" = "xcvm-yubikey01" ]; then
-    ip_address=$(getent hosts $ami | awk '{ print $1}')
+  # special case for macos and yubikey testing node
+  if [ x"$platform" = "xosx_x86_64" ] || [ x"$ami" = "xcvm-yubikey01" ]; then
+    ip_address=$(getent ahostsv4 $ami | head -n1 | awk '{ print $1}')
     retcode=$?
-    check_retcode $retcode
+    [ $retcode -eq 0 ] || return $retcode
+
+    # need to set up the VM on yubikey testing node
+    # run a script prepared by Ansible in root home directory
+    if [ x"$ami" = "xcvm-yubikey01" ]; then
+      start_yubikey_vm $ip_address || retcode=$?
+    fi
+
     return $retcode
   fi
 
@@ -214,6 +227,29 @@ cleanup_test_machine() {
   fi
 }
 
+start_yubikey_vm() {
+  local ip_address=$1
+  echo -n "Setting up VM on cvm-yubikey01 node... "
+  ssh -i $EC2_KEY_LOCATION -o StrictHostKeyChecking=no     \
+                           -o UserKnownHostsFile=/dev/null \
+                           -o LogLevel=ERROR               \
+                           -o BatchMode=yes                \
+      root@${ip_address} $YUBIKEY_VM_STARTUP_SCRIPT > /dev/null 2>&1
+  retcode=$?
+  check_retcode $retcode || return $retcode
+}
+
+tear_down_yubikey_vm() {
+  local ip_address=$1
+  echo -n "Tearing down VM on cvm-yubikey01 node... "
+  ssh -i $EC2_KEY_LOCATION -o StrictHostKeyChecking=no     \
+                           -o UserKnownHostsFile=/dev/null \
+                           -o LogLevel=ERROR               \
+                           -o BatchMode=yes                \
+      root@${ip_address} $YUBIKEY_VM_TEARDOWN_SCRIPT > /dev/null 2>&1
+  retcode=$?
+  check_retcode $retcode || return $retcode
+}
 
 handle_test_failure() {
   local ip=$1
@@ -349,8 +385,10 @@ else
   fi
 fi
 
-if [ x"$ami" = "cvm-yubikey01" ]; then
-  export CUSTOM_SSH_PORT=2222
+# special case: yubikey testing node runs a VM accesible by port 2222
+if [ x"$ami_name" = "xcvm-yubikey01" ]; then
+  export CLOUD_TESTING_SSH_PORT=$YUBIKEY_SSH_PORT
+  echo "Setting custom port for ssh $CLOUD_TESTING_SSH_PORT"
 fi
 
 # load EC2 configuration
@@ -370,10 +408,12 @@ setup_virtual_machine     $ip_address  $username    || die "Aborting..."
 wait_for_virtual_machine  $ip_address  $username    || die "Aborting..."
 run_test_cases            $ip_address  $username    || die "Aborting..."
 get_test_results          $ip_address  $username    || die "Aborting..."
-if [ "x$platform" != "xosx_x86_64" ]; then
-  tear_down_virtual_machine $instance_id            || die "Aborting..."
-else
+if [ "x$platform" = "xosx_x86_64" ]; then
   cleanup_test_machine $ip_address $username        || die "Aborting..."
+elif [ x"$ami_name" = "xcvm-yubikey01" ]; then
+  tear_down_yubikey_vm $ip_address                  || die "Aborting..."
+else
+  tear_down_virtual_machine $instance_id            || die "Aborting..."
 fi
 
 echo "all done"
