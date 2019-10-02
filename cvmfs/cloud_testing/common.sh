@@ -123,6 +123,7 @@ spawn_virtual_machine() {
 wait_for_virtual_machine() {
   local ip=$1
   local username=$2
+  local port=${CLOUD_TESTING_SSH_PORT:-22}
 
   # wait for the virtual machine to respond to pings
   echo -n "waiting for IP ($ip) to become reachable... "
@@ -141,7 +142,7 @@ wait_for_virtual_machine() {
                                    -o UserKnownHostsFile=/dev/null \
                                    -o LogLevel=ERROR               \
                                    -o BatchMode=yes                \
-              ${username}@${ip} 'echo hallo' > /dev/null 2>&1; do
+              ${username}@${ip} -p $port 'echo hallo' > /dev/null 2>&1; do
     sleep 10
     timeout=$(( $timeout - 10 ))
   done
@@ -169,6 +170,8 @@ run_script_on_virtual_machine() {
   local script_path=$3
   shift 3
 
+  local port=${CLOUD_TESTING_SSH_PORT:-22}
+
   args=""
   while [ $# -gt 0 ]; do
     if echo "$1" | grep -q "[[:space:]]"; then
@@ -183,7 +186,7 @@ run_script_on_virtual_machine() {
                            -o UserKnownHostsFile=/dev/null \
                            -o LogLevel=ERROR               \
                            -o BatchMode=yes                \
-      $username@$ip 'cat | bash /dev/stdin' $args < $script_path
+      $username@$ip -p $port 'cat | bash /dev/stdin' $args < $script_path
 }
 
 
@@ -192,7 +195,8 @@ retrieve_file_from_virtual_machine() {
   local username=$2
   local file_path=$3
   local dest_path=$4
+  local port=${CLOUD_TESTING_SSH_PORT:-22}
 
-  scp -i $EC2_KEY_LOCATION -o StrictHostKeyChecking=no \
+  scp -i $EC2_KEY_LOCATION -o StrictHostKeyChecking=no -P $port\
       $username@${ip}:${file_path} ${dest_path} > /dev/null 2>&1
 }
