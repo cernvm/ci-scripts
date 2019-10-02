@@ -349,6 +349,10 @@ else
   fi
 fi
 
+if [ x"$ami" = "cvm-yubikey01" ]; then
+  export CUSTOM_SSH_PORT=2222
+fi
+
 # load EC2 configuration
 . $ec2_config
 
