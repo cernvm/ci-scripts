@@ -27,6 +27,7 @@ DESTINATION="$(mktemp -d)"
 YUM_REPO_CFG=/etc/yum/repos.d/${SYSTEM_NAME}_${BASE_ARCH}-bootstrap.repo
 YUM_REPO_NAME=${SYSTEM_NAME}-${BASE_ARCH}-os-bootstrap
 PACKAGE_MGR=${PACKAGE_MGR:=yum}
+YUM_CONFIG_FILE=$(mktemp)
 
 echo "installing cleanup handler..."
 cleanup() {
@@ -36,6 +37,7 @@ cleanup() {
   umount ${DESTINATION}/sys  || true
   rm -f $YUM_REPO_CFG        || true
   rm -fR $DESTINATION        || true
+  rm $YUM_CONFIG_FILE
 }
 trap cleanup EXIT HUP INT TERM
 
@@ -51,6 +53,23 @@ baseurl=$REPO_BASE_URL
 gpgkey=$GPG_KEY_PATHS
 gpgcheck=1
 enabled=0
+keepcache=1
+cachedir=/var/cache/yum/$basearch
+EOF
+
+cat > $YUM_CONFIG_FILE << EOF
+[main]
+cachedir=/var/cache/yum
+keepcache=1
+debuglevel=2
+logfile=/var/log/yum.log
+exactarch=1
+obsoletes=1
+gpgcheck=1
+plugins=1
+installonly_limit=5
+bugtracker_url=http://bugs.centos.org/set_project.php?project_id=23&ref=http://bugs.centos.org/bug_report_page.php?category=yum
+distroverpkg=centos-release
 EOF
 
 echo "creating chroot dir..."
@@ -68,6 +87,7 @@ echo "bootstrapping the system..."
 yum --disablerepo='*'             \
     --enablerepo="$YUM_REPO_NAME" \
     --installroot=$DESTINATION    \
+    --config=$YUM_CONFIG_FILE     \
     -y install                    \
     $BASE_PACKAGES
 
