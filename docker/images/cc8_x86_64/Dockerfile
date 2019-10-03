@@ -22,6 +22,8 @@ RUN         yum -y install                     \
                        libuuid-devel           \
                        make                    \
                        openssl-devel           \
+                       python2                 \
+                       python3-devel           \
                        rpm-build               \
                        ruby-devel              \
                        selinux-policy-devel    \
