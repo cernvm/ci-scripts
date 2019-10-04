@@ -1,5 +1,5 @@
 FROM        scratch
-MAINTAINER  Jakob Blomer <jblomer@cern.ch>
+MAINTAINER  Simone Mosciatti <simone.mosciatti@cern.ch>
 
 # 2019-02-05 11:36  - dummy comment to trigger installation of latest golang compiler
 ADD         cc8_x86_64.tar.gz /
@@ -13,6 +13,7 @@ RUN         yum -y install                     \
                        fuse3-devel             \
                        gcc                     \
                        gcc-c++                 \
+                       gdb                     \
                        git                     \
                        golang                  \
                        hardlink                \
