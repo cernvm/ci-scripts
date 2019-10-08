@@ -53,23 +53,6 @@ zypper_cache="${DESTINATION}/var/cache/zypp/packages"
 mkdir -p ${DESTINATION}/tmp
 cp -r $zypper_cache ${DESTINATION}/tmp
 
-echo "installing dependencies for broken openldap2-client RPM..."
-# Workaround: openldap-client has a broken post-install script
-#             therefore we download and install it manually without running
-#             the install scripts.
-zypper --non-interactive     \
-       --root ${DESTINATION} \
-       install glibc libopenssl0_9_8 libldap-2_4-2 cyrus-sasl
-
-echo "downloading and installing broken openldap2-client RPM (--noscript)..."
-zypper --non-interactive install wget # on host container
-rpm_url=${REPO_BASE_URL}/suse/x86_64/openldap2-client-2.4.26-0.24.36.x86_64.rpm
-rpm_name=/tmp/$(basename $rpm_url)
-wget -O $rpm_name $rpm_url
-rpm --root ${DESTINATION} \
-    --noscripts           \
-    -i $rpm_name
-
 echo "installing base system and package manager..."
 zypper --non-interactive     \
        --root ${DESTINATION} \

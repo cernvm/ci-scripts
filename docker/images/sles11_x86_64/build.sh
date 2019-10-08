@@ -27,7 +27,7 @@ docker run --volume ${DESTINATION}:/chroot    \
            --volume ${SCRIPT_LOCATION}:/build \
            --rm=true                          \
            --privileged=true                  \
-           opensuse:latest /build/build_internal.sh
+           opensuse/leap:latest /build/build_internal.sh
 
 echo "package up the base image..."
 tar -czf $TARBALL_NAME -C $DESTINATION .
