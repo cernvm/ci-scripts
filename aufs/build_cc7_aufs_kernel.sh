@@ -99,6 +99,9 @@ echo "successfully built AUFS enabled kernel ${aufs_kernel_version_tag}"
 # echo "downloading OpenAFS kernel module sources..."
 # download_kmod_sources $source_location kmod-openafs
 
+# echo "cleaning up old kernels..."
+# sudo package-cleanup --oldkernels --count=2
+
 # echo "installing just created kernel RPMs..."
 # install_kernel_devel_rpm "$rpmbuild_location" "$aufs_kernel_version_tag"
 
