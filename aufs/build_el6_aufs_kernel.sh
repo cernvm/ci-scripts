@@ -69,7 +69,7 @@ download_kmod_sources $source_location spl-kmod
 download_kmod_sources $source_location zfs-kmod
 
 echo "cleaning up old kernels..."
-sudo package-cleanup --oldkernels --count=2
+sudo package-cleanup -y --oldkernels --count=2
 
 echo "installing just created kernel RPMs..."
 install_kernel_devel_rpm "$rpmbuild_location" "$aufs_kernel_version_tag"
