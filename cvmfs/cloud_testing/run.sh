@@ -72,7 +72,6 @@ usage() {
   echo " -p <platform name>           name of the platform to be tested"
   echo " -b <setup script>            platform specific setup script (inside the tarball)"
   echo " -w <gateway URL>             URL of the repository gateway build to be tested"
-  echo " -D <DUCC URL>                URL of the DUCC repository build to be tested"
   echo " -r <run script>              platform specific test script (inside the tarball)"
   echo " -a <AMI name>                the virtual machine image to spawn"
   echo
