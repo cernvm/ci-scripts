@@ -28,8 +28,15 @@ has_platform_parameter 'user'  "$vm_desc" || die "VM parameter .user missing"
 
 suites=
 if [ "x${CVMFS_QUICK_TESTS}" = "xtrue" ]; then
-  suites="-s quick"
+  suites="$suites quick"
 fi
+if [ "x${CVMFS_DUCC_TESTS}" = "xtrue" ]; then
+  suites="$suites ducc"
+fi
+if [ "x$suites" != "x" ]; then
+  suites="-s $suites"
+fi
+
 
 echo "Running cloud tests for $CVMFS_PLATFORM / $CVMFS_PLATFORM_CONFIG ..."
 ${SCRIPT_LOCATION}/cloud_testing/run.sh                    \
