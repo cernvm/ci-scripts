@@ -271,6 +271,7 @@ download_if_used $devel_package
 download_if_used $source_tarball
 download_if_used $unittest_package
 download_if_used $shrinkwrap_package
+download_if_used $ducc_package
 download_if_used $config_package
 
 # get local file path of downloaded files
