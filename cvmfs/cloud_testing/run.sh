@@ -35,7 +35,6 @@ platform=""
 platform_run_script=""
 platform_setup_script=""
 gateway_pkg_url=""
-ducc_pkg_url=""
 ec2_config=""
 ami_name=""
 log_destination="."
@@ -156,8 +155,8 @@ setup_virtual_machine() {
   if [ "x$gateway_pkg_url" != "x" ]; then
     args="$args -w $gateway_pkg_url"
   fi
-  if [ "x$ducc_pkg_url" != "x" ]; then
-    args="$args -D $ducc_pkg_url"
+  if [ "x$ducc_package" != "x" ]; then
+    args="$args -D $ducc_package"
   fi
   run_script_on_virtual_machine $args
 
@@ -302,7 +301,7 @@ while getopts "r:b:u:w:p:e:a:d:m:c:l:s:D:" option; do
       gateway_pkg_url=$OPTARG
       ;;
     D)
-      ducc_pkg_url=$OPTARG
+      ducc_package=$OPTARG
       ;;
     p)
       platform=$OPTARG
@@ -341,7 +340,6 @@ if [ x$platform_run_script   = "x" ] ||
    [ x$platform              = "x" ] ||
    [ x$testee_url            = "x" ] ||
    [ x$gateway_pkg_url       = "x" ] ||
-   [ x$ducc_pkg_url          = "x" ] ||
    [ x$ami_name              = "x" ]; then
   usage "Missing parameter(s)"
 fi
@@ -362,6 +360,7 @@ server_package=$(read_package_map     ${otu}/pkgmap "$platform" 'server'    )
 devel_package=$(read_package_map      ${ctu}/pkgmap "$platform" 'devel'     )
 unittest_package=$(read_package_map   ${otu}/pkgmap "$platform" 'unittests' )
 shrinkwrap_package=$(read_package_map ${otu}/pkgmap "$platform" 'shrinkwrap')
+ducc_package=$(read_package_map       ${otu}/pkgmap "$platform" 'ducc'      )
 config_packages="$(read_package_map   ${otu}/pkgmap "$platform" 'config'    )"
 
 if [ x"$platform" != "xosx_x86_64" ]; then
@@ -383,6 +382,7 @@ if [ x"$platform" != "xosx_x86_64" ]; then
   devel_package="${ctu}/${devel_package}"
   unittest_package="${otu}/${unittest_package}"
   shrinkwrap_package="${otu}/${shrinkwrap_package}"
+  ducc_package="${otu}/${ducc_package}"
   config_package_urls=""
   for config_package in $config_packages; do
     config_package_urls="${config_package_base_url}/${config_package} $config_package_urls"

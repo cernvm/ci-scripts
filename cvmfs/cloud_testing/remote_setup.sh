@@ -23,7 +23,7 @@ usage() {
   echo "-k <cvmfs config package>  CernVM-FS config package (Linux only)"
   echo "-r <setup script>          platform specific script (inside the tarball)"
   echo "-w <repo gateway url>      URL of a build of the repository gateway package"
-  echo "-D <repo DUCC url>         URL of a build of the DUCC repository package"
+  echo "-D <cvmfs DUCC package>    URL of a build of the DUCC repository package"
   echo
   echo "Optional parameters:"
   echo "-p <platform path>         custom search path for platform specific script"
@@ -119,7 +119,7 @@ source_tarball=""
 unittest_package=""
 shrinkwrap_package=""
 gateway_pkg_url=""
-ducc_pkg_url=""
+ducc_package=""
 test_username="sftnight"
 
 # RHEL (SLC) requires a tty for sudo... work around that
@@ -206,7 +206,7 @@ while getopts "r:s:c:d:t:g:k:w:p:u:e:f:D:" option; do
       gateway_pkg_url="$OPTARG"
       ;;
     D)
-      ducc_pkg_url="$OPTARG"
+      ducc_package="$OPTARG"
       ;;
     p)
       platform_script_path=$OPTARG
@@ -237,7 +237,7 @@ if [ "x$(uname -s)" != "xDarwin" ]; then
     [ "x$config_package"     = "x" ] ||
     [ "x$source_tarball"     = "x" ] ||
     [ "x$gateway_pkg_url"    = "x" ] ||
-    [ "x$ducc_pkg_url"       = "x" ] ||
+    [ "x$ducc_package"       = "x" ] ||
     [ "x$unittest_package"   = "x" ] ||
     [ "x$shrinkwrap_package" = "x" ]; then
     usage "Missing parameter(s)"
@@ -340,7 +340,7 @@ args="-t $cvmfs_source_directory \
       -l $cvmfs_log_directory    \
       -c $client_package"
 if [ "x$(uname -s)" != "xDarwin" ]; then
-  args="$args -s $server_package -d $devel_package -g $unittest_package -p $shrinkwrap_package -k $config_package -w $gateway_pkg_url -D $ducc_pkg_url"
+  args="$args -s $server_package -d $devel_package -g $unittest_package -p $shrinkwrap_package -k $config_package -w $gateway_pkg_url -D $ducc_package"
 fi
 if [ x"$fuse3_package" != "x" ]; then
   args="$args -f $fuse3_package"
