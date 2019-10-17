@@ -299,9 +299,6 @@ while getopts "r:b:u:w:p:e:a:d:m:c:l:s:D:" option; do
     w)
       gateway_pkg_url=$OPTARG
       ;;
-    D)
-      ducc_package=$OPTARG
-      ;;
     p)
       platform=$OPTARG
       ;;
