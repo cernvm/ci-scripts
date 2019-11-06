@@ -88,9 +88,7 @@
     "setup": "centos7_x86_64_setup.sh",
     "test": "centos7_x86_64_test.sh",
     "user": "centos",
-    "context": "#!/bin/sh
-                 echo 'Defaults !requiretty' | tee --append /etc/sudoers
-                 echo 'Defaults visiblepw' | tee --append /etc/sudoers"
+    "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
   },
   {
     "dist": "el7",
@@ -100,9 +98,7 @@
     "setup": "centos7_x86_64_setup.sh",
     "test": "centos7_x86_64_s3_test.sh",
     "user": "centos",
-    "context": "#!/bin/sh
-                 echo 'Defaults !requiretty' | tee --append /etc/sudoers
-                 echo 'Defaults visiblepw' | tee --append /etc/sudoers"
+    "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
   },
   {
     "dist": "el7",
@@ -112,9 +108,7 @@
     "setup": "centos7_x86_64-RAMCACHE_setup.sh",
     "test": "centos7_x86_64-RAMCACHE_test.sh",
     "user": "centos",
-    "context": "#!/bin/sh
-                 echo 'Defaults !requiretty' | tee --append /etc/sudoers
-                 echo 'Defaults visiblepw' | tee --append /etc/sudoers"
+    "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
   },
   {
     "dist": "el7",
@@ -124,9 +118,7 @@
     "setup": "centos7_x86_64-NFS_setup.sh",
     "test": "centos7_x86_64-NFS_test.sh",
     "user": "centos",
-    "context": "#!/bin/sh
-                 echo 'Defaults !requiretty' | tee --append /etc/sudoers
-                 echo 'Defaults visiblepw' | tee --append /etc/sudoers"
+    "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
   },
   {
     "dist": "el7",
@@ -136,9 +128,7 @@
     "setup": "centos7_x86_64-FUSE3_setup.sh",
     "test": "centos7_x86_64-FUSE3_test.sh",
     "user": "centos",
-    "context": "#!/bin/sh
-                 echo 'Defaults !requiretty' | tee --append /etc/sudoers
-                 echo 'Defaults visiblepw' | tee --append /etc/sudoers"
+    "context": "#!/bin/sh \n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
   },
   {
     "dist": "ubuntu1204",
