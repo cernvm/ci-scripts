@@ -374,11 +374,15 @@ if [ x"$platform" != "xosx_x86_64" ]; then
     fuse3_package="${ctu}/${fuse3_package}"
   fi
 
+
+  if [ "x$ducc_package" != "x" ]; then
+    ducc_package="${otu}/${ducc_package}"
+  fi
+
   server_package="${otu}/${server_package}"
   devel_package="${ctu}/${devel_package}"
   unittest_package="${otu}/${unittest_package}"
   shrinkwrap_package="${otu}/${shrinkwrap_package}"
-  ducc_package="${otu}/${ducc_package}"
   config_package_urls=""
   for config_package in $config_packages; do
     config_package_urls="${config_package_base_url}/${config_package} $config_package_urls"
