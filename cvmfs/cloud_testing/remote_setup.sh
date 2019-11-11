@@ -23,11 +23,11 @@ usage() {
   echo "-k <cvmfs config package>  CernVM-FS config package (Linux only)"
   echo "-r <setup script>          platform specific script (inside the tarball)"
   echo "-w <repo gateway url>      URL of a build of the repository gateway package"
-  echo "-D <cvmfs DUCC package>    URL of a build of the DUCC repository package"
   echo
   echo "Optional parameters:"
   echo "-p <platform path>         custom search path for platform specific script"
   echo "-u <user name>             user name to use for test run"
+  echo "-D <cvmfs DUCC package>    URL of a build of the DUCC repository package"
   echo
   echo "You must provide http addresses for all packages and tar balls. They will"
   echo "be downloaded and executed to test CVMFS on various platforms"
@@ -237,7 +237,6 @@ if [ "x$(uname -s)" != "xDarwin" ]; then
     [ "x$config_package"     = "x" ] ||
     [ "x$source_tarball"     = "x" ] ||
     [ "x$gateway_pkg_url"    = "x" ] ||
-    [ "x$ducc_package"       = "x" ] ||
     [ "x$unittest_package"   = "x" ] ||
     [ "x$shrinkwrap_package" = "x" ]; then
     usage "Missing parameter(s)"
