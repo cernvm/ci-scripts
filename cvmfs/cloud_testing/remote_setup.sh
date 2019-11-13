@@ -27,7 +27,6 @@ usage() {
   echo "Optional parameters:"
   echo "-p <platform path>         custom search path for platform specific script"
   echo "-u <user name>             user name to use for test run"
-  echo "-D <cvmfs DUCC package>    URL of a build of the DUCC repository package"
   echo
   echo "You must provide http addresses for all packages and tar balls. They will"
   echo "be downloaded and executed to test CVMFS on various platforms"
@@ -340,7 +339,7 @@ args="-t $cvmfs_source_directory \
       -l $cvmfs_log_directory    \
       -c $client_package"
 if [ "x$(uname -s)" != "xDarwin" ]; then
-  args="$args -s $server_package -d $devel_package -g $unittest_package -p $shrinkwrap_package -k $config_package -w $gateway_pkg_url -D $ducc_package"
+  args="$args -s $server_package -d $devel_package -g $unittest_package -p $shrinkwrap_package -k $config_package -w $gateway_pkg_url"
 fi
 if [ x"$fuse3_package" != "x" ]; then
   args="$args -f $fuse3_package"
