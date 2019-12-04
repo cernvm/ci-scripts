@@ -40,14 +40,6 @@ RUN         useradd sftnight
 # Fix yum issues with Docker OverlayFS by installing this plugin
 RUN yum -y install yum-plugin-ovl
 
-# Relieve a bit the version requirement of selinux-policy
-RUN yum -y downgrade \
-  http://ftp.scientificlinux.org/linux/scientific/7.3/x86_64/os/Packages/selinux-policy-targeted-3.13.1-102.el7.noarch.rpm \
-  http://ftp.scientificlinux.org/linux/scientific/7.3/x86_64/os/Packages/selinux-policy-devel-3.13.1-102.el7.noarch.rpm \
-  http://ftp.scientificlinux.org/linux/scientific/7.3/x86_64/os/Packages/selinux-policy-3.13.1-102.el7.noarch.rpm
-
-# End of Erlang part
-
 RUN GOPATH=/usr/local go get github.com/jstemmer/go-junit-report
 
 USER        sftnight
