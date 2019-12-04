@@ -24,7 +24,7 @@ set -e
 
 TARBALL_NAME="${SYSTEM_NAME}_${BASE_ARCH}.tar.gz"
 DESTINATION="$(mktemp -d)"
-YUM_REPO_CFG=/etc/yum/repos.d/${SYSTEM_NAME}_${BASE_ARCH}-bootstrap.repo
+YUM_REPO_CFG=/etc/yum.repos.d/${SYSTEM_NAME}_${BASE_ARCH}-bootstrap.repo
 YUM_REPO_NAME=${SYSTEM_NAME}-${BASE_ARCH}-os-bootstrap
 PACKAGE_MGR=${PACKAGE_MGR:=yum}
 YUM_CONFIG_FILE=$(mktemp)
