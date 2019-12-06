@@ -2,12 +2,12 @@
 build_docker_image() {
   local directory="$1"
 
-  echo "$directory"
+  echo "Working on $directory"
 
-  pushd $directory
-  ./build.sh 2>&1 >> build.log || return 1
-  docker build . -t "cvmfs/$(basename $directory)" 2>&1 >> docker.log
-  popd
+  pushd $directory > /dev/null
+  ./build.sh >> build.log 2>&1 || echo "Error on $directory"; return 1
+  docker build . -t "cvmfs/$(basename $directory)" >> docker.log 2>&1
+  popd > /dev/null
 }
 export -f build_docker_image
 
