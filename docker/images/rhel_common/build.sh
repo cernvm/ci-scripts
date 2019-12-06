@@ -24,9 +24,9 @@ set -e
 
 TARBALL_NAME="${SYSTEM_NAME}_${BASE_ARCH}.tar.gz"
 DESTINATION="$(mktemp -d)"
-if [ -d "/etc/yum/repos.d" ] then
+if [ -d "/etc/yum/repos.d" ]; then
   YUM_REPO_CFG=/etc/yum/repos.d/${SYSTEM_NAME}_${BASE_ARCH}-bootstrap.repo
-elif [ -d "/etc/yum.repos.d" ] then
+elif [ -d "/etc/yum.repos.d" ]; then
   YUM_REPO_CFG=/etc/yum.repos.d/${SYSTEM_NAME}_${BASE_ARCH}-bootstrap.repo
 else
   die "Unrecognized yum config directory, it is neither /etc/yum/repos.d nor /etc/yum.repos.d"
