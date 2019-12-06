@@ -5,8 +5,8 @@ build_docker_image() {
   echo "$directory"
 
   pushd $directory
-  ./build.sh || return 1
-  docker build . -t "cvmfs/$(basename $directory)"
+  ./build.sh >> build.log || return 1
+  docker build . -t "cvmfs/$(basename $directory)" >> docker.log
   popd
 }
 export -f build_docker_image
