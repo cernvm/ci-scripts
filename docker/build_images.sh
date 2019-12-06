@@ -5,8 +5,8 @@ build_docker_image() {
   echo "$directory"
 
   pushd $directory
-  ./build.sh >> build.log || return 1
-  docker build . -t "cvmfs/$(basename $directory)" >> docker.log
+  ./build.sh 2>&1 >> build.log || return 1
+  docker build . -t "cvmfs/$(basename $directory)" 2>&1 >> docker.log
   popd
 }
 export -f build_docker_image
@@ -16,7 +16,7 @@ parallel="1"
 while getopts "p:" opt; do
   case $opt in 
     p) 
-      parallel={$OPTARG}
+      parallel="$OPTARG"
       ;;
   esac
 done
