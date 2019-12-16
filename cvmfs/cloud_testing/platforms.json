@@ -1,23 +1,5 @@
 [
-  {
-    "dist": "el5",
-    "config": "x86",
-    "ami": "ami-d2d04f50",
-    "label": "slc5_i386",
-    "setup": "slc5_i386_setup.sh",
-    "test": "slc5_i386_test.sh",
-    "user": "root"
-  },
-  {
-    "dist": "el5",
-    "config": "x86_64",
-    "ami": "ami-5dc38e8b",
-    "label": "slc5_x86_64",
-    "setup": "slc5_x86_64_setup.sh",
-    "test": "slc5_x86_64_test.sh",
-    "user": "root"
-  },
-  {
+ {
     "dist": "el6",
     "config": "x86",
     "ami": "ami-2c180bc4",
@@ -130,16 +112,7 @@
     "user": "centos",
     "context": "#!/bin/sh \n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
   },
-  {
-    "dist": "ubuntu1204",
-    "config": "x86_64",
-    "ami": "ami-53c2a1d5",
-    "label": "ubuntu1204_x86_64",
-    "setup": "ubuntu_setup.sh",
-    "test": "ubuntu_test.sh",
-    "user": "ubuntu"
-  },
-  {
+ {
     "dist": "ubuntu1404",
     "config": "x86_64",
     "ami": "ami-6f304f09",
@@ -211,52 +184,7 @@
     "test": "ubuntu_test.sh",
     "user": "ubuntu"
   },
-  {
-    "dist": "fedora23",
-    "config": "x86_64",
-    "ami": "ami-d23bf7bc",
-    "label": "fedora23_x86_64",
-    "setup": "fedora23_x86_64_setup.sh",
-    "test": "fedora23_x86_64_test.sh",
-    "user": "fedora"
-  },
-  {
-    "dist": "fedora24",
-    "config": "x86_64",
-    "ami": "ami-889e64fa",
-    "label": "fedora24_x86_64",
-    "setup": "fedora24_x86_64_setup.sh",
-    "test": "fedora24_x86_64_test.sh",
-    "user": "fedora"
-  },
-  {
-    "dist": "fedora25",
-    "config": "x86_64",
-    "ami": "ami-0123c707",
-    "label": "fedora25_x86_64",
-    "setup": "fedora25_x86_64_setup.sh",
-    "test": "fedora25_x86_64_test.sh",
-    "user": "fedora"
-  },
-  {
-    "dist": "fedora26",
-    "config": "x86_64",
-    "ami": "ami-bda71e23",
-    "label": "fedora26_x86_64",
-    "setup": "fedora_setup.sh",
-    "test": "fedora_test.sh",
-    "user": "fedora"
-  },
-  {
-    "dist": "fedora27",
-    "config": "x86_64",
-    "ami": "ami-9131fcbc",
-    "label": "fedora27_x86_64",
-    "setup": "fedora_setup.sh",
-    "test": "fedora_test.sh",
-    "user": "fedora"
-  },
-  {
+ {
     "dist": "fedora28",
     "config": "x86_64",
     "ami": "ami-4ab5a3be",
