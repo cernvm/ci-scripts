@@ -38,8 +38,10 @@ RUN         yum -y install                     \
                        voms-devel              \
                        zlib-devel
 
-RUN         useradd sftnight
-RUN         yum -y install yum-plugin-ovl
+# necessary to build the documentation
+RUN         yum -y install doxygen
+
+RUN         adduser sftnight
 
 # Relieve a bit the version requirement of selinux-policy
 RUN yum -y downgrade \
