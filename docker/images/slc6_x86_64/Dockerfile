@@ -42,21 +42,6 @@ RUN         yum -y update && yum -y install                         \
 
 RUN         useradd sftnight
 
-# Erlang part below
-
-RUN pip install sqlobject==3.3.0
-
-RUN yum -y install http://ecsft.cern.ch/dist/cvmfs/builddeps/otp/esl-erlang_21.2.5-1~centos~6_amd64.rpm
-
-RUN curl -o /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3 && chmod +x /usr/local/bin/rebar3 && /usr/local/bin/rebar3 local install
-
-RUN curl -o /tmp/togo-2.5-1.noarch.rpm http://ecsft.cern.ch/dist/cvmfs/builddeps/togo-2.5-1.noarch.rpm && rpm -i --nodeps /tmp/togo-2.5-1.noarch.rpm
-
-RUN mkdir -p /home/sftnight/.togo && chown sftnight /home/sftnight/.togo && chmod ugo+rwx /home/sftnight/.togo
-RUN touch /home/sftnight/.rpmmacros && chown sftnight /home/sftnight/.rpmmacros && chmod ugo+rw /home/sftnight/.rpmmacros
-
-# End of Erlang part
-
 RUN go get github.com/jstemmer/go-junit-report
 
 USER        sftnight
