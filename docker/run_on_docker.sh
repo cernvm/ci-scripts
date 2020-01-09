@@ -118,7 +118,7 @@ cleanup_output_pool() {
   [ -z $OUTPUT_POOL_DIR           ] || rm -fR $OUTPUT_POOL_DIR
 }
 
-trap cleanup_output_pool EXIT HUP INT TERM
+#trap cleanup_output_pool EXIT HUP INT TERM
 
 OUTPUT_POOL_DIR=$(mktemp -d)
 [ -d $OUTPUT_POOL_DIR ] || die "cannot create output redirection pool"
