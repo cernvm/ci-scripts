@@ -1,10 +1,13 @@
 FROM        scratch
 MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
-# 2019-02-05 11:36  - dummy comment to trigger installation of latest golang compiler
 ADD         cc7_x86_64.tar.gz /
-RUN         yum -y update
-RUN         yum -y install filesystem
+RUN         yum -y update;    \
+	    yum -y install    \
+		filesystem    \
+		epel-release  \
+		yum-plugin-ovl
+# see https://github.com/CentOS/sig-cloud-instance-images/issues/15 for `yum-plugin-ovl`
 RUN         yum -y install epel-release
 RUN         yum -y install                     \
                        cmake                   \
@@ -35,7 +38,10 @@ RUN         yum -y install                     \
                        voms-devel              \
                        zlib-devel
 
-RUN         useradd sftnight
+# necessary to build the documentation
+RUN         yum -y install doxygen
+
+RUN         adduser sftnight
 
 # Relieve a bit the version requirement of selinux-policy
 RUN yum -y downgrade \
