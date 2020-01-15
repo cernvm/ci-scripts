@@ -1,6 +1,9 @@
 FROM        scratch
 MAINTAINER  Rene Meusel <rene.meusel@cern.ch>
 
+# This two args should not be necessary, but the bug fixed by
+# https://github.com/opencontainers/runc/pull/2086
+# makes them necessary in our environment
 ARG SFTNIGHT_UID=500
 ARG SFTNIGHT_GID=500
 
@@ -42,7 +45,9 @@ RUN         yum -y update && yum -y install                         \
                                         python-pip                  \
                                         python-argparse
 
-
+# Similarly to the node above.
+# `adduser sftnight` should be sufficient, but the bug above requires
+# this workaround
 RUN  groupadd --gid $SFTNIGHT_GID sftnight && \
         adduser --uid $SFTNIGHT_UID --gid $SFTNIGHT_GID sftnight
 
