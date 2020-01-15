@@ -29,6 +29,7 @@ RUN         yum -y update && yum -y install                         \
                                         libuuid-devel               \
                                         libyaml-devel               \
                                         make                        \
+                                        openssl                     \
                                         openssl-devel               \
                                         policycoreutils-python      \
                                         python-devel                \
