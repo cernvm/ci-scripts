@@ -43,7 +43,8 @@ RUN         yum -y update && yum -y install                         \
                                         python-argparse
 
 
-RUN         adduser --uid $SFTNIGHT_UID --gid $SFTNIGHT_GID sftnight
+RUN  groupadd --gid $SFTNIGHT_GID sftnight \
+        adduser --uid $SFTNIGHT_UID --gid $SFTNIGHT_GID sftnight
 
 RUN go get github.com/jstemmer/go-junit-report
 
