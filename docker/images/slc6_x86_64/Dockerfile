@@ -1,6 +1,9 @@
 FROM        scratch
 MAINTAINER  Rene Meusel <rene.meusel@cern.ch>
 
+ARG SFTNIGHT_UID=500
+ARG SFTNIGHT_GID=500
+
 ADD         slc6_x86_64.tar.gz /
 RUN         yum -y update && yum -y install                         \
                                         cmake                       \
@@ -40,7 +43,7 @@ RUN         yum -y update && yum -y install                         \
                                         python-argparse
 
 
-RUN         adduser sftnight
+RUN         adduser --uid $SFTNIGHT_UID --gid $SFTNIGHT_GID sftnight
 
 RUN go get github.com/jstemmer/go-junit-report
 

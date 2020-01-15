@@ -79,7 +79,7 @@ bootstrap_image() {
   cp ${container_dir}/* .
   [ -x ${container_dir}/build.sh ] || die "./build.sh not available or not executable"
   sudo ${container_dir}/build.sh   || die "Failed to build chroot tarball"
-  sudo docker build --tag=$image_name .
+  sudo docker build --build_arg SFTNIGHT_UID=$(id sftnight -u) SFTNIGHT_UID=$(id sftnight -g) --tag=$image_name .
   [ $? -eq 0 ] || die "Failed to build docker image '$image_name'"
   cd $old_wordir
   rm -fR $build_workdir
