@@ -79,18 +79,7 @@ bootstrap_image() {
   cp ${container_dir}/* .
   [ -x ${container_dir}/build.sh ] || die "./build.sh not available or not executable"
   sudo ${container_dir}/build.sh   || die "Failed to build chroot tarball"
-  # passing the two `--build-arg` should not be necessary, however a bug in docker
-  # make it necessary on some platform, specifically slc6
-  # https://github.com/opencontainers/runc/pull/2086
-  # look into `docker/images/slc6_x86_64/Dockerfile` for details
-  # remove them as soon as possible
-  # in the close future these two variables should not be necessary anymore.
-  # eliminate them without fear if the CI keeps building and using the docker images
-  # with issues.
-  # Simone 15/01/2020
   sudo docker build \
-          --build-arg SFTNIGHT_UID=$(id sftnight -u) \
-          --build-arg SFTNIGHT_GID=$(id sftnight -g) \
           --tag=$image_name .
   [ $? -eq 0 ] || die "Failed to build docker image '$image_name'"
   cd $old_wordir
@@ -173,7 +162,8 @@ args="--env GOCACHE=$WORKSPACE/.gocache $args"
 uid=$(id -u)
 gid=$(id -g)
 echo "++ $@"
-sudo docker run --volume="$WORKSPACE":"$WORKSPACE"           \
+sudo docker run --volume=/home/sftnight:/home/sftnight:ro    \
+                --volume="$WORKSPACE":"$WORKSPACE"           \
                 --volume=/etc/passwd:/etc/passwd             \
                 --volume=/etc/group:/etc/group               \
                 --volume="$OUTPUT_POOL_DIR:$OUTPUT_POOL_DIR" \
