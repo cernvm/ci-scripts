@@ -14,6 +14,7 @@ RUN         apt-get -y update && apt-get -y install             \
                                               libattr1-dev      \
                                               libcap-dev        \
                                               libfuse-dev       \
+                                              libfuse3-dev      \
                                               libssl-dev        \
                                               libz-dev          \
                                               pbuilder          \
