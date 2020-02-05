@@ -41,7 +41,7 @@ RUN         yum -y install                     \
 # necessary to build the documentation
 RUN         yum -y install doxygen
 
-RUN         adduser sftnight
+RUN         adduser sftnight && chmod 0766 /home/sftnight
 
 # Relieve a bit the version requirement of selinux-policy
 RUN yum -y downgrade \

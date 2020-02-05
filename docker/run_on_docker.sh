@@ -162,7 +162,7 @@ args="--env GOCACHE=$WORKSPACE/.gocache $args"
 uid=$(id -u)
 gid=$(id -g)
 echo "++ $@"
-sudo docker run \
+sudo docker run --volume=/home/sftnight:/home/sftnight:ro    \
                 --volume="$WORKSPACE":"$WORKSPACE"           \
                 --volume=/etc/passwd:/etc/passwd             \
                 --volume=/etc/group:/etc/group               \
