@@ -162,7 +162,8 @@ args="--env GOCACHE=$WORKSPACE/.gocache $args"
 uid=$(id -u)
 gid=$(id -g)
 echo "++ $@"
-sudo docker run --volume=/home/sftnight:/home/sftnight:ro    \
+# sudo docker run --volume=/home/sftnight/jenkins:/home/sftnight/jenkins:ro    \
+sudo docker run \
                 --volume="$WORKSPACE":"$WORKSPACE"           \
                 --volume=/etc/passwd:/etc/passwd             \
                 --volume=/etc/group:/etc/group               \
