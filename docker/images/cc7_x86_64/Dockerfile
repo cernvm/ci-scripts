@@ -60,5 +60,3 @@ RUN yum -y install http://ecsft.cern.ch/dist/cvmfs/builddeps/togo-2.5-1.noarch.r
         touch /home/sftnight/.rpmmacros && chown sftnight /home/sftnight/.rpmmacros && chmod ugo+rw /home/sftnight/.rpmmacros
 
 USER        sftnight
-
-WORKDIR     /home/sftnight
