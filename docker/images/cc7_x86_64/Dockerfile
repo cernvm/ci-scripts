@@ -1,6 +1,9 @@
 FROM        scratch
 MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
+ARG SFTNIGHT_UID=500
+ARG SFTNIGHT_GID=500
+
 ADD         cc7_x86_64.tar.gz /
 RUN         yum -y update;    \
 	    yum -y install    \
@@ -41,7 +44,8 @@ RUN         yum -y install                     \
 # necessary to build the documentation
 RUN         yum -y install doxygen
 
-RUN         adduser sftnight
+RUN  groupadd --gid $SFTNIGHT_GID sftnight && \
+        adduser --uid $SFTNIGHT_UID --gid $SFTNIGHT_GID sftnight
 
 # Relieve a bit the version requirement of selinux-policy
 RUN yum -y downgrade \
