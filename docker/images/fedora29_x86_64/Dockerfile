@@ -1,6 +1,9 @@
 FROM        scratch
 MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
+ARG SFTNIGHT_UID=500
+ARG SFTNIGHT_GID=500
+
 ADD         fedora29_x86_64.tar.gz /
 RUN         dnf -y update && dnf -y install                     \
                                         cmake                   \
@@ -37,7 +40,9 @@ RUN         dnf -y update && dnf -y install                     \
 
 RUN go get github.com/jstemmer/go-junit-report
 
-RUN         useradd sftnight
+RUN  groupadd --gid $SFTNIGHT_GID sftnight && \
+        adduser --uid $SFTNIGHT_UID --gid $SFTNIGHT_GID sftnight
+
 USER        sftnight
 WORKDIR     /home/sftnight
 
