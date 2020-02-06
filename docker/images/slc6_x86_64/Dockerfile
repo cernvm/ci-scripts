@@ -55,7 +55,7 @@ RUN  groupadd --gid $SFTNIGHT_GID sftnight && \
 RUN go get github.com/jstemmer/go-junit-report
 
 # Necessary for packing stuff
-RUN yum -y install http://ecsft.cern.ch/dist/cvmfs/builddeps/python-sqlite2-2.3.5-2.el6.x86_64.rpm http://ecsft.cern.ch/dist/cvmfs/builddeps/togo-2.5-1.noarch.rpm && \
+RUN yum -y install https://github.com/genereese/togo/releases/download/v2.6r2/togo-2.6-2.noarch.rpm && \
         mkdir -p /home/sftnight/.togo && chown sftnight /home/sftnight/.togo && chmod ugo+rwx /home/sftnight/.togo && \
         touch /home/sftnight/.rpmmacros && chown sftnight /home/sftnight/.rpmmacros && chmod ugo+rw /home/sftnight/.rpmmacros
 
