@@ -36,6 +36,10 @@ fi
 if [ "x$suites" != "x" ]; then
   suites="-s $suites"
 fi
+geoip_key=
+if [ "x$CVMFS_TEST_GEO_LICENSE_KEY" != x ]; then
+  geoip_key="-G $CVMFS_TEST_GEO_LICENSE_KEY"
+fi
 
 
 echo "Running cloud tests for $CVMFS_PLATFORM / $CVMFS_PLATFORM_CONFIG ..."
@@ -50,5 +54,5 @@ ${SCRIPT_LOCATION}/cloud_testing/run.sh                    \
         -m  $(get_platform_parameter 'user'    "$vm_desc") \
         -c "$(get_platform_parameter 'context' "$vm_desc")"\
         -l "$CVMFS_CLIENT_TESTEE_URL"                      \
-        $suites
+        $suites $geoip_key
 
