@@ -50,6 +50,7 @@ unittest_package=""
 source_tarball="source.tar.gz" # will be prepended by ${testee_url} later
 
 suites=""
+geoip_key=""
 
 # global variables (get filled by spawn_virtual_machine)
 ip_address=""
@@ -83,6 +84,7 @@ usage() {
   echo
   echo " -l <custom client URL>       URL to a nightly build for a custom CVMFS client"
   echo " -s <test suite labels>       Restrict tests to given suite names"
+  echo " -G <geoip key>               Download key for GeoIP database"
 
   exit 1
 }
@@ -196,6 +198,9 @@ run_test_cases() {
   if [ "x$suites" != "x" ]; then
     args="$args -S $suites"
   fi
+  if [ "x$geoip_key" != "x" ]; then
+    args="$args -G $geoip_key"
+  fi
 
   run_script_on_virtual_machine $args
 
@@ -282,7 +287,7 @@ get_test_results() {
 #
 
 
-while getopts "r:b:u:w:p:e:a:d:m:c:l:s:D:" option; do
+while getopts "r:b:u:w:p:e:a:d:m:c:l:s:D:G:" option; do
   case $option in
     r)
       platform_run_script=$OPTARG
@@ -319,6 +324,9 @@ while getopts "r:b:u:w:p:e:a:d:m:c:l:s:D:" option; do
       ;;
     s)
       suites="$OPTARG"
+      ;;
+    G)
+      geoip_key="$OPTARG"
       ;;
     ?)
       shift $(($OPTIND-2))
