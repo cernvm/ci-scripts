@@ -62,6 +62,7 @@ enabled=0
 keepcache=1
 cachedir=/var/cache/yum/$basearch
 EOF
+[ -z REPO_MIRRORLIST ] || echo "mirrorlist=$REPO_MIRRORLIST" >> $YUM_REPO_CFG
 
 cat > $YUM_CONFIG_FILE << EOF
 [main]

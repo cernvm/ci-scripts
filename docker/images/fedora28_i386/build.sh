@@ -10,6 +10,7 @@ BASE_ARCH="i386"
 
 yum_repo="$(get_yum_repo_mirror "https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-28&arch=$BASE_ARCH")"
 REPO_BASE_URL="$yum_repo"
+REPO_MIRRORLIST="https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-28&arch=$BASE_ARCH"
 GPG_KEY_PATHS="file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-28"
 BASE_PACKAGES="fedora-release coreutils tar iputils dnf"
 PACKAGE_MGR="dnf"
