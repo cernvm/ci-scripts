@@ -16,11 +16,11 @@
 
 set -e
 
-[ ! -z $SYSTEM_NAME   ] || die "SYSTEM_NAME is not defined"
-[ ! -z $BASE_ARCH     ] || die "BASE_ARCH is not defined"
-[ ! -z $REPO_BASE_URL ] || die "REPO_BASE_URL is not defined"
-[ ! -z $GPG_KEY_PATHS ] || die "GPG_KEY_PATHS is not defined"
-[ ! -z $BASE_PACKAGES ] || die "BASE_PACKAGES is not defined"
+[ ! -z "$SYSTEM_NAME"   ] || die "SYSTEM_NAME is not defined"
+[ ! -z "$BASE_ARCH"     ] || die "BASE_ARCH is not defined"
+[ ! -z "$REPO_BASE_URL" ] || die "REPO_BASE_URL is not defined"
+[ ! -z "$GPG_KEY_PATHS" ] || die "GPG_KEY_PATHS is not defined"
+[ ! -z "$BASE_PACKAGES" ] || die "BASE_PACKAGES is not defined"
 
 TARBALL_NAME="${SYSTEM_NAME}_${BASE_ARCH}.tar.gz"
 DESTINATION="$(mktemp -d)"
@@ -62,7 +62,7 @@ enabled=0
 keepcache=1
 cachedir=/var/cache/yum/$basearch
 EOF
-[ -z $REPO_MIRRORLIST ] || echo "mirrorlist=$REPO_MIRRORLIST" >> $YUM_REPO_CFG
+[ -z "$REPO_MIRRORLIST" ] || echo "mirrorlist=$REPO_MIRRORLIST" >> $YUM_REPO_CFG
 
 cat > $YUM_CONFIG_FILE << EOF
 [main]
