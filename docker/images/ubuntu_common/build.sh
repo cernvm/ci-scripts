@@ -12,10 +12,10 @@
 
 set -e
 
-[ ! -z SYSTEM_NAME    ] || die "SYSTEM_NAME is not defined"
-[ ! -z BASE_ARCH      ] || die "BASE_ARCH is not defined"
-[ ! -z REPO_BASE_URL  ] || die "REPO_BASE_URL is not defined"
-[ ! -z UBUNTU_RELEASE ] || die "GPG_KEY_PATHS is not defined"
+[ ! -z $SYSTEM_NAME    ] || die "SYSTEM_NAME is not defined"
+[ ! -z $BASE_ARCH      ] || die "BASE_ARCH is not defined"
+[ ! -z $REPO_BASE_URL  ] || die "REPO_BASE_URL is not defined"
+[ ! -z $UBUNTU_RELEASE ] || die "GPG_KEY_PATHS is not defined"
 
 TARBALL_NAME="${SYSTEM_NAME}_${BASE_ARCH}.tar.gz"
 DESTINATION="$(mktemp -d)"
