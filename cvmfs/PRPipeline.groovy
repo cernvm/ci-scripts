@@ -21,14 +21,14 @@ def cloudTestingBuildCombinations = [
                                      ]
 
 
-def mention = "@cernvm-bot"
-def helpString = "Syntax: " + mention + " subcommand + [args]\n" +
-                 "Available commands:\n" +
-                 "help\n" +
-                 "cpplint\n" +
-                 "unittest\n" +
-                 "cloudtest\n" +
-                 "build\n"
+mention = "@cernvm-bot"
+helpString = "Syntax: " + mention + " subcommand + [args]\n" +
+             "Available commands:\n" +
+             "help\n" +
+             "cpplint\n" +
+             "unittest\n" +
+             "cloudtest\n" +
+             "build\n"
 
 void helpCommand() {
     postComment(helpString)
