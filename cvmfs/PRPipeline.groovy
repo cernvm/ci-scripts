@@ -1,9 +1,9 @@
 import org.jenkinsci.plugins.ghprb.GhprbTrigger
 
-void postComment(String comment, String prId) {
+void postComment(String comment) {
     def triggerJob = manager.hudson.getJob('jpriessn-PipelinePRBuilder')
     def prbTrigger = triggerJob.getTriggers().get(GhprbTrigger.getDscp())
-    prbTrigger.getRepository().addComment(Integer.valueOf(prId), comment)
+    prbTrigger.getRepository().addComment(Integer.valueOf(env.ghprbPullId), comment)
 }
 
 def cloudTestingBuildCombinations = [
@@ -19,6 +19,57 @@ def cloudTestingBuildCombinations = [
                                     //  'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=ubuntu1804',
                                     //  'CVMFS_BUILD_ARCH=osx10-x86_64,CVMFS_BUILD_PLATFORM=mac'
                                      ]
+
+
+void helpCommand() {
+
+}
+
+void cpplintCommand() {
+
+}
+
+void unittestCommand() {
+
+}
+
+void cloudtestCommand() {
+
+}
+
+void buildCommand() {
+
+}
+
+def mention = "@cernvm-bot"
+def commandDict = ["help": helpCommand,
+                   "cpplint": cpplintCommand,
+                   "unittest": unittestCommand,
+                   "cloudtest": cloudtestCommand,
+                   "build": buildCommand]
+
+void commentHandler() {
+    def words = env.ghprbCommentBody.split()
+    if (words[0] != mention) return;
+    
+    def command = commandDict.get(words[1]);
+    if (command == null) return;
+
+    command()
+}
+
+if (env.ghprbCommentBody == mention + " help") {
+    helpCommand()
+} else if (env.ghprbCommentBody == mention + " cpplint") {
+
+} else if (env.ghprbCommentBody == mention + " unittest") {
+
+} else if (env.ghprbCommentBody == mention + " cloudtest") {
+
+} else if (env.ghprbCommentBody == mention + " build") {
+    
+}
+
 
 if (env.ghprbCommentBody == "ok to test") {
     postComment("nothing to run for testing yet", env.ghprbPullId)
