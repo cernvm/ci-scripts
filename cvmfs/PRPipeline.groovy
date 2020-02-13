@@ -11,19 +11,20 @@ void postComment(String comment) {
     prbTrigger.getRepository().addComment(Integer.valueOf(env.ghprbPullId), comment)
 }
 
-def cloudTestingBuildCombinations = [
-                                    //  'CVMFS_BUILD_ARCH=docker-i386,CVMFS_BUILD_PLATFORM=slc6',
-                                    //  'CVMFS_BUILD_ARCH=docker-i386,CVMFS_BUILD_PLATFORM=ubuntu1604',
-                                    //  'CVMFS_BUILD_ARCH=docker-i386,CVMFS_BUILD_PLATFORM=ubuntu1804',
-                                    //  'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=slc6',
-                                     'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=cc7'
-                                    //  'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=fedora28',
-                                    //  'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=fedora29',
-                                    //  'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=ubuntu1404',
-                                    //  'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=ubuntu1604',
-                                    //  'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=ubuntu1804',
-                                    //  'CVMFS_BUILD_ARCH=osx10-x86_64,CVMFS_BUILD_PLATFORM=mac'
-                                     ]
+
+cloudTestingBuildCombinations = [
+                                // 'CVMFS_BUILD_ARCH=docker-i386,CVMFS_BUILD_PLATFORM=slc6',
+                                // 'CVMFS_BUILD_ARCH=docker-i386,CVMFS_BUILD_PLATFORM=ubuntu1604',
+                                // 'CVMFS_BUILD_ARCH=docker-i386,CVMFS_BUILD_PLATFORM=ubuntu1804',
+                                // 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=slc6',
+                                'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=cc7'
+                                // 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=fedora28',
+                                // 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=fedora29',
+                                // 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=ubuntu1404',
+                                // 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=ubuntu1604',
+                                // 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=ubuntu1804',
+                                // 'CVMFS_BUILD_ARCH=osx10-x86_64,CVMFS_BUILD_PLATFORM=mac'
+                                ]
 
 
 mention = "@cernvm-bot"
@@ -36,12 +37,20 @@ helpString = "Syntax: " + mention + " subcommand + [args]\n" +
              "build\n"
 
 void helpCommand() {
-    echo "running helpCommand"
     postComment(helpString)
 }
 
 void cpplintCommand() {
-    postComment("not yet implemented")
+    // postComment("not yet implemented")
+    def lintResult = build job: 'CvmfsCpplint',
+        parameters: [
+            string(name: 'CVMFS_GIT_REVISION', value: env.sha1)],
+        propagate: false
+
+    def s = new Scanner(lintResult.rawBuild.getArtifactManager().root().child("cpplint.error").open()).useDelimiter("\\A");
+    def result = s.hasNext() ? s.next() : "no errors";
+    postComment("linter finished:\n" + result)
+    currentBuild.result = lintResult.getResult()
 }
 
 void unittestCommand() {
@@ -49,7 +58,34 @@ void unittestCommand() {
 }
 
 void cloudtestCommand() {
-    postComment("not yet implemented")
+    postComment("building CVMFS for cloudtesting")
+
+    def buildResult = build job: 'CvmfsFullBuildDocker',
+        parameters: [
+            string(name: 'CVMFS_GIT_REVISION', value: env.sha1),
+            [$class: 'MatrixCombinationsParameterValue', name: 'CVMFS_BUILD_PLATFORMS', combinations: cloudTestingBuildCombinations, description: null]],
+        propagate: false
+
+    postComment("building finished: " + buildResult.getResult() + " " + buildResult.getAbsoluteUrl())
+    if (buildResult.getResult() != 'SUCCESS') {
+        currentBuild.result = buildResult.getResult()
+        error 'CvmfsFullBuildDocker did not succeed'
+    }
+
+    postComment("running cloudtests")
+
+    def testResult = build job: 'CvmfsCloudTesting',
+        parameters: [
+            string(name: 'CVMFS_TESTEE_URL', value: 'http://ecsft.cern.ch/dist/cvmfs/nightlies/cvmfs-git-' + buildResult.getId()),
+            booleanParam(name: 'CVMFS_QUICK_TESTS', value: true),
+            [$class: 'MatrixCombinationsParameterValue', name: 'CVMFS_TEST_PLATFORMS', combinations: ['CVMFS_PLATFORM=el7,CVMFS_PLATFORM_CONFIG=x86_64,label=trampoline'], description: null]],
+        propagate: false
+
+    postComment("cloudtesting finished: " + testResult.getResult() + " " + testResult.getAbsoluteUrl())
+    if (testResult.getResult() != 'SUCCESS') {
+        currentBuild.result = testResult.getResult()
+        error 'CvmfsCloudTesting did not succeed'
+    }
 }
 
 void buildCommand() {
@@ -63,7 +99,6 @@ void buildCommand() {
 //                    "build": buildCommand]
 
 void commentHandler() {
-    echo "Running commentHandler"
     def words = env.ghprbCommentBody.split()
     if (words[0] != mention) return;
     
@@ -74,10 +109,8 @@ void commentHandler() {
     else if (command == "build") buildCommand();
     else helpCommand();
 }
-node {
-    echo "about to run commentHandler"
-    commentHandler()
-}
+
+commentHandler()
 // if (env.ghprbCommentBody == mention + " help") {
 //     helpCommand()
 // } else if (env.ghprbCommentBody == mention + " cpplint") {
