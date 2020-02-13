@@ -61,7 +61,5 @@ RUN pip install sqlobject==3.3.0 && \
         mkdir -p /home/sftnight/.togo && chown sftnight /home/sftnight/.togo && chmod ugo+rwx /home/sftnight/.togo && \
         touch /home/sftnight/.rpmmacros && chown sftnight /home/sftnight/.rpmmacros && chmod ugo+rw /home/sftnight/.rpmmacros
 
-RUN yum -y install bash zsh
-
 USER        sftnight
 WORKDIR     /home/sftnight
