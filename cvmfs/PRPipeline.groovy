@@ -69,10 +69,10 @@ void commentHandler() {
     else if (command == "build") buildCommand();
     else helpCommand();
 }
-
-echo "about to run commentHandler"
-commentHandler()
-
+node {
+    echo "about to run commentHandler"
+    commentHandler()
+}
 // if (env.ghprbCommentBody == mention + " help") {
 //     helpCommand()
 // } else if (env.ghprbCommentBody == mention + " cpplint") {
