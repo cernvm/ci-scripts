@@ -50,20 +50,22 @@ void buildCommand() {
     postComment("not yet implemented")
 }
 
-def commandDict = ["help": helpCommand,
-                   "cpplint": cpplintCommand,
-                   "unittest": unittestCommand,
-                   "cloudtest": cloudtestCommand,
-                   "build": buildCommand]
+// def commandDict = ["help": helpCommand,
+//                    "cpplint": cpplintCommand,
+//                    "unittest": unittestCommand,
+//                    "cloudtest": cloudtestCommand,
+//                    "build": buildCommand]
 
 void commentHandler() {
     def words = env.ghprbCommentBody.split()
     if (words[0] != mention) return;
     
-    def command = commandDict.get(words[1]);
-    if (command == null) helpCommand();
-
-    command()
+    // def command = commandDict.get(words[1]);
+    if (command == "cpplint") cpplintCommand();
+    else if (command == "unittest") unittestCommand();
+    else if (command == "cloudtest") cloudtestCommand();
+    else if (command == "build") buildCommand();
+    else helpCommand();
 }
 
 commentHandler()
