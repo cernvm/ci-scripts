@@ -1,6 +1,6 @@
 #!groovy
 
-@Library('cvmfs-pipelines')
+// @Library('cvmfs-pipelines')
 
 import org.jenkinsci.plugins.ghprb.GhprbTrigger
 
