@@ -40,6 +40,7 @@ ami_name=""
 log_destination="."
 username="root"
 userdata=""
+destroy_failed=""
 
 # package download locations
 server_package=""
@@ -85,6 +86,8 @@ usage() {
   echo " -l <custom client URL>       URL to a nightly build for a custom CVMFS client"
   echo " -s <test suite labels>       Restrict tests to given suite names"
   echo " -G <geoip key>               Download key for GeoIP database"
+  echo " -F <destroy failed VMs>      Destroy VMs with failed tests"
+
 
   exit 1
 }
@@ -255,13 +258,29 @@ tear_down_yubikey_vm() {
   check_retcode $retcode || return $retcode
 }
 
+tear_down() {
+  if [ "x$platform" = "xosx_x86_64" ]; then
+    cleanup_test_machine $ip_address $username        || die "Cleanup of OSX machine failed!"
+  elif [ x"$ami_name" = "xcvm-yubikey01" ]; then
+    tear_down_yubikey_vm $ip_address                  || die "Teardown of Yubikey VM failed!"
+  else
+    tear_down_virtual_machine $instance_id            || die "Teardown of VM failed!"
+  fi
+}
+
 handle_test_failure() {
   local ip=$1
   local username=$2
 
   get_test_results $ip $username
 
-  echo "at least one test case failed... skipping destructions of VM!"
+  echo -n "at least one test case failed..."
+  if [ "x$destroy_failed" = "xyes" ]; then
+    echo "destroying VM!"
+    tear_down
+  else
+    echo "skipping destructions of VM!"
+  fi
   exit 100
 }
 
@@ -286,7 +305,7 @@ get_test_results() {
 #
 
 
-while getopts "r:b:u:w:p:e:a:d:m:c:l:s:D:G:" option; do
+while getopts "r:b:u:w:p:e:a:d:m:c:l:s:D:G:F" option; do
   case $option in
     r)
       platform_run_script=$OPTARG
@@ -326,6 +345,9 @@ while getopts "r:b:u:w:p:e:a:d:m:c:l:s:D:G:" option; do
       ;;
     G)
       geoip_key="$OPTARG"
+      ;;
+    F)
+      destroy_failed="yes"
       ;;
     ?)
       shift $(($OPTIND-2))
@@ -421,12 +443,6 @@ setup_virtual_machine     $ip_address  $username    || die "Aborting..."
 wait_for_virtual_machine  $ip_address  $username    || die "Aborting..."
 run_test_cases            $ip_address  $username    || die "Aborting..."
 get_test_results          $ip_address  $username    || die "Aborting..."
-if [ "x$platform" = "xosx_x86_64" ]; then
-  cleanup_test_machine $ip_address $username        || die "Aborting..."
-elif [ x"$ami_name" = "xcvm-yubikey01" ]; then
-  tear_down_yubikey_vm $ip_address                  || die "Aborting..."
-else
-  tear_down_virtual_machine $instance_id            || die "Aborting..."
-fi
+tear_down
 
 echo "all done"
