@@ -22,7 +22,7 @@ def cloudTestingBuildCombinations = [
 
 
 def mention = "@cernvm-bot"
-def helpString = "Syntax: " mention + " subcommand + [args]\n" +
+def helpString = "Syntax: " + mention + " subcommand + [args]\n" +
                  "Available commands:\n" +
                  "help\n" +
                  "cpplint\n" +
