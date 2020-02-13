@@ -31,6 +31,7 @@ helpString = "Syntax: " + mention + " subcommand + [args]\n" +
              "build\n"
 
 void helpCommand() {
+    echo "running helpCommand"
     postComment(helpString)
 }
 
@@ -57,6 +58,7 @@ void buildCommand() {
 //                    "build": buildCommand]
 
 void commentHandler() {
+    echo "Running commentHandler"
     def words = env.ghprbCommentBody.split()
     if (words[0] != mention) return;
     
