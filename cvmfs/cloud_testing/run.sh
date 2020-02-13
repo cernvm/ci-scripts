@@ -161,7 +161,6 @@ setup_virtual_machine() {
   check_retcode $?
   if [ $? -ne 0 ]; then
     handle_test_failure $ip $username
-    return 1
   fi
 
   echo -n "giving the dust time to settle... "
