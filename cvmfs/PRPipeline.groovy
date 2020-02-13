@@ -60,7 +60,7 @@ void commentHandler() {
     def words = env.ghprbCommentBody.split()
     if (words[0] != mention) return;
     
-    // def command = commandDict.get(words[1]);
+    def command = words[1];
     if (command == "cpplint") cpplintCommand();
     else if (command == "unittest") unittestCommand();
     else if (command == "cloudtest") cloudtestCommand();
