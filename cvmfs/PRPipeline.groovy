@@ -70,6 +70,7 @@ void commentHandler() {
     else helpCommand();
 }
 
+echo "about to run commentHandler"
 commentHandler()
 
 // if (env.ghprbCommentBody == mention + " help") {
