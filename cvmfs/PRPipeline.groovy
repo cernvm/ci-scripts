@@ -21,27 +21,35 @@ def cloudTestingBuildCombinations = [
                                      ]
 
 
-void helpCommand() {
+def mention = "@cernvm-bot"
+def helpString = "Syntax: " mention + " subcommand + [args]\n" +
+                 "Available commands:\n" +
+                 "help\n" +
+                 "cpplint\n" +
+                 "unittest\n" +
+                 "cloudtest\n" +
+                 "build\n"
 
+void helpCommand() {
+    postComment(helpString)
 }
 
 void cpplintCommand() {
-
+    postComment("not yet implemented")
 }
 
 void unittestCommand() {
-
+    postComment("not yet implemented")
 }
 
 void cloudtestCommand() {
-
+    postComment("not yet implemented")
 }
 
 void buildCommand() {
-
+    postComment("not yet implemented")
 }
 
-def mention = "@cernvm-bot"
 def commandDict = ["help": helpCommand,
                    "cpplint": cpplintCommand,
                    "unittest": unittestCommand,
@@ -53,71 +61,73 @@ void commentHandler() {
     if (words[0] != mention) return;
     
     def command = commandDict.get(words[1]);
-    if (command == null) return;
+    if (command == null) helpCommand();
 
     command()
 }
 
-if (env.ghprbCommentBody == mention + " help") {
-    helpCommand()
-} else if (env.ghprbCommentBody == mention + " cpplint") {
+commentHandler()
 
-} else if (env.ghprbCommentBody == mention + " unittest") {
+// if (env.ghprbCommentBody == mention + " help") {
+//     helpCommand()
+// } else if (env.ghprbCommentBody == mention + " cpplint") {
 
-} else if (env.ghprbCommentBody == mention + " cloudtest") {
+// } else if (env.ghprbCommentBody == mention + " unittest") {
 
-} else if (env.ghprbCommentBody == mention + " build") {
+// } else if (env.ghprbCommentBody == mention + " cloudtest") {
+
+// } else if (env.ghprbCommentBody == mention + " build") {
     
-}
+// }
 
 
-if (env.ghprbCommentBody == "ok to test") {
-    postComment("nothing to run for testing yet", env.ghprbPullId)
-} else if (env.ghprbCommentBody == "ok to cloudtest") {
-    postComment("building CVMFS for cloudtesting", env.ghprbPullId)
+// if (env.ghprbCommentBody == "ok to test") {
+//     postComment("nothing to run for testing yet", env.ghprbPullId)
+// } else if (env.ghprbCommentBody == "ok to cloudtest") {
+//     postComment("building CVMFS for cloudtesting", env.ghprbPullId)
 
-    def buildResult = build job: 'CvmfsFullBuildDocker',
-        parameters: [
-            string(name: 'CVMFS_GIT_REVISION', value: env.sha1),
-            [$class: 'MatrixCombinationsParameterValue', name: 'CVMFS_BUILD_PLATFORMS', combinations: cloudTestingBuildCombinations, description: null]],
-        propagate: false
+//     def buildResult = build job: 'CvmfsFullBuildDocker',
+//         parameters: [
+//             string(name: 'CVMFS_GIT_REVISION', value: env.sha1),
+//             [$class: 'MatrixCombinationsParameterValue', name: 'CVMFS_BUILD_PLATFORMS', combinations: cloudTestingBuildCombinations, description: null]],
+//         propagate: false
 
-    postComment("building finished: " + buildResult.getResult() + " " + buildResult.getAbsoluteUrl(), env.ghprbPullId)
-    if (buildResult.getResult() != 'SUCCESS') {
-        currentBuild.result = buildResult.getResult()
-        error 'CvmfsFullBuildDocker did not succeed'
-    }
+//     postComment("building finished: " + buildResult.getResult() + " " + buildResult.getAbsoluteUrl(), env.ghprbPullId)
+//     if (buildResult.getResult() != 'SUCCESS') {
+//         currentBuild.result = buildResult.getResult()
+//         error 'CvmfsFullBuildDocker did not succeed'
+//     }
 
-    postComment("running cloudtests", env.ghprbPullId)
+//     postComment("running cloudtests", env.ghprbPullId)
 
-    def testResult = build job: 'CvmfsCloudTesting',
-        parameters: [
-            string(name: 'CVMFS_TESTEE_URL', value: 'http://ecsft.cern.ch/dist/cvmfs/nightlies/cvmfs-git-' + buildResult.getId()),
-            booleanParam(name: 'CVMFS_QUICK_TESTS', value: true),
-            [$class: 'MatrixCombinationsParameterValue', name: 'CVMFS_TEST_PLATFORMS', combinations: ['CVMFS_PLATFORM=el7,CVMFS_PLATFORM_CONFIG=x86_64,label=trampoline'], description: null]]
-        propagate: false
+//     def testResult = build job: 'CvmfsCloudTesting',
+//         parameters: [
+//             string(name: 'CVMFS_TESTEE_URL', value: 'http://ecsft.cern.ch/dist/cvmfs/nightlies/cvmfs-git-' + buildResult.getId()),
+//             booleanParam(name: 'CVMFS_QUICK_TESTS', value: true),
+//             [$class: 'MatrixCombinationsParameterValue', name: 'CVMFS_TEST_PLATFORMS', combinations: ['CVMFS_PLATFORM=el7,CVMFS_PLATFORM_CONFIG=x86_64,label=trampoline'], description: null]]
+//         propagate: false
     
-    postComment("cloudtesting finished: " + testResult.getResult() + " " + testResult.getAbsoluteUrl(), env.ghprbPullId)
-    if (testResult.getResult() != 'SUCCESS') {
-        currentBuild.result = testResult.getResult()
-        error 'CvmfsCloudTesting did not succeed'
-    }
+//     postComment("cloudtesting finished: " + testResult.getResult() + " " + testResult.getAbsoluteUrl(), env.ghprbPullId)
+//     if (testResult.getResult() != 'SUCCESS') {
+//         currentBuild.result = testResult.getResult()
+//         error 'CvmfsCloudTesting did not succeed'
+//     }
 
-} else if (env.ghprbCommentBody == "ok to fullbuild"){
-    postComment("building CVMFS",  env.ghprbPullId)
-    def result = build job: 'CvmfsFullBuildDocker', parameters: [
-        string(name: 'CVMFS_GIT_REVISION', value: env.sha1)]
-        // [$class: 'MatrixCombinationsParameterValue', name: 'CVMFS_BUILD_PLATFORMS', combinations: ['CVMFS_BUILD_ARCH=docker-x86_664,CVMFS_BUILD_PLATFORM=cc7'], description: null]]
-    postComment("building finished: " + result.getResult() + " " + buildResult.getAbsoluteUrl(), env.ghprbPullId)
+// } else if (env.ghprbCommentBody == "ok to fullbuild"){
+//     postComment("building CVMFS",  env.ghprbPullId)
+//     def result = build job: 'CvmfsFullBuildDocker', parameters: [
+//         string(name: 'CVMFS_GIT_REVISION', value: env.sha1)]
+//         // [$class: 'MatrixCombinationsParameterValue', name: 'CVMFS_BUILD_PLATFORMS', combinations: ['CVMFS_BUILD_ARCH=docker-x86_664,CVMFS_BUILD_PLATFORM=cc7'], description: null]]
+//     postComment("building finished: " + result.getResult() + " " + buildResult.getAbsoluteUrl(), env.ghprbPullId)
 
-} else {
-    // def r = build job: 'jpriessn-CvmfsFullBuildDocker', parameters: [
-    //     string(name: 'CVMFS_GIT_REVISION', value: env.sha1),
-    //     [$class: 'MatrixCombinationsParameterValue', name: 'CVMFS_BUILD_PLATFORMS', combinations: cloudTestingBuildCombinations, description: null]],
-    //     // wait: false,
-    //     propagate: false
-    // echo r.class.
-    // echo r.getAbsoluteUrl()
-    // echo r.getCurrentResult()
-    // echo r.getResult()
-}
+// } else {
+//     // def r = build job: 'jpriessn-CvmfsFullBuildDocker', parameters: [
+//     //     string(name: 'CVMFS_GIT_REVISION', value: env.sha1),
+//     //     [$class: 'MatrixCombinationsParameterValue', name: 'CVMFS_BUILD_PLATFORMS', combinations: cloudTestingBuildCombinations, description: null]],
+//     //     // wait: false,
+//     //     propagate: false
+//     // echo r.class.
+//     // echo r.getAbsoluteUrl()
+//     // echo r.getCurrentResult()
+//     // echo r.getResult()
+// }
