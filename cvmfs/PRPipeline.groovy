@@ -1,4 +1,9 @@
+#!groovy
+
+@Library('cvmfs-pipelines')
+
 import org.jenkinsci.plugins.ghprb.GhprbTrigger
+
 
 void postComment(String comment) {
     def triggerJob = manager.hudson.getJob('jpriessn-PipelinePRBuilder')
