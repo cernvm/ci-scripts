@@ -27,6 +27,7 @@ RUN         yum -y install                     \
                        openssl-devel           \
                        policycoreutils-python  \
                        python-devel            \
+                       python-pytest           \
                        python-setuptools       \
                        rpm-build               \
                        ruby-devel              \
