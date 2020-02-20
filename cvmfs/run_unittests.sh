@@ -46,6 +46,7 @@ if [ x"$CVMFS_RUN_UNITTESTS" = x"true" ]; then
   [ x"$CVMFS_UNITTESTS_QUICK" = x"true" ] && command_tmpl="$command_tmpl -q"
   [ ! -z "$CVMFS_UNITTESTS_CACHEPLUGINS" ] && command_tmpl="$command_tmpl -c $CVMFS_UNITTESTS_CACHEPLUGINS"
   [ x"$CVMFS_UNITTESTS_DUCC" = x"true" ] && command_tmpl="$command_tmpl -d"
+  command_tmpl="$command_tmpl -g $CVMFS_SOURCE_LOCATION/cvmfs/webapi"
   command_tmpl="$command_tmpl ${CVMFS_UNITTESTS_BINARY} ${CVMFS_UNITTESTS_RESULT_LOCATION}"
   echo "++ $command_tmpl"
 
