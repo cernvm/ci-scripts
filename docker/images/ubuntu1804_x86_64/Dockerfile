@@ -20,6 +20,7 @@ RUN         apt-get -y update && apt-get -y install             \
                                               libssl-dev        \
                                               pkg-config        \
                                               python-dev        \
+                                              python-pytest     \
                                               python-setuptools \
                                               ruby              \
                                               ruby-dev          \

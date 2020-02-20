@@ -20,6 +20,7 @@ RUN        zypper -n update && zypper -n install    \
                                   patch             \
                                   pkgconfig         \
                                   python-devel      \
+                                  python-pytest     \
                                   python-setuptools \
                                   rpmbuild          \
                                   tar               \

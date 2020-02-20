@@ -19,7 +19,6 @@ RUN        zypper -n update && zypper -n install          \
                                   make                    \
                                   policycoreutils-python  \
                                   python-devel            \
-                                  python-pytest           \
                                   python-setuptools       \
                                   rpm-build               \
                                   selinux-policy-devel    \
