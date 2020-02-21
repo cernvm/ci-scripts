@@ -40,6 +40,9 @@ RUN         yum -y install                     \
                        voms-devel              \
                        zlib-devel
 
+
+RUN GOPATH=/usr/local go get github.com/jstemmer/go-junit-report
+
 # Similarly to the node above.
 # `adduser sftnight` should be sufficient, but the bug above requires
 # this workaround

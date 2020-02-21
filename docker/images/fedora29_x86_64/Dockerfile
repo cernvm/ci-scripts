@@ -35,7 +35,7 @@ RUN         dnf -y update && dnf -y install                     \
                                         zlib-devel
 
 
-RUN go get github.com/jstemmer/go-junit-report
+RUN GOPATH=/usr/local go get github.com/jstemmer/go-junit-report
 
 RUN         useradd sftnight
 USER        sftnight

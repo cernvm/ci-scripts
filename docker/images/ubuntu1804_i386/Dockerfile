@@ -35,3 +35,9 @@ RUN apt-get -y update && apt-get -y install \
   libxml2-dev \
   sssd-common
 
+# Golang >= 11.5 is needed for cvmfs-gateway
+RUN curl -o /tmp/go.tar.gz https://dl.google.com/go/go1.12.4.linux-386.tar.gz && \
+    tar -C /usr/local -xzf /tmp/go.tar.gz && rm /tmp/go.tar.gz
+ENV PATH="/usr/local/go/bin:${PATH}"
+
+RUN GOPATH=/usr/local go get github.com/jstemmer/go-junit-report

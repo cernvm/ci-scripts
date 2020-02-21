@@ -44,7 +44,7 @@ RUN         dnf -y update && dnf -y install                     \
 RUN  groupadd --gid $SFTNIGHT_GID sftnight && \
         adduser --uid $SFTNIGHT_UID --gid $SFTNIGHT_GID sftnight
 
-RUN go get github.com/jstemmer/go-junit-report
+RUN GOPATH=/usr/local go get github.com/jstemmer/go-junit-report
 
 USER        sftnight
 WORKDIR     /home/sftnight

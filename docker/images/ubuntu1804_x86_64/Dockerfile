@@ -61,4 +61,6 @@ RUN curl -o /tmp/go.tar.gz https://dl.google.com/go/go1.12.4.linux-amd64.tar.gz 
     tar -C /usr/local -xzf /tmp/go.tar.gz && rm /tmp/go.tar.gz
 ENV PATH="/usr/local/go/bin:${PATH}"
 
+RUN GOPATH=/usr/local go get github.com/jstemmer/go-junit-report
+
 RUN gem install --no-ri --no-rdoc fpm
