@@ -30,7 +30,6 @@ RUN         yum -y install                     \
                        openssl-devel           \
                        python2                 \
                        python2-devel           \
-                       python2-pytest          \
                        python3-devel           \
                        rpm-build               \
                        ruby-devel              \
