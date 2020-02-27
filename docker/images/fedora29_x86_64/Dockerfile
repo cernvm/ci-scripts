@@ -11,7 +11,6 @@ RUN         dnf -y update && dnf -y install                     \
                                         gcc-c++                 \
                                         gdb                     \
                                         git                     \
-                                        golang                  \
                                         gridsite                \
                                         hardlink                \
                                         libattr-devel           \
@@ -34,6 +33,9 @@ RUN         dnf -y update && dnf -y install                     \
                                         valgrind-devel          \
                                         zlib-devel
 
+RUN curl https://dl.google.com/go/go1.14.linux-amd64.tar.gz --output go.tar.gz && \
+        tar -C /usr/local -xzf go.tar.gz 
+ENV PATH $PATH:/usr/local/go/bin
 
 RUN GOPATH=/usr/local go get github.com/jstemmer/go-junit-report
 
