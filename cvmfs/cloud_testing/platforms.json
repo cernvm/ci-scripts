@@ -184,24 +184,6 @@
     "test": "ubuntu_test.sh",
     "user": "ubuntu"
   },
- {
-    "dist": "fedora28",
-    "config": "x86_64",
-    "ami": "ami-4ab5a3be",
-    "label": "fedora28_x86_64",
-    "setup": "fedora_setup.sh",
-    "test": "fedora_test.sh",
-    "user": "fedora"
-  },
-  {
-    "dist": "fedora29",
-    "config": "x86_64",
-    "ami": "ami-1659d06c",
-    "label": "fedora29_x86_64",
-    "setup": "fedora_setup.sh",
-    "test": "fedora_test.sh",
-    "user": "fedora"
-  },
   {
     "dist": "fedora30",
     "config": "x86_64",
