@@ -1,12 +1,7 @@
 FROM        scratch
 MAINTAINER  Simone Mosciatti <simone.mosciatti@cern.ch>
 
-# This two args should not be necessary, but the bug fixed by
-# https://github.com/opencontainers/runc/pull/2086
-# makes them necessary in our environment
-ARG SFTNIGHT_UID=500
-ARG SFTNIGHT_GID=500
-
+# 2019-02-05 11:36  - dummy comment to trigger installation of latest golang compiler
 ADD         cc8_x86_64.tar.gz /
 RUN         yum -y update
 RUN         yum -y install filesystem
@@ -40,15 +35,9 @@ RUN         yum -y install                     \
                        voms-devel              \
                        zlib-devel
 
-
 RUN GOPATH=/usr/local go get github.com/jstemmer/go-junit-report
 
-# Similarly to the node above.
-# `adduser sftnight` should be sufficient, but the bug above requires
-# this workaround
-RUN  groupadd --gid $SFTNIGHT_GID sftnight && \
-        adduser --uid $SFTNIGHT_UID --gid $SFTNIGHT_GID sftnight
-
+RUN         useradd sftnight
 USER        sftnight
 
 WORKDIR     /home/sftnight

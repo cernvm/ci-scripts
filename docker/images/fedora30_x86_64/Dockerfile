@@ -1,9 +1,6 @@
 FROM        scratch
 MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
-ARG SFTNIGHT_UID=500
-ARG SFTNIGHT_GID=500
-
 ADD         fedora30_x86_64.tar.gz /
 RUN         dnf -y update && dnf -y install                     \
                                         cmake                   \
@@ -38,13 +35,8 @@ RUN         dnf -y update && dnf -y install                     \
                                         zlib-devel
 
 
-# Similarly to the node above.
-# `adduser sftnight` should be sufficient, but the bug above requires
-# this workaround
-RUN  groupadd --gid $SFTNIGHT_GID sftnight && \
-        adduser --uid $SFTNIGHT_UID --gid $SFTNIGHT_GID sftnight
+RUN go get github.com/jstemmer/go-junit-report
 
-RUN GOPATH=/usr/local go get github.com/jstemmer/go-junit-report
-
+RUN         useradd sftnight
 USER        sftnight
 WORKDIR     /home/sftnight
