@@ -80,6 +80,8 @@ bootstrap_image() {
   [ -x ${container_dir}/build.sh ] || die "./build.sh not available or not executable"
   sudo ${container_dir}/build.sh   || die "Failed to build chroot tarball"
   sudo docker build \
+          --build-arg SFTNIGHT_UID=$(id sftnight -u) \
+          --build-arg SFTNIGHT_GID=$(id sftnight -g) \
           --tag=$image_name .
   [ $? -eq 0 ] || die "Failed to build docker image '$image_name'"
   cd $old_wordir
@@ -162,7 +164,7 @@ args="--env GOCACHE=$WORKSPACE/.gocache $args"
 uid=$(id -u)
 gid=$(id -g)
 echo "++ $@"
-sudo docker run --volume=/home/sftnight:/home/sftnight:ro    \
+sudo docker run \
                 --volume="$WORKSPACE":"$WORKSPACE"           \
                 --volume=/etc/passwd:/etc/passwd             \
                 --volume=/etc/group:/etc/group               \
