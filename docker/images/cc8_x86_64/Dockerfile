@@ -7,6 +7,7 @@ MAINTAINER  Simone Mosciatti <simone.mosciatti@cern.ch>
 ARG SFTNIGHT_UID=500
 ARG SFTNIGHT_GID=500
 
+
 ADD         cc8_x86_64.tar.gz /
 RUN         yum -y update
 RUN         yum -y install filesystem
