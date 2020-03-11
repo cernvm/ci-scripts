@@ -47,3 +47,5 @@ RUN  groupadd --gid $SFTNIGHT_GID sftnight && \
         adduser --uid $SFTNIGHT_UID --gid $SFTNIGHT_GID sftnight
 
 USER sftnight
+
+WORKDIR /home/sftnight
