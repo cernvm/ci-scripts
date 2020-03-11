@@ -164,6 +164,22 @@ args="--env GOCACHE=$WORKSPACE/.gocache $args"
 uid=$(id -u)
 gid=$(id -g)
 echo "++ $@"
+
+echo "start debug..."
+echo "sudo docker run \
+                --volume=$WORKSPACE:$WORKSPACE           \
+                --volume=/etc/passwd:/etc/passwd             \
+                --volume=/etc/group:/etc/group               \
+                --volume=$OUTPUT_POOL_DIR:$OUTPUT_POOL_DIR \
+                --user=${uid}:${gid}                         \
+                --rm=true                                    \
+                --privileged=true                            \
+                $args $image_name                            \
+                ${OUTPUT_POOL_DIR}/docker_script_wrapper.sh  \
+                $fstdout $fstderr $@
+"
+echo "... end debug"
+
 sudo docker run \
                 --volume="$WORKSPACE":"$WORKSPACE"           \
                 --volume=/etc/passwd:/etc/passwd             \
