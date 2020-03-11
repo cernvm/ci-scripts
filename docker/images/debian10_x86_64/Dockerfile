@@ -43,6 +43,10 @@ RUN apt-get -y update && apt-get -y install \
 RUN apt-get -y update && apt-get -y install \
   fakechroot
 
+RUN curl -o /tmp/go.tar.gz https://dl.google.com/go/go1.14.linux-amd64.tar.gz && \
+    tar -C /usr/local -xzf /tmp/go.tar.gz && rm /tmp/go.tar.gz
+ENV PATH="/usr/local/go/bin:${PATH}"
+
 RUN  groupadd --gid $SFTNIGHT_GID sftnight && \
         adduser --uid $SFTNIGHT_UID --gid $SFTNIGHT_GID sftnight
 
