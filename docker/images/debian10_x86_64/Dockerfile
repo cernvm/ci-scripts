@@ -26,26 +26,27 @@ RUN         apt-get -y update && apt-get -y install             \
                                               python-setuptools \
                                               unzip             \
                                               uuid-dev          \
-                                              valgrind
-
-RUN apt-get -y update && apt-get -y install \
-  autoconf \
-  bison \
-  dh-systemd \
-  flex \
-  libhesiod-dev \
-  libkrb5-dev \
-  libldap2-dev \
-  libsasl2-dev \
-  libxml2-dev \
-  sssd-common
-
-RUN apt-get -y update && apt-get -y install \
-  fakechroot
+                                              valgrind          \
+                                              autoconf          \
+                                              bison             \
+                                              dh-systemd        \
+                                              flex              \
+                                              libhesiod-dev     \
+                                              libkrb5-dev       \
+                                              libldap2-dev      \
+                                              libsasl2-dev      \
+                                              libxml2-dev       \
+                                              sssd-common       \
+                                              fakechroot        \
+                                              ruby              \
+                                              ruby-dev          \
+                                              rubygems
 
 RUN curl -o /tmp/go.tar.gz https://dl.google.com/go/go1.14.linux-amd64.tar.gz && \
     tar -C /usr/local -xzf /tmp/go.tar.gz && rm /tmp/go.tar.gz
 ENV PATH="/usr/local/go/bin:${PATH}"
+
+RUN gem install --no-ri --no-rdoc fpm
 
 RUN  groupadd --gid $SFTNIGHT_GID sftnight && \
         adduser --uid $SFTNIGHT_UID --gid $SFTNIGHT_GID sftnight
