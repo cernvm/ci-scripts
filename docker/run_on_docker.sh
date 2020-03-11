@@ -164,6 +164,7 @@ args="--env GOCACHE=$WORKSPACE/.gocache $args"
 uid=$(id -u)
 gid=$(id -g)
 echo "++ $@"
+
 sudo docker run \
                 --volume="$WORKSPACE":"$WORKSPACE"           \
                 --volume=/etc/passwd:/etc/passwd             \
