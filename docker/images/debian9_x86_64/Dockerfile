@@ -1,6 +1,9 @@
 FROM        scratch
 MAINTAINER  Jakob Blomer <jblomer@cern.ch>
 
+ARG SFTNIGHT_UID=500
+ARG SFTNIGHT_GID=500
+
 ADD         debian9_x86_64.tar.gz /
 RUN         apt-get -y update && apt-get -y upgrade
 RUN         apt-get -y update && apt-get -y install             \
@@ -39,3 +42,7 @@ RUN apt-get -y update && apt-get -y install \
 RUN apt-get -y update && apt-get -y install \
   fakechroot
 
+RUN  groupadd --gid $SFTNIGHT_GID sftnight && \
+        adduser --uid $SFTNIGHT_UID --gid $SFTNIGHT_GID sftnight
+
+USER sftnight
