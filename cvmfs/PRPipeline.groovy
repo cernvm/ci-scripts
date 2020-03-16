@@ -1,6 +1,11 @@
 #!groovy
 
-// @Library('cvmfs-pipelines')
+// This is a pipeline script for CvmfsPRBuilder Jenkins job.
+// IT IS NOT SYNCHRONIZED AUTOMATICALLY.
+// When updating the script, push the new revision into the upstream AND
+// copy-paste the whole updated script directly into the CvmfsPRBuilder
+// job definition. Apart from the copy-paste, also add a comment with
+// git hash of the latest commit.
 
 import org.jenkinsci.plugins.ghprb.GhprbTrigger
 import org.kohsuke.github.GHCommitState
