@@ -24,9 +24,9 @@ RUN         dnf -y update && dnf -y install                     \
                                         nfs-utils               \
                                         openssl-devel           \
                                         perl-IO-Interface       \
-                                        policycoreutils-python  \
-                                        python-devel            \
-                                        python-setuptools       \
+                                        policycoreutils-python3 \
+                                        python2-devel           \
+                                        python2-setuptools      \
                                         rpm-build               \
                                         selinux-policy-devel    \
                                         selinux-policy-targeted \
