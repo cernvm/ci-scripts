@@ -30,6 +30,14 @@ void getNextBuildUrl(String job) {
     return url
 }
 
+void cleanupBuild(String dir) {
+    def cleanupResult = build job: 'CvmfsBuildCleanup',
+        parameters: [
+            string(name: 'TARGET_DIR', value: dir),
+        ],
+        propagate: false
+}
+
 cloudTestingBuildCombinations = [
                                 'CVMFS_BUILD_ARCH=docker-i386,CVMFS_BUILD_PLATFORM=slc6',
                                 'CVMFS_BUILD_ARCH=docker-i386,CVMFS_BUILD_PLATFORM=ubuntu1604',
@@ -151,18 +159,23 @@ void cloudtestCommand(args) {
         propagate: false
 
     postComment("building for cloudtests finished: " + buildResult.getResult() + " " + buildResult.getAbsoluteUrl())
+
+    def buildDir = "pr/pr" + env.ghprbPullId + '-' + buildResult.getId()
     if (buildResult.getResult() != 'SUCCESS') {
+        cleanupBuild(buildDir)
         setCommitStatus("cloudtest", GHCommitState.FAILURE, "", buildResult.getAbsoluteUrl())
         currentBuild.result = buildResult.getResult()
         error 'CvmfsFullBuildDocker did not succeed'
     }
     setCommitStatus("cloudtest", GHCommitState.PENDING, "", getNextBuildUrl('CvmfsCloudTesting'))
 
-    testParams.add(string(name: 'CVMFS_TESTEE_URL', value: 'http://ecsft.cern.ch/dist/cvmfs/pr/pr' + env.ghprbPullId + '-' + buildResult.getId()))
+    testParams.add(string(name: 'CVMFS_TESTEE_URL', value: 'http://ecsft.cern.ch/dist/cvmfs/' + buildDir))
 
     def testResult = build job: 'CvmfsCloudTesting',
         parameters: testParams,
         propagate: false
+
+    cleanupBuild(buildDir)
 
     postComment("cloudtests finished: " + testResult.getResult() + " " + testResult.getAbsoluteUrl())
     def status = testResult.getResult() == 'SUCCESS' ? GHCommitState.SUCCESS : GHCommitState.FAILURE
