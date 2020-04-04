@@ -115,7 +115,7 @@
  {
     "dist": "ubuntu1404",
     "config": "x86_64",
-    "ami": "ami-6f304f09",
+    "ami": "ami-82ca1e49",
     "label": "ubuntu1404_x86_64",
     "setup": "ubuntu_setup.sh",
     "test": "ubuntu_test.sh",
