@@ -86,7 +86,7 @@ void cpplintCommand(args) {
     def s = new Scanner(lintResult.rawBuild.getArtifactManager().root().child("cpplint.error").open()).useDelimiter("\\A");
     def errors = s.hasNext() ? s.next() : "";
     if (errors != "") {
-        postComment("linter finished with errors:\n" + errors)
+        postComment("linter finished with errors:\n\n```" + errors + "```")
         currentBuild.result = lintResult.getResult()
     }
 }
@@ -157,7 +157,7 @@ void cloudtestCommand(args) {
             string(name: 'CVMFS_TARGET_DIR', value: "pr/pr" + env.ghprbPullId)],
         propagate: false
 
-    postComment("building for cloudtests finished: " + buildResult.getResult() + " " + buildResult.getAbsoluteUrl())
+    postComment("building for cloudtests finished: " + buildResult.getResult() + "\n" + buildResult.getAbsoluteUrl())
 
     def buildDir = "pr/pr" + env.ghprbPullId + '-' + buildResult.getId()
     if (buildResult.getResult() != 'SUCCESS') {
@@ -176,7 +176,7 @@ void cloudtestCommand(args) {
 
     cleanupBuild(buildDir)
 
-    postComment("cloudtests finished: " + testResult.getResult() + " " + testResult.getAbsoluteUrl())
+    postComment("cloudtests finished: " + testResult.getResult() + "\n" + testResult.getAbsoluteUrl())
     def status = testResult.getResult() == 'SUCCESS' ? GHCommitState.SUCCESS : GHCommitState.FAILURE
     setCommitStatus("cloudtest", status, "", testResult.getAbsoluteUrl())
     if (testResult.getResult() != 'SUCCESS') {
