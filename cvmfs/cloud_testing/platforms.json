@@ -112,7 +112,17 @@
     "user": "centos",
     "context": "#!/bin/sh \n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
   },
- {
+  {
+    "dist": "el8",
+    "config": "x86_64",
+    "ami": "ami-8d06d828",
+    "label": "cc8_x86_64",
+    "setup": "centos8_x86_64_setup.sh",
+    "test": "centos8_x86_64_test.sh",
+    "user": "root",
+    "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
+  },
+  {
     "dist": "ubuntu1404",
     "config": "x86_64",
     "ami": "ami-6f304f09",
