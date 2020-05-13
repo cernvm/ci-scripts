@@ -1,5 +1,5 @@
 #!groovy
-
+// COMMIT_NUMBER_HERE
 // This is a pipeline script for CvmfsPRBuilder Jenkins job.
 // IT IS NOT SYNCHRONIZED AUTOMATICALLY.
 // When updating the script, push the new revision into the upstream AND
@@ -84,10 +84,11 @@ void cpplintCommand(args) {
     def status = lintResult.getResult() == 'SUCCESS' ? GHCommitState.SUCCESS : GHCommitState.FAILURE
     setCommitStatus("cpplint", status, "", lintResult.getAbsoluteUrl())
 
-    def s = new Scanner(lintResult.rawBuild.getArtifactManager().root().child("cpplint.error").open()).useDelimiter("\\A");
-    def errors = s.hasNext() ? s.next() : "";
-    if (errors != "") {
-        postComment("linter finished with errors:\n\n```" + errors + "```")
+    def errorFile = lintResult.rawBuild.getArtifactManager().root().child("cpplint.error").open();
+    def errorText = errorFile.getText('utf-8')
+
+    if (errorText.length() > 0) {
+        postComment("linter finished with errors:\n\n```\n" + errorText + "```")
         currentBuild.result = lintResult.getResult()
     }
 }
