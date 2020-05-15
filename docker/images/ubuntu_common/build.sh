@@ -50,7 +50,7 @@ debootstrap --variant=buildd  \
             $DESTINATION      \
             $REPO_BASE_URL
 
-if [ x"$UBUNTU_RELEASE" != x"bionic" ] && [ x"$UBUNTU_RELEASE" != x"buster" ] ; then
+if [ x"$UBUNTU_RELEASE" != x"bionic" ] && [ x"$UBUNTU_RELEASE" != x"buster" ] && [ x"$UBUNTU_RELEASE" != x"focal" ]; then
   echo "installing stretch and artful source repositories for autofs backport..."
   echo "deb-src http://ftp.debian.org/debian stretch main" > $DESTINATION/etc/apt/sources.list.d/stretch-src.list
   echo "deb-src http://old-releases.ubuntu.com/ubuntu/ artful main" > $DESTINATION/etc/apt/sources.list.d/artful-src.list

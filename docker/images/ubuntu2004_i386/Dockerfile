@@ -17,8 +17,6 @@ RUN         apt-get -y update && apt-get -y install             \
                                               libfuse-dev       \
                                               libssl-dev        \
                                               pkg-config        \
-                                              python-dev        \
-                                              python-setuptools \
                                               unzip             \
                                               uuid-dev          \
                                               valgrind
@@ -34,6 +32,8 @@ RUN apt-get -y update && apt-get -y install \
   libldap2-dev \
   libsasl2-dev \
   libxml2-dev \
+  python-dev-is-python2 \
+  python-setuptools \
   sssd-common
 
 RUN GOPATH=/usr/local go get github.com/jstemmer/go-junit-report
