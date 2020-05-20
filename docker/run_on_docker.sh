@@ -68,6 +68,25 @@ image_recipe() {
   echo $recipe_epoch
 }
 
+check_and_build_image() {
+  # check if the docker container specification exists in ci/docker
+  image_name="cvmfs/${CVMFS_DOCKER_IMAGE}"
+  container_dir="${SCRIPT_LOCATION}/images/${CVMFS_DOCKER_IMAGE}"
+  [ -d $container_dir ] || die "container $CVMFS_DOCKER_IMAGE not found"
+
+  # bootstrap the docker container if non-existent or recreate if outdated
+  if ! sudo docker images $image_name | grep -q "$image_name"; then
+    bootstrap_image "$image_name" "$container_dir"
+  elif [ $(image_creation $image_name) -lt $(image_recipe $container_dir) ]; then
+    echo -n "removing outdated docker image '$image_name'... "
+    sudo docker rmi -f "$image_name" > /dev/null || die "fail"
+    echo "done"
+    bootstrap_image "$image_name" "$container_dir"
+  fi
+  echo $image_name
+}
+
+
 bootstrap_image() {
   local image_name="$1"
   local container_dir="$2"
@@ -92,21 +111,13 @@ bootstrap_image() {
 which docker > /dev/null 2>&1 || die "docker is not installed"
 which git    > /dev/null 2>&1 || die "git is not installed"
 
-# check if the docker container specification exists in ci/docker
-image_name="cvmfs/${CVMFS_DOCKER_IMAGE}"
-container_dir="${SCRIPT_LOCATION}/images/${CVMFS_DOCKER_IMAGE}"
-[ -d $container_dir ] || die "container $CVMFS_DOCKER_IMAGE not found"
-
-# bootstrap the docker container if non-existent or recreate if outdated
-if ! sudo docker images $image_name | grep -q "$image_name"; then
-  bootstrap_image "$image_name" "$container_dir"
-elif [ $(image_creation $image_name) -lt $(image_recipe $container_dir) ]; then
-  echo -n "removing outdated docker image '$image_name'... "
-  sudo docker rmi -f "$image_name" > /dev/null || die "fail"
-  echo "done"
-  bootstrap_image "$image_name" "$container_dir"
+if [ ${CVMFS_DOCKER_IMAGE} = "ubuntu2004_x86_64" ]; then
+  image_name="gitlab-registry.cern.ch/cernvm/infrastructure/ubuntu_x86_64:20.04"
+else
+  image_name=$(check_and_build_image)
 fi
 
+echo "image used: $image_name"
 # Workaround: set up a stdout/stderr redirection to circumvent docker's broken
 #             forwarding. Apparently this is a known issue of Docker and might
 #             become fixed at some point.
