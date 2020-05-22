@@ -83,7 +83,6 @@ check_and_build_image() {
     echo "done"
     bootstrap_image "$image_name" "$container_dir"
   fi
-  echo $image_name
 }
 
 
@@ -112,9 +111,24 @@ which docker > /dev/null 2>&1 || die "docker is not installed"
 which git    > /dev/null 2>&1 || die "git is not installed"
 
 if [ ${CVMFS_DOCKER_IMAGE} = "ubuntu2004_x86_64" ]; then
-  image_name="gitlab-registry.cern.ch/cernvm/infrastructure/ubuntu_x86_64:20.04"
+  image_name="gitlab-registry.cern.ch/cernvm/build-images/ubuntu_x86_64:20.04"
+  sudo docker pull $image_name
+elif [ ${CVMFS_DOCKER_IMAGE} = "fedora31_x86_64" ]; then
+  image_name="gitlab-registry.cern.ch/cernvm/build-images/fedora_x86_64:31"
+  sudo docker pull $image_name
+elif [ ${CVMFS_DOCKER_IMAGE} = "fedora32_x86_64" ]; then
+  image_name="gitlab-registry.cern.ch/cernvm/build-images/fedora_x86_64:32"
+  sudo docker pull $image_name
+elif [ ${CVMFS_DOCKER_IMAGE} = "sles11_x86_64" ]; then
+  image_name="gitlab-registry.cern.ch/cernvm/build-images/sles_x86_64:11"
+  sudo docker pull $image_name
+elif [ ${CVMFS_DOCKER_IMAGE} = "sles12_x86_64" ]; then
+  image_name="gitlab-registry.cern.ch/cernvm/build-images/sles_x86_64:12"
+  sudo docker pull $image_name
 else
-  image_name=$(check_and_build_image)
+  # we set image_name inside the `check_and_build_image` function
+  # as a global. It is horrible.
+  check_and_build_image
 fi
 
 echo "image used: $image_name"
@@ -176,14 +190,13 @@ uid=$(id -u)
 gid=$(id -g)
 echo "++ $@"
 
+id
+
 sudo docker run \
                 --volume="$WORKSPACE":"$WORKSPACE"           \
-                --volume=/etc/passwd:/etc/passwd             \
-                --volume=/etc/group:/etc/group               \
                 --volume="$OUTPUT_POOL_DIR:$OUTPUT_POOL_DIR" \
-                --user=${uid}:${gid}                         \
                 --rm=true                                    \
                 --privileged=true                            \
-                $args $image_name                            \
-                ${OUTPUT_POOL_DIR}/docker_script_wrapper.sh  \
-                $fstdout $fstderr "$@"
+                --user=${uid}:${gid}                         \
+		$args $image_name                            \
+        	"$@"
