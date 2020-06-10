@@ -176,6 +176,7 @@ uid=$(id -u)
 gid=$(id -g)
 echo "++ $@"
 
+mkdir -p $WORKSPACE
 sudo docker run \
                 --volume="$WORKSPACE":"$WORKSPACE"           \
                 --volume="$OUTPUT_POOL_DIR:$OUTPUT_POOL_DIR" \
