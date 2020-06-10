@@ -190,13 +190,11 @@ uid=$(id -u)
 gid=$(id -g)
 echo "++ $@"
 
-id
-
 sudo docker run \
                 --volume="$WORKSPACE":"$WORKSPACE"           \
                 --volume="$OUTPUT_POOL_DIR:$OUTPUT_POOL_DIR" \
+                --user=${uid}:${gid}                         \
                 --rm=true                                    \
                 --privileged=true                            \
-                --user=${uid}:${gid}                         \
-		$args $image_name                            \
-        	"$@"
+                $args $image_name                            \
+                "$@"
