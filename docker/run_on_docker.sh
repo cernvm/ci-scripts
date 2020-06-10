@@ -177,7 +177,7 @@ gid=$(id -g)
 echo "++ $@"
 
 mkdir -p $WORKSPACE
-sudo docker run \
+docker run \
                 --volume="$WORKSPACE":"$WORKSPACE"           \
                 --volume="$OUTPUT_POOL_DIR:$OUTPUT_POOL_DIR" \
                 --user=${uid}:${gid}                         \
