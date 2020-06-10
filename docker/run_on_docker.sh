@@ -150,20 +150,6 @@ trap cleanup_output_pool EXIT HUP INT TERM
 
 OUTPUT_POOL_DIR=$(mktemp -d)
 [ -d $OUTPUT_POOL_DIR ] || die "cannot create output redirection pool"
-fstdout="${OUTPUT_POOL_DIR}/stdout"
-fstderr="${OUTPUT_POOL_DIR}/stderr"
-touch $fstdout $fstderr || die "cannot create output redirection files"
-cp ${SCRIPT_LOCATION}/docker_script_wrapper.sh $OUTPUT_POOL_DIR || \
-  die "cannot put docker_script_wrapper.sh in place"
-
-tail -f $fstdout &
-OUTPUT_POOL_STDOUT_READER=$!
-tail -f $fstderr >&2 &
-OUTPUT_POOL_STDERR_READER=$!
-
-[ ! -z $OUTPUT_POOL_STDOUT_READER ] && [ ! -z $OUTPUT_POOL_STDERR_READER ] && \
-kill -0 $OUTPUT_POOL_STDOUT_READER  && kill -0 $OUTPUT_POOL_STDERR_READER  || \
-  die "cannot setup output redirection readers"
 
 # Jenkins provides the CVMFS_CI_PLATFORM_LABEL as a platform specifier. For
 # docker this needs to be re-set to the actual label rather than 'docker'
