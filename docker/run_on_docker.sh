@@ -110,26 +110,85 @@ bootstrap_image() {
 which docker > /dev/null 2>&1 || die "docker is not installed"
 which git    > /dev/null 2>&1 || die "git is not installed"
 
-if [ ${CVMFS_DOCKER_IMAGE} = "ubuntu2004_x86_64" ]; then
-  image_name="gitlab-registry.cern.ch/cernvm/build-images/ubuntu_x86_64:20.04"
-  sudo docker pull $image_name
-elif [ ${CVMFS_DOCKER_IMAGE} = "fedora31_x86_64" ]; then
-  image_name="gitlab-registry.cern.ch/cernvm/build-images/fedora_x86_64:31"
-  sudo docker pull $image_name
-elif [ ${CVMFS_DOCKER_IMAGE} = "fedora32_x86_64" ]; then
-  image_name="gitlab-registry.cern.ch/cernvm/build-images/fedora_x86_64:32"
-  sudo docker pull $image_name
-elif [ ${CVMFS_DOCKER_IMAGE} = "sles11_x86_64" ]; then
-  image_name="gitlab-registry.cern.ch/cernvm/build-images/sles_x86_64:11"
-  sudo docker pull $image_name
-elif [ ${CVMFS_DOCKER_IMAGE} = "sles12_x86_64" ]; then
-  image_name="gitlab-registry.cern.ch/cernvm/build-images/sles_x86_64:12"
-  sudo docker pull $image_name
-else
-  # we set image_name inside the `check_and_build_image` function
-  # as a global. It is horrible.
-  check_and_build_image
-fi
+case ${CVMFS_DOCKER_IMAGE} in
+  "ubuntu2004_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/ubuntu_x86_64:20.04"
+    sudo docker pull $image_name
+    ;;
+  "ubuntu1804_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/ubuntu_x86_64:18.04"
+    sudo docker pull $image_name
+    ;;
+  "ubuntu1804_i386")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/ubuntu_i386:18.04"
+    sudo docker pull $image_name
+    ;;
+  "ubuntu1604_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/ubuntu_x86_64:16.04"
+    sudo docker pull $image_name
+    ;;
+  "ubuntu1604_i386")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/ubuntu_i386:16.04"
+    sudo docker pull $image_name
+    ;;
+  "ubuntu1404_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/ubuntu_x86_64:14.04"
+    sudo docker pull $image_name
+    ;;
+  "ubuntu1404_i386")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/ubuntu_i386:14.04"
+    sudo docker pull $image_name
+    ;;
+  "sles11_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/sles_x86_64:11"
+    sudo docker pull $image_name
+    ;;
+  "sles12_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/sles_x86_64:12"
+    sudo docker pull $image_name
+    ;;
+  "fedora32_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/fedora_x86_64:32"
+    sudo docker pull $image_name
+    ;;
+  "fedora31_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/fedora_x86_64:31"
+    sudo docker pull $image_name
+    ;;
+  "fedora30_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/fedora_x86_64:30"
+    sudo docker pull $image_name
+    ;;
+  "fedora30_i386")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/fedora_i386:30"
+    sudo docker pull $image_name
+    ;;
+  "debian10_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/debian_x86_64:10"
+    sudo docker pull $image_name
+    ;;
+  "debian9_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/debian_x86_64:9"
+    sudo docker pull $image_name
+    ;;
+  "debian8_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/debian_x86_64:8"
+    sudo docker pull $image_name
+    ;;
+  "cc8_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/centos_x86_64:8"
+    sudo docker pull $image_name
+    ;;
+  "cc7_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/centos_x86_64:7"
+    sudo docker pull $image_name
+    ;;
+  *)
+    # we set image_name inside the `check_and_build_image` function
+    # as a global. It is horrible.
+    check_and_build_image
+    ;;
+esac
 
 echo "image used: $image_name"
 # Workaround: set up a stdout/stderr redirection to circumvent docker's broken
