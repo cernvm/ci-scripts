@@ -183,10 +183,16 @@ case ${CVMFS_DOCKER_IMAGE} in
     image_name="gitlab-registry.cern.ch/cernvm/build-images/centos_x86_64:7"
     sudo docker pull $image_name
     ;;
+  "slc6_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/slc_x86_64:6"
+    sudo docker pull $image_name
+    ;;
+  "slc6_i386")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/slc_i386:6"
+    sudo docker pull $image_name
+    ;;
   *)
-    # we set image_name inside the `check_and_build_image` function
-    # as a global. It is horrible.
-    check_and_build_image
+    die "Unknow platform"
     ;;
 esac
 
