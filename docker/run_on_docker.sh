@@ -191,24 +191,6 @@ case ${CVMFS_DOCKER_IMAGE} in
 esac
 
 echo "image used: $image_name"
-# Workaround: set up a stdout/stderr redirection to circumvent docker's broken
-#             forwarding. Apparently this is a known issue of Docker and might
-#             become fixed at some point.
-#             (See docker_script_wrapper.sh for more details)
-OUTPUT_POOL_DIR=
-OUTPUT_POOL_STDOUT_READER=
-OUTPUT_POOL_STDERR_READER=
-cleanup_output_pool() {
-  echo "running cleanup function..."
-  [ -z $OUTPUT_POOL_STDOUT_READER ] || kill $OUTPUT_POOL_STDOUT_READER
-  [ -z $OUTPUT_POOL_STDERR_READER ] || kill $OUTPUT_POOL_STDERR_READER
-  [ -z $OUTPUT_POOL_DIR           ] || rm -fR $OUTPUT_POOL_DIR
-}
-
-trap cleanup_output_pool EXIT HUP INT TERM
-
-OUTPUT_POOL_DIR=$(mktemp -d)
-[ -d $OUTPUT_POOL_DIR ] || die "cannot create output redirection pool"
 
 # Jenkins provides the CVMFS_CI_PLATFORM_LABEL as a platform specifier. For
 # docker this needs to be re-set to the actual label rather than 'docker'
@@ -228,9 +210,6 @@ for var in $(env | grep -ohe "^\(CVMFS\|CERNVM\)_[^=]*"); do
 done
 args="--env GOCACHE=$WORKSPACE/.gocache $args"
 
-# run provided script inside the docker container
-# Note: Workaround for stdout/stderr redirection in conjunction with
-#       docker_script_wrapper.sh
 uid=$(id -u)
 gid=$(id -g)
 echo "++ $@"
@@ -238,7 +217,6 @@ echo "++ $@"
 mkdir -p $WORKSPACE
 docker run \
                 --volume="$WORKSPACE":"$WORKSPACE"           \
-                --volume="$OUTPUT_POOL_DIR:$OUTPUT_POOL_DIR" \
                 --user=${uid}:${gid}                         \
                 --rm=true                                    \
                 --privileged=true                            \
