@@ -1,3 +1,14 @@
+# DEPRECATED, remove soon.
+
+We move to use docker images pre-built in gitlab. These bluprints are not used
+anymore.
+
+The new repository for managing the docker images is:
+https://gitlab.cern.ch/cernvm/build-images/
+
+The images can be found here:
+https://gitlab.cern.ch/cernvm/build-images/container_registry
+
 # CVMFS Build Docker Containers 
 This directory contains various blue prints for docker images. Those can be used
 to platform-independently build the CernVM-FS packages. Each blue print comes
