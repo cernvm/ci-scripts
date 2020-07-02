@@ -45,8 +45,8 @@ cloudTestingBuildCombinations = [
                                 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=slc6',
                                 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=cc7',
                                 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=cc8',
-                                'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=fedora30',
                                 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=fedora31',
+                                'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=fedora32',
                                 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=ubuntu1604',
                                 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=ubuntu1804',
                                 'CVMFS_BUILD_ARCH=osx10-x86_64,CVMFS_BUILD_PLATFORM=mac'
@@ -76,7 +76,7 @@ void helpCommand() {
 }
 
 void cpplintCommand(args) {
-    setCommitStatus("cpplint", GHCommitState.PENDING, "", getNextBuildUrl('CvmfsCpplint'))    
+    setCommitStatus("cpplint", GHCommitState.PENDING, "", getNextBuildUrl('CvmfsCpplint'))
     def lintResult = build job: 'CvmfsCpplint',
         parameters: [
             string(name: 'CVMFS_GIT_REVISION', value: env.sha1)],
@@ -115,7 +115,7 @@ void unittestCommand(args) {
     if (!combs.isEmpty()) {
         params.add([$class: 'MatrixCombinationsParameterValue', name: 'CVMFS_BUILD_PLATFORMS', combinations: combs, description: null])
     }
-    setCommitStatus("unittest", GHCommitState.PENDING, "", getNextBuildUrl('CvmfsUnittest'))    
+    setCommitStatus("unittest", GHCommitState.PENDING, "", getNextBuildUrl('CvmfsUnittest'))
     def testResult = build job: 'CvmfsUnittest',
         parameters: params,
         propagate: false
@@ -150,7 +150,7 @@ void cloudtestCommand(args) {
     testParams.add(booleanParam(name: 'CVMFS_QUICK_TESTS', value: quickSuite))
     testParams.add(booleanParam(name: 'CVMFS_DESTROY_FAILED_VMS', value: destroy));
 
-    setCommitStatus("cloudtest", GHCommitState.PENDING, "", getNextBuildUrl('CvmfsFullBuildDocker'))    
+    setCommitStatus("cloudtest", GHCommitState.PENDING, "", getNextBuildUrl('CvmfsFullBuildDocker'))
 
     def buildResult = build job: 'CvmfsFullBuildDocker',
         parameters: [
@@ -225,7 +225,7 @@ void commitHandler() {
     )
 }
 
-// someone pushed new commit or opened PR 
+// someone pushed new commit or opened PR
 if (env.ghprbActualCommitAuthor != "") {
     commitHandler()
 } else {
