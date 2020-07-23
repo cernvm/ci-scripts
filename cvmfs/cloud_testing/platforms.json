@@ -253,7 +253,7 @@
   {
     "dist": "fedora32",
     "config": "x86_64",
-    "ami": "ami-154decb1",
+    "ami": "ami-95048c88",
     "label": "fedora32_x86_64",
     "setup": "fedora_setup.sh",
     "test": "fedora_test.sh",
