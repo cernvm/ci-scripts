@@ -61,6 +61,10 @@ cloudTestingcc7TestCombinations = [
                                   'CVMFS_PLATFORM=el7,CVMFS_PLATFORM_CONFIG=x86_64_yubikey,label=trampoline'
                                   ]
 
+cloudTestingContainerTestCombinations = [
+                                  'CVMFS_PLATFORM=el8,CVMFS_PLATFORM_CONFIG=x86_64_container,label=trampoline'
+                                  ]
+
 
 mention = "@cernvm-bot"
 helpString = "Syntax: " + mention + " subcommand + [args]\n" +
@@ -68,7 +72,7 @@ helpString = "Syntax: " + mention + " subcommand + [args]\n" +
              "help\n" +
              "cpplint\n" +
              "unittest + [full] + [ducc] + [linux] + [mac]\n" +
-             "cloudtest + [full] + [nodestroy] + [cc7]\n" +
+             "cloudtest + [full] + [nodestroy] + [cc7] + [container]\n" +
              "all\n"
 
 void helpCommand() {
@@ -144,6 +148,9 @@ void cloudtestCommand(args) {
             case "cc7":
             testParams.add([$class: 'MatrixCombinationsParameterValue', name: 'CVMFS_TEST_PLATFORMS', combinations: cloudTestingcc7TestCombinations, description: null])
             buildCombs = ['CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=cc7']
+            case "container":
+            testParams.add([$class: 'MatrixCombinationsParameterValue', name: 'CVMFS_TEST_PLATFORMS', combinations: cloudTestingContainerTestCombinations, description: null])
+            buildCombs = ['CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=cc8']
             break
         }
     }
