@@ -108,7 +108,7 @@ case ${CVMFS_DOCKER_IMAGE} in
     sudo docker pull $image_name
     ;;
   *)
-    die "Unknow platform"
+    die "Unknow platform: ${CVMFS_DOCKER_IMAGE}"
     ;;
 esac
 
