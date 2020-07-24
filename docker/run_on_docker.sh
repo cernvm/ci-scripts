@@ -146,6 +146,7 @@ docker run \
                 --user=${uid}:${gid}                         \
                 --rm=true                                    \
                 --privileged=true                            \
+                --device /dev/fuse                           \
                 $args $image_name                            \
                 "$@"
 set +x
