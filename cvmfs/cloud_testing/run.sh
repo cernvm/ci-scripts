@@ -159,6 +159,9 @@ setup_virtual_machine() {
   if [ "x$gateway_pkg_url" != "x" ]; then
     args="$args -w $gateway_pkg_url"
   fi
+  if [ "x$service_container" != "x" ]; then
+    args="$args -C $service_container"
+  fi
   run_script_on_virtual_machine $args
 
   check_retcode $?
@@ -384,6 +387,7 @@ unittest_package=$(read_package_map   ${otu}/pkgmap "$platform" 'unittests' )
 shrinkwrap_package=$(read_package_map ${otu}/pkgmap "$platform" 'shrinkwrap')
 ducc_package=$(read_package_map       ${otu}/pkgmap "$platform" 'ducc'      )
 config_packages="$(read_package_map   ${otu}/pkgmap "$platform" 'config'    )"
+service_container="$(read_package_map ${ctu}/pkgmap "container_x86_64" 'client')"
 
 if [ x"$platform" != "xosx_x86_64" ]; then
   # check if all necessary packages were found
@@ -414,6 +418,7 @@ if [ x"$platform" != "xosx_x86_64" ]; then
     config_package_urls="${config_package_base_url}/${config_package} $config_package_urls"
   done
   config_packages="$config_package_urls"
+  service_container="${ctu}/${service_container}"
 else
   if [ x"$client_package" = "x" ]; then
     usage "Incomplete pkgmap file"

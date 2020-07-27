@@ -21,6 +21,7 @@ usage() {
   echo "-g <cvmfs tests package>   CernVM-FS unit tests package (Linux only)"
   echo "-e <shrinkwrap package>    CernVM-FS shrinkwrap package (Linux only)"
   echo "-k <cvmfs config package>  CernVM-FS config package (Linux only)"
+  echo "-C <service container>     CernVM-FS service container"
   echo "-r <setup script>          platform specific script (inside the tarball)"
   echo "-w <repo gateway url>      URL of a build of the repository gateway package"
   echo
@@ -119,6 +120,7 @@ unittest_package=""
 shrinkwrap_package=""
 gateway_pkg_url=""
 ducc_package=""
+service_container=""
 test_username="sftnight"
 
 # RHEL (SLC) requires a tty for sudo... work around that
@@ -172,7 +174,7 @@ exec &> ${cvmfs_log_directory}/setup.log
 echo "*** Called remote_setup.sh with options $@"
 
 # read parameters
-while getopts "r:s:c:d:t:g:k:w:p:u:e:f:D:" option; do
+while getopts "r:s:c:d:t:g:k:w:p:u:e:f:D:C:" option; do
   case $option in
     r)
       platform_script=$OPTARG
@@ -206,6 +208,9 @@ while getopts "r:s:c:d:t:g:k:w:p:u:e:f:D:" option; do
       ;;
     D)
       ducc_package="$OPTARG"
+      ;;
+    C)
+      service_container="$OPTARG"
       ;;
     p)
       platform_script_path=$OPTARG
@@ -271,6 +276,7 @@ download_if_used $unittest_package
 download_if_used $shrinkwrap_package
 download_if_used $ducc_package
 download_if_used $config_package
+download_if_used $service_container
 
 # get local file path of downloaded files
 if [ "x$server_package" != "x" ]; then
@@ -296,6 +302,9 @@ if [ "x$shrinkwrap_package" != "x" ]; then
 fi
 if [ "x$config_package" != "x" ]; then
   config_package=$(canonicalize_path $config_package)
+fi
+if [ "x$service_container" != "x" ]; then
+  service_container=$(canonicalize_path $service_container)
 fi
 
 # extract the source tarball
@@ -343,5 +352,8 @@ if [ "x$(uname -s)" != "xDarwin" ]; then
 fi
 if [ x"$fuse3_package" != "x" ]; then
   args="$args -f $fuse3_package"
+fi
+if [ x"$service_container" != "x" ]; then
+  args="$args -C $service_container"
 fi
 sudo -H -E -u $test_username bash $platform_script_abs $args
