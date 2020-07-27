@@ -140,13 +140,19 @@ uid=$(id -u)
 gid=$(id -g)
 mkdir -p $WORKSPACE
 
+# Use the host's docker for building images as long as we cannot use
+# buildah (host kernel too old)
+sudo chown root:$(id -g) /var/run/docker.sock
+
 set -x
 docker run \
-                --volume="$WORKSPACE":"$WORKSPACE"           \
-                --user=${uid}:${gid}                         \
-                --rm=true                                    \
-                --privileged=true                            \
-                --device /dev/fuse                           \
-                $args $image_name                            \
+                --volume="$WORKSPACE":"$WORKSPACE"                 \
+                --volume=/var/run/docker.sock:/var/run/docker.sock \
+                --volume=/usr/bin/docker:/usr/bin/docker           \
+                --user=${uid}:${gid}                               \
+                --rm=true                                          \
+                --privileged=true                                  \
+                --device /dev/fuse                                 \
+                $args $image_name                                  \
                 "$@"
 set +x
