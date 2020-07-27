@@ -27,11 +27,18 @@ if [ x"$CVMFS_CI_PLATFORM_LABEL" = x"docker" ]; then
   # not be the package type of the host system
   rpms="$(find $CVMFS_BUILD_LOCATION -name '*.rpm' | wc -l)"
   debs="$(find $CVMFS_BUILD_LOCATION -name '*.deb' | wc -l)"
-  [ $rpms -gt 0 ] || [ $debs -gt 0 ] || die "Neither RPMs nor DEBs found"
-  if [ $rpms -gt $debs ]; then
-    package_type="rpm"
+  containers="$(find $CVMFS_BUILD_LOCATION -name '*.docker.tar.gz' | wc -l)"
+  [ $rpms -gt 0 ] || [ $debs -gt 0 ] || [ $containers -gt 0 ] || \
+    die "Neither RPMs nor DEBs nor containers found"
+
+  if [ $containers -gt 0 ]; then
+    package_type="container"
   else
-    package_type="deb"
+    if [ $rpms -gt $debs ]; then
+      package_type="rpm"
+    else
+      package_type="deb"
+    fi
   fi
 else
   # on a bare metal build machine we just assume the package type to be the
@@ -111,6 +118,9 @@ case "$package_type" in
     ;;
   deb)
     sign_deb || die "fail (error code: $?)"
+    ;;
+  container)
+    echo "TODO: sign docker container"
     ;;
   *)
     echo "signing is not supported for $package_type"
