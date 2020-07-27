@@ -356,4 +356,5 @@ fi
 if [ x"$service_container" != "x" ]; then
   args="$args -C $service_container"
 fi
+echo "  --> calling $platform_script_abs $args"
 sudo -H -E -u $test_username bash $platform_script_abs $args
