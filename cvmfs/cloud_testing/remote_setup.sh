@@ -265,6 +265,16 @@ if [ $? -ne 0 ]; then
   echo "Defaults:$test_username !requiretty" | sudo tee --append /etc/sudoers
 fi
 
+echo "testing name resolution..."
+ping -c2 -W5 ecsft.cern.ch
+if [ $? -ne 0 ]; then
+  echo "patching /etc/resolv.conf"
+  echo "search cern.ch" | sudo tee /etc/resolv.conf
+  echo "nameserver 137.138.16.5" | sudo tee -a /etc/resolv.conf
+  echo "nameserver 2001:1458:201:1100::5" | sudo tee -a /etc/resolv.conf
+  ping -c2 -W5 ecsft.cern.ch || exit 5
+fi
+
 # download the needed packages
 echo "downloading packages..."
 download_if_used $server_package
