@@ -423,6 +423,8 @@ else
   if [ x"$client_package" = "x" ]; then
     usage "Incomplete pkgmap file"
   fi
+  # Don't try to download the service container on macOS
+  service_container=
 fi
 
 # special case: yubikey testing node runs a VM accesible by port 2222
