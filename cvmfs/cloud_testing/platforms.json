@@ -214,7 +214,25 @@
     "test": "ubuntu_test.sh",
     "user": "ubuntu"
   },
- {
+  {
+    "dist": "ubuntu2004",
+    "config": "x86_64",
+    "ami": "ami-d4879c51",
+    "label": "ubuntu2004_x86_64",
+    "setup": "ubuntu_setup.sh",
+    "test": "ubuntu_test.sh",
+    "user": "ubuntu"
+  },
+  {
+    "dist": "ubuntu2004",
+    "config": "x86_64_s3",
+    "ami": "ami-d4879c51",
+    "label": "ubuntu2004_x86_64",
+    "setup": "ubuntu_setup.sh",
+    "test": "ubuntu_s3_test.sh",
+    "user": "ubuntu"
+  },
+  {
     "dist": "fedora28",
     "config": "x86_64",
     "ami": "ami-4ab5a3be",
