@@ -418,7 +418,9 @@ if [ x"$platform" != "xosx_x86_64" ]; then
     config_package_urls="${config_package_base_url}/${config_package} $config_package_urls"
   done
   config_packages="$config_package_urls"
-  service_container="${ctu}/${service_container}"
+  if [ "x$service_container" != "x" ]; then
+    service_container="${ctu}/${service_container}"
+  fi
 else
   if [ x"$client_package" = "x" ]; then
     usage "Incomplete pkgmap file"
