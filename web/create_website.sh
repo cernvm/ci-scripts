@@ -1,13 +1,8 @@
 
-# we start by cloning the repository that contains the website
-git clone https://github.com/cernvm/web-team
-git clone https://github.com/cernvm/web-cernvm
-git clone https://github.com/cernvm/web-cvmfs
-
 # we create the structure to hold the html pages
 mkdir content
 pushd content
-mkdir fs filesystem cvmfs appliance vm team
+mkdir fs appliance team
 popd
 
 
@@ -29,9 +24,6 @@ popd
 
 # we copy the websites to all the folders
 pushd content
-cp -r appliance/* vm/
-cp -r fs/* filesystem/
-cp -r fs/* cvmfs/
 cp -r team/* .
 popd
 
