@@ -29,7 +29,7 @@ download_kernel_sources() {
   cd $source_location
 
   sudo yum clean all
-  yumdownloader --disablerepo=* --enablerepo=${yum_repo} --source kernel-${kernel_version}
+  yumdownloader --disableplugin=ovl --disablerepo=* --enablerepo=${yum_repo} --source kernel-${kernel_version}
   rpm2cpio kernel-${kernel_version}.src.rpm | cpio -i
   rm -f kernel-${kernel_version}.src.rpm
 
@@ -43,7 +43,7 @@ download_kmod_sources() {
 
   cd $source_location
 
-  yumdownloader --source $kmod_name
+  yumdownloader --disableplugin=ovl --source $kmod_name
 
   cd $previous_workdir
 }
