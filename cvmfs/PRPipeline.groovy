@@ -150,6 +150,7 @@ void cloudtestCommand(args) {
             case "cc7":
             testParams.add([$class: 'MatrixCombinationsParameterValue', name: 'CVMFS_TEST_PLATFORMS', combinations: cloudTestingcc7TestCombinations, description: null])
             buildCombs = ['CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=cc7']
+            break
             case "container":
             testParams.add([$class: 'MatrixCombinationsParameterValue', name: 'CVMFS_TEST_PLATFORMS', combinations: cloudTestingContainerTestCombinations, description: null])
             buildCombs = ['CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=cc8', 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=container']
