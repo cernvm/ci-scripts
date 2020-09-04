@@ -217,7 +217,7 @@
   {
     "dist": "ubuntu2004",
     "config": "x86_64",
-    "ami": "ami-adbb7a86",
+    "ami": "ami-5e058f4b",
     "label": "ubuntu2004_x86_64",
     "setup": "ubuntu_setup.sh",
     "test": "ubuntu_test.sh",
@@ -226,7 +226,7 @@
   {
     "dist": "ubuntu2004",
     "config": "x86_64_s3",
-    "ami": "ami-adbb7a86",
+    "ami": "ami-5e058f4b",
     "label": "ubuntu2004_x86_64",
     "setup": "ubuntu_setup.sh",
     "test": "ubuntu_s3_test.sh",
