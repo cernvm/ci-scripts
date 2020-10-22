@@ -29,6 +29,7 @@ download_kernel_sources() {
   cd $source_location
 
   sudo yum clean all
+  yum --disableplugin=ovl --enablerepo=${yum_repo} clean all
   yumdownloader --disableplugin=ovl --disablerepo=* --enablerepo=${yum_repo} --source kernel-${kernel_version}
   rpm2cpio kernel-${kernel_version}.src.rpm | cpio -i
   rm -f kernel-${kernel_version}.src.rpm
