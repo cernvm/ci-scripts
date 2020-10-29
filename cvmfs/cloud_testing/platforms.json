@@ -84,6 +84,16 @@
   },
   {
     "dist": "el7",
+    "config": "x86_64_exlcache",
+    "ami": "ami-89dd37d0",
+    "label": "cc7_x86_64",
+    "setup": "centos7_x86_64-EXCLCACHE_setup.sh",
+    "test": "centos7_x86_64-EXCLCACHE_test.sh",
+    "user": "root",
+    "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
+  },
+  {
+    "dist": "el7",
     "config": "x86_64_ramcache",
     "ami": "ami-89dd37d0",
     "label": "cc7_x86_64",
