@@ -58,7 +58,7 @@ cloudTestingcc7TestCombinations = [
                                   'CVMFS_PLATFORM=el7,CVMFS_PLATFORM_CONFIG=x86_64,label=trampoline',
                                   'CVMFS_PLATFORM=el7,CVMFS_PLATFORM_CONFIG=x86_64_s3,label=trampoline',
                                   'CVMFS_PLATFORM=el7,CVMFS_PLATFORM_CONFIG=x86_64_nfs,label=trampoline',
-                                  'CVMFS_PLATFORM=el7,CVMFS_PLATFORM_CONFIG=x86_64_exclcache,label=trampoline',
+                                  'CVMFS_PLATFORM=el7,CVMFS_PLATFORM_CONFIG=x86_64_exlcache,label=trampoline',
                                   'CVMFS_PLATFORM=el7,CVMFS_PLATFORM_CONFIG=x86_64_ramcache,label=trampoline',
                                   'CVMFS_PLATFORM=el7,CVMFS_PLATFORM_CONFIG=x86_64_fuse3,label=trampoline',
                                   'CVMFS_PLATFORM=el7,CVMFS_PLATFORM_CONFIG=x86_64_yubikey,label=trampoline'
