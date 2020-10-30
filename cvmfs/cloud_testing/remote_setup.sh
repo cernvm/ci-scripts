@@ -268,6 +268,7 @@ fi
 echo "testing name resolution..."
 ping -c2 -W5 ecsft.cern.ch
 if [ $? -ne 0 ]; then
+  # This fix, so far, is necessary for FC32 on CERN OpenStack
   echo "patching /etc/resolv.conf"
   echo "search cern.ch" | sudo tee /etc/resolv.conf
   echo "nameserver 137.138.16.5" | sudo tee -a /etc/resolv.conf
@@ -275,6 +276,7 @@ if [ $? -ne 0 ]; then
   sudo mkdir -p /etc/NetworkManager/conf.d
   echo "[main]" | sudo tee /etc/NetworkManager/conf.d/dns.conf
   echo "dns=none" | sudo tee -a /etc/NetworkManager/conf.d/dns.conf
+  sudo systemctl restart NetworkManager
   ping -c2 -W5 ecsft.cern.ch || exit 5
 fi
 
