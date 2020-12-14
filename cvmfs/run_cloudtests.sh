@@ -44,7 +44,9 @@ destroy_failed=
 if [ "x${CVMFS_DESTROY_FAILED_VMS}" = "xtrue" ]; then
   destroy_failed='-F'
 fi
-
+if [ "x${CVMFS_UPLOAD_REPORTS}" = "xtrue" ]; then
+  cdash_upload='-U'
+fi
 
 echo "Running cloud tests for $CVMFS_PLATFORM / $CVMFS_PLATFORM_CONFIG ..."
 ${SCRIPT_LOCATION}/cloud_testing/run.sh                    \
@@ -58,5 +60,5 @@ ${SCRIPT_LOCATION}/cloud_testing/run.sh                    \
         -m  $(get_platform_parameter 'user'    "$vm_desc") \
         -c "$(get_platform_parameter 'context' "$vm_desc")"\
         -l "$CVMFS_CLIENT_TESTEE_URL"                      \
-        $suites $geoip_key $destroy_failed
+        $suites $geoip_key $destroy_failed $cdash_upload
 

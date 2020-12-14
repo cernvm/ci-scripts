@@ -41,6 +41,7 @@ log_destination="."
 username="root"
 userdata=""
 destroy_failed=""
+cdash_upload=""
 
 # package download locations
 server_package=""
@@ -87,6 +88,7 @@ usage() {
   echo " -s <test suite labels>       Restrict tests to given suite names"
   echo " -G <geoip key>               Download key for GeoIP database"
   echo " -F <destroy failed VMs>      Destroy VMs with failed tests"
+  echo " -U <cdash upload>            Upload xml test reports to cdash"
 
 
   exit 1
@@ -303,12 +305,21 @@ get_test_results() {
 }
 
 
+handle_upload_reports() {
+  if [ "x$cdash_upload" = "xyes" ]; then
+    echo "uploading xml reports to cdash"
+    # FUNCTION that uploads to cdash
+  else
+    echo "skipping upload of xml reports to cdash"
+  fi
+}
+
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 
 
-while getopts "r:b:u:w:p:e:a:d:m:c:l:s:D:G:F" option; do
+while getopts "r:b:u:w:p:e:a:d:m:c:l:s:D:G:F:U" option; do
   case $option in
     r)
       platform_run_script=$OPTARG
@@ -351,6 +362,9 @@ while getopts "r:b:u:w:p:e:a:d:m:c:l:s:D:G:F" option; do
       ;;
     F)
       destroy_failed="yes"
+      ;;
+    U)
+      cdash_upload="yes"
       ;;
     ?)
       shift $(($OPTIND-2))
