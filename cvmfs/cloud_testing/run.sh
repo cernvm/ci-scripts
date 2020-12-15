@@ -286,6 +286,9 @@ handle_test_failure() {
   else
     echo "skipping destructions of VM!"
   fi
+
+  handle_upload_reports
+  
   exit 100
 }
 
