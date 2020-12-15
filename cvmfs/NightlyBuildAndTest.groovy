@@ -16,6 +16,7 @@ def buildDir = "nightlies/cvmfs-git-" + buildResult.getId()
 testParams.add(string(name: 'CVMFS_TESTEE_URL', value: 'http://ecsft.cern.ch/dist/cvmfs/' + buildDir))
 testParams.add(booleanParam(name: 'CVMFS_QUICK_TESTS', value: false))
 testParams.add(booleanParam(name: 'CVMFS_DESTROY_FAILED_VMS', value: true));
+testParams.add(booleanParam(name: 'CVMFS_UPLOAD_REPORTS', value: true));
 
 def testResult = build job: 'CvmfsCloudTesting',
     parameters: testParams
