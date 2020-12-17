@@ -286,8 +286,6 @@ handle_test_failure() {
   else
     echo "skipping destructions of VM!"
   fi
-
-  handle_upload_reports
   
   exit 100
 }
@@ -305,15 +303,23 @@ get_test_results() {
       "${cvmfs_log_directory}/*"     \
       $log_destination
   check_retcode $?
+
+  handle_upload_reports $log_destination
 }
 
 
 handle_upload_reports() {
+  local log_destination=$1
+
+  echo -n "managing test results... "
+  echo -n "destination: $log_destination"
+  echo -n "directory: $cvmfs_log_directory"
+
   if [ "x$cdash_upload" = "xyes" ]; then
-    echo "uploading xml reports to cdash"
+    echo -n "uploading xml reports to cdash"
     # FUNCTION that uploads to cdash
   else
-    echo "skipping upload of xml reports to cdash"
+    echo -n "skipping upload of xml reports to cdash"
   fi
 }
 
