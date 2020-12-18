@@ -312,14 +312,24 @@ handle_upload_reports() {
   local log_destination=$1
 
   echo -n "managing test results... "
-  echo -n "destination: $log_destination"
+
+  echo "destination: $log_destination"
+  for entry in "$log_destination"/*
+  do
+    echo "$entry"
+  done
+
   echo -n "directory: $cvmfs_log_directory"
+  for entry in "$cvmfs_log_directory"/*
+  do
+    echo "$entry"
+  done
 
   if [ "x$cdash_upload" = "xyes" ]; then
-    echo -n "uploading xml reports to cdash"
+    echo -n "uploading xml reports to cdash..."
     # FUNCTION that uploads to cdash
   else
-    echo -n "skipping upload of xml reports to cdash"
+    echo -n "skipping upload of xml reports to cdash..."
   fi
 }
 
