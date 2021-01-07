@@ -62,11 +62,11 @@ sign_rpm() {
     mv $rpm $unsigned_rpm || return 2
 
     echo "signing ${unsigned_rpm} saving into ${rpm}..."
-    curl --data-binary @$unsigned_rpm                          \
-         --cacert      /etc/pki/tls/certs/cern-ca-bundle.crt   \
-         --cert        /etc/pki/tls/certs/$(hostname -s).crt   \
-         --key         /etc/pki/tls/private/$(hostname -s).key \
-         --silent                                              \
+    curl --data-binary @$unsigned_rpm  \
+         --cacert      $CACERT         \
+         --cert        $CERT           \
+         --key         $KEY            \
+         --silent                      \
          "$rpm_signing_server" > $rpm || return 3
 
     echo "validating ${rpm}..."
@@ -90,11 +90,11 @@ sign_deb() {
     mv $deb $unsigned_deb || return 2
 
     echo "signing ${unsigned_deb} saving into ${deb}..."
-    curl --data-binary @$unsigned_deb                          \
-         --cacert      /etc/pki/tls/certs/cern-ca-bundle.crt   \
-         --cert        /etc/pki/tls/certs/$(hostname -s).crt   \
-         --key         /etc/pki/tls/private/$(hostname -s).key \
-         --silent                                              \
+    curl --data-binary @$unsigned_deb      \
+         --cacert      $CACERT             \
+         --cert        $CERT               \
+         --key         $KEY                \
+         --silent                          \
          "$deb_signing_server" > $deb || return 3
 
     echo "validating ${deb}..."
@@ -105,7 +105,17 @@ sign_deb() {
   done
 }
 
-if [ ! -f /etc/pki/tls/certs/$(hostname -s).crt ]; then
+CERT=/etc/pki/tls/certs/$(hostname -s).crt
+KEY=/etc/pki/tls/private/$(hostname -s).key
+CACERT=/etc/pki/tls/certs/cern-ca-bundle.crt
+if [ -f ~/cernvm/$(hostname -s).crt ]; then
+  CERT="~/cernvm/$(hostname -s).crt"
+  KEY="~/cernvm/$(hostname -s).key"
+  CACERT="~/cernvm/cern-ca-bundle.crt"
+  echo "Using foreign certificate $CERT"
+fi
+
+if [ ! -f $CERT ]; then
   echo "WARNING: NO HOST CERTIFICATE FOUND!"
   echo "  Expected /etc/pki/tls/certs/$(hostname -s).crt"
   echo "  Not signing packages!"
