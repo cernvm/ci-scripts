@@ -108,16 +108,16 @@ sign_deb() {
 CERT=/etc/pki/tls/certs/$(hostname -s).crt
 KEY=/etc/pki/tls/private/$(hostname -s).key
 CACERT=/etc/pki/tls/certs/cern-ca-bundle.crt
-if [ -f ~/cernvm/$(hostname -s).crt ]; then
-  CERT="~/cernvm/$(hostname -s).crt"
-  KEY="~/cernvm/$(hostname -s).key"
-  CACERT="~/cernvm/cern-ca-bundle.crt"
+if [ -f $HOME/cernvm/$(hostname -s).crt ]; then
+  CERT="$HOME/cernvm/$(hostname -s).crt"
+  KEY="$HOME/cernvm/$(hostname -s).key"
+  CACERT="$HOME/cernvm/cern-ca-bundle.crt"
   echo "Using foreign certificate $CERT"
 fi
 
 if [ ! -f $CERT ]; then
   echo "WARNING: NO HOST CERTIFICATE FOUND!"
-  echo "  Expected /etc/pki/tls/certs/$(hostname -s).crt"
+  echo "  Expected $CERT"
   echo "  Not signing packages!"
   exit 0
 fi
