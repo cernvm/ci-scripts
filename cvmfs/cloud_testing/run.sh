@@ -316,13 +316,15 @@ handle_upload_reports() {
   echo "destination: $log_destination"
   for entry in "$log_destination"/*
   do
-    echo "$entry"
-  done
-
-  echo -n "directory: $cvmfs_log_directory"
-  for entry in "$cvmfs_log_directory"/*
-  do
-    echo "$entry"
+    if [ [ "$entry" == *xml] ]
+    then
+      echo "$entry"
+      md5sum_value = $(md5sum_value "$entry")
+      echo "$md5sum_value"
+      curl --upload-file "$entry" 'http://cdash.cern.ch/submit.php?project=CernVM&FileName="$entry"&MD5="$md5sum_value"'
+      echo "http://cdash.cern.ch/submit.php?project=CernVM&FileName="$entry"&MD5="$md5sum_value""
+      echo "The report "$entry" has been uploaded to CDash"
+    fi
   done
 
   if [ "x$cdash_upload" = "xyes" ]; then
