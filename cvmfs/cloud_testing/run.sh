@@ -295,7 +295,9 @@ get_test_results() {
   local ip=$1
   local username=$2
   local retval=0
-
+  echo -n "uploading reports... "
+  handle_upload_reports $log_destination
+  
   echo -n "retrieving test results... "
   retrieve_file_from_virtual_machine \
       $ip                            \
@@ -304,7 +306,6 @@ get_test_results() {
       $log_destination
   check_retcode $?
 
-  handle_upload_reports $log_destination
 }
 
 
