@@ -313,16 +313,17 @@ handle_upload_reports() {
   local log_destination=$1
 
   echo -n "managing test results... "
-
-  echo "destination: $log_destination"
+  
   for entry in "$log_destination"/*
   do
-    if [ "$entry" == *xml ]; then
-      echo "$entry"
-      md5sum_value = $(md5sum_value "$entry")
-      echo "$md5sum_value"
+    if [[ $entry == *xml ]]; then
+      report_name="${entry##*/}"
+      md5sum_value=$(md5sum "$entry")
+      report_md5sum="${md5sum_value%%  *}"
+      curl --upload-file "${report_name}" "http://cdash.cern.ch/submit.php?project=CernVM&FileName=${report_name}&MD5=${report_md5sum}"
     fi
   done
+
 
   if [ "x$cdash_upload" = "xyes" ]; then
     echo -n "uploading xml reports to cdash..."

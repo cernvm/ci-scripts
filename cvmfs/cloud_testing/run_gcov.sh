@@ -90,7 +90,6 @@ get_test_results() {
   local ip=$1
   local username=$2
   local retval=0
-  echo -n "run_gcov.sh file"
   echo -n "retrieving test results... "
   retrieve_file_from_virtual_machine \
       $ip                            \
