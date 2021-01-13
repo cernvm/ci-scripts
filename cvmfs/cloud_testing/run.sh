@@ -298,7 +298,7 @@ get_test_results() {
   echo -n "uploading reports... "
   handle_upload_reports $log_destination
 
-  echo -n "1.retrieving test results... "
+  echo -n "retrieving test results... "
   retrieve_file_from_virtual_machine \
       $ip                            \
       $username                      \
@@ -317,8 +317,7 @@ handle_upload_reports() {
   echo "destination: $log_destination"
   for entry in "$log_destination"/*
   do
-    if [ [ "$entry" == *xml] ]
-    then
+    if [ "$entry" == *xml ]; then
       echo "$entry"
       md5sum_value = $(md5sum_value "$entry")
       echo "$md5sum_value"
