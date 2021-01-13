@@ -44,6 +44,7 @@ destroy_failed=
 if [ "x${CVMFS_DESTROY_FAILED_VMS}" = "xtrue" ]; then
   destroy_failed='-F'
 fi
+cdash_upload=
 if [ "x${CVMFS_UPLOAD_REPORTS}" = "xtrue" ]; then
   cdash_upload='-U'
 fi
