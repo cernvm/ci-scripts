@@ -297,8 +297,8 @@ get_test_results() {
   local retval=0
   echo -n "uploading reports... "
   handle_upload_reports $log_destination
-  
-  echo -n "retrieving test results... "
+
+  echo -n "1.retrieving test results... "
   retrieve_file_from_virtual_machine \
       $ip                            \
       $username                      \
