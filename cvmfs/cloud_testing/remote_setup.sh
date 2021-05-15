@@ -118,7 +118,7 @@ config_package=""
 source_tarball=""
 unittest_package=""
 shrinkwrap_package=""
-gateway_pkg_url=""
+gateway_package=""
 ducc_package=""
 service_container=""
 test_username="sftnight"
@@ -204,7 +204,7 @@ while getopts "r:s:c:d:t:g:k:w:p:u:e:f:D:C:" option; do
       config_package="$OPTARG"
       ;;
     w)
-      gateway_pkg_url="$OPTARG"
+      gateway_package="$OPTARG"
       ;;
     D)
       ducc_package="$OPTARG"
@@ -240,7 +240,6 @@ if [ "x$(uname -s)" != "xDarwin" ]; then
     [ "x$devel_package"      = "x" ] ||
     [ "x$config_package"     = "x" ] ||
     [ "x$source_tarball"     = "x" ] ||
-    [ "x$gateway_pkg_url"    = "x" ] ||
     [ "x$unittest_package"   = "x" ] ||
     [ "x$shrinkwrap_package" = "x" ]; then
     usage "Missing parameter(s)"
@@ -289,6 +288,7 @@ download_if_used $devel_package
 download_if_used $source_tarball
 download_if_used $unittest_package
 download_if_used $shrinkwrap_package
+download_if_used $gateway_package
 download_if_used $ducc_package
 download_if_used $config_package
 download_if_used $service_container
@@ -311,6 +311,12 @@ if [ "x$source_tarball" != "x" ]; then
 fi
 if [ "x$unittest_package" != "x" ]; then
   unittest_package=$(canonicalize_path $unittest_package)
+fi
+if [ "x$gateway_package" != "x" ]; then
+  gateway_package=$(canonicalize_path $gateway_package)
+fi
+if [ "x$ducc_package" != "x" ]; then
+  ducc_package=$(canonicalize_path $ducc_package)
 fi
 if [ "x$shrinkwrap_package" != "x" ]; then
   shrinkwrap_package=$(canonicalize_path $shrinkwrap_package)
@@ -363,13 +369,16 @@ args="-t $cvmfs_source_directory \
       -l $cvmfs_log_directory    \
       -c $client_package"
 if [ "x$(uname -s)" != "xDarwin" ]; then
-  args="$args -s $server_package -d $devel_package -g $unittest_package -p $shrinkwrap_package -k $config_package -w $gateway_pkg_url"
+  args="$args -s $server_package -d $devel_package -g $unittest_package -p $shrinkwrap_package -k $config_package"
 fi
 if [ x"$fuse3_package" != "x" ]; then
   args="$args -f $fuse3_package"
 fi
 if [ x"$service_container" != "x" ]; then
   args="$args -C $service_container"
+fi
+if [ x"$gateway_package" != "x" ]; then
+  args="$args -w $gateway_package"
 fi
 echo "  --> calling $platform_script_abs $args"
 sudo -H -E -u $test_username bash $platform_script_abs $args

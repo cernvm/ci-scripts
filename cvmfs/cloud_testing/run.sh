@@ -34,7 +34,6 @@ client_testee_url=""
 platform=""
 platform_run_script=""
 platform_setup_script=""
-gateway_pkg_url=""
 ec2_config=""
 ami_name=""
 log_destination="."
@@ -73,7 +72,6 @@ usage() {
   echo " -u <testee URL>              URL to the nightly build directory to be tested"
   echo " -p <platform name>           name of the platform to be tested"
   echo " -b <setup script>            platform specific setup script (inside the tarball)"
-  echo " -w <gateway URL>             URL of the repository gateway build to be tested"
   echo " -r <run script>              platform specific test script (inside the tarball)"
   echo " -a <AMI name>                the virtual machine image to spawn"
   echo
@@ -156,11 +154,11 @@ setup_virtual_machine() {
   if [ "x$config_packages" != "x" ]; then
     args="$args -k $config_packages"
   fi
-  if [ "x$gateway_pkg_url" != "x" ]; then
-    args="$args -w $gateway_pkg_url"
-  fi
   if [ "x$service_container" != "x" ]; then
     args="$args -C $service_container"
+  fi
+  if [ "x$gateway_package" != "x" ]; then
+    args="$args -w $gateway_package"
   fi
   run_script_on_virtual_machine $args
 
@@ -308,7 +306,7 @@ get_test_results() {
 #
 
 
-while getopts "r:b:u:w:p:e:a:d:m:c:l:s:D:G:F" option; do
+while getopts "r:b:u:p:e:a:d:m:c:l:s:D:G:F" option; do
   case $option in
     r)
       platform_run_script=$OPTARG
@@ -318,9 +316,6 @@ while getopts "r:b:u:w:p:e:a:d:m:c:l:s:D:G:F" option; do
       ;;
     u)
       testee_url=$OPTARG
-      ;;
-    w)
-      gateway_pkg_url=$OPTARG
       ;;
     p)
       platform=$OPTARG
@@ -364,7 +359,6 @@ if [ x$platform_run_script   = "x" ] ||
    [ x$platform_setup_script = "x" ] ||
    [ x$platform              = "x" ] ||
    [ x$testee_url            = "x" ] ||
-   [ x$gateway_pkg_url       = "x" ] ||
    [ x$ami_name              = "x" ]; then
   usage "Missing parameter(s)"
 fi
@@ -385,6 +379,7 @@ server_package=$(read_package_map     ${otu}/pkgmap "$platform" 'server'    )
 devel_package=$(read_package_map      ${ctu}/pkgmap "$platform" 'devel'     )
 unittest_package=$(read_package_map   ${otu}/pkgmap "$platform" 'unittests' )
 shrinkwrap_package=$(read_package_map ${otu}/pkgmap "$platform" 'shrinkwrap')
+gateway_package=$(read_package_map    ${otu}/pkgmap "$platform" 'gateway'   )
 ducc_package=$(read_package_map       ${otu}/pkgmap "$platform" 'ducc'      )
 config_packages="$(read_package_map   ${otu}/pkgmap "$platform" 'config'    )"
 service_container="$(read_package_map ${ctu}/pkgmap "container_x86_64" 'client')"
@@ -404,6 +399,9 @@ if [ x"$platform" != "xosx_x86_64" ]; then
     fuse3_package="${ctu}/${fuse3_package}"
   fi
 
+  if [ "x$gateway_package" != "x" ]; then
+    gateway_package="${otu}/${gateway_package}"
+  fi
 
   if [ "x$ducc_package" != "x" ]; then
     ducc_package="${otu}/${ducc_package}"
