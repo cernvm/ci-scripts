@@ -29,7 +29,7 @@ if [ x"$CVMFS_CI_PLATFORM_LABEL" = x"docker" ]; then
   debs="$(find $CVMFS_BUILD_LOCATION -name '*.deb' | wc -l)"
   containers="$(find $CVMFS_BUILD_LOCATION -name '*.docker.tar.gz' | wc -l)"
   snapshotters="$(find $CVMFS_BUILD_LOCATION -name 'cvmfs_snapshotter.*.x86_64' | wc -l)"
-  [ $rpms -gt 0 ] || [ $debs -gt 0 ] || [ $containers -gt 0 ] || [ $snapshotters -gt 0 ] \
+  [ $rpms -gt 0 ] || [ $debs -gt 0 ] || [ $containers -gt 0 ] || [ $snapshotters -gt 0 ] || \
     die "Neither RPMs nor DEBs nor containers nor snapshotters found"
 
   if [ $snapshotters -gt 0 ]; then
