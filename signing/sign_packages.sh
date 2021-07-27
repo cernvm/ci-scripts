@@ -28,17 +28,18 @@ if [ x"$CVMFS_CI_PLATFORM_LABEL" = x"docker" ]; then
   rpms="$(find $CVMFS_BUILD_LOCATION -name '*.rpm' | wc -l)"
   debs="$(find $CVMFS_BUILD_LOCATION -name '*.deb' | wc -l)"
   containers="$(find $CVMFS_BUILD_LOCATION -name '*.docker.tar.gz' | wc -l)"
-  [ $rpms -gt 0 ] || [ $debs -gt 0 ] || [ $containers -gt 0 ] || \
-    die "Neither RPMs nor DEBs nor containers found"
+  snapshotters="$(find $CVMFS_BUILD_LOCATION -name 'cvmfs_snapshotter.*.x86_64' | wc -l)"
+  [ $rpms -gt 0 ] || [ $debs -gt 0 ] || [ $containers -gt 0 ] || [ $snapshotters -gt 0 ] || \
+    die "Neither RPMs nor DEBs nor containers nor snapshotters found"
 
-  if [ $containers -gt 0 ]; then
+  if [ $snapshotters -gt 0 ]; then
+    package_type="snapshotter"
+  elif [ $containers -gt 0 ]; then
     package_type="container"
+  elif [ $rpms -gt $debs ]; then
+    package_type="rpm"
   else
-    if [ $rpms -gt $debs ]; then
-      package_type="rpm"
-    else
-      package_type="deb"
-    fi
+    package_type="deb"
   fi
 else
   # on a bare metal build machine we just assume the package type to be the
