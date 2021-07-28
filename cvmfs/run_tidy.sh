@@ -13,7 +13,7 @@ BUILD_SCRIPT_LOCATION=$(cd "$(dirname "$0")"; pwd)
 [ ! -z $CVMFS_BUILD_CLEAN          ] || die "CVMFS_BUILD_CLEAN missing"
 [ ! -z $CVMFS_TIDY_RESULT_LOCATION ] || die "CVMFS_TIDY_RESULT_LOCATION missing"
 
-TIDY_SCRIPT="ci/run_tidy.sh -build"
+TIDY_SCRIPT="${CVMFS_SOURCE_LOCATION}/ci/run_tidy.sh -build"
 if [ x"$CVMFS_TIDY_DIFF" = x"true" ]; then
   TIDY_SCRIPT="$TIDY_SCRIPT -diff"
 fi
@@ -35,11 +35,10 @@ if is_docker_host; then
   command_tmpl="${CERNVM_CI_SCRIPT_LOCATION}/docker/run_on_docker.sh \
     ${WORKSPACE}                                                     \
     ${docker_image_name}                                             \
-    ${CVMFS_SOURCE_LOCATION}/${DOXYGEN_SCRIPT}                       \
-    ${CVMFS_BUILD_LOCATION}"
+    ${TIDY_SCRIPT}
 else
   echo "running clang-tidy bare metal for ${desired_architecture}..."
-  command_tmpl="${CVMFS_SOURCE_LOCATION}/${DOXYGEN_SCRIPT} ${CVMFS_BUILD_LOCATION}"
+  command_tmpl="${TIDY_SCRIPT}"
 fi
 
 # run the build script
