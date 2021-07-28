@@ -251,6 +251,7 @@ void commentHandler() {
 
     def command = words[1];
     if (command == "cpplint") cpplintCommand(words[2..-1]);
+    else if (command == "tidy") tidyCommand(words[2..-1]);
     else if (command == "unittest") unittestCommand(words[2..-1]);
     else if (command == "cloudtest") cloudtestCommand(words[2..-1]);
     else if (command == "all") allCommand(words[2..-1]);
