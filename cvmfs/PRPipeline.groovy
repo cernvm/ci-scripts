@@ -21,7 +21,6 @@ void setCommitStatus(context, status, text, url) {
     def triggerJob = manager.hudson.getJob(currentBuild.projectName)
     def prbTrigger = triggerJob.getTriggers().get(GhprbTrigger.getDscp())
     prbTrigger.getGitHub().getRepository(env.ghprbGhRepository).createCommitStatus(env.ghprbActualCommit, status, url, text, context)
-
 }
 
 void getNextBuildUrl(String job) {
@@ -79,6 +78,7 @@ helpString = "Syntax: " + mention + " subcommand + [args]\n" +
              "Available commands:\n" +
              "help\n" +
              "cpplint\n" +
+             "tidy\n" +
              "unittest + [full] + [ducc] + [linux] + [mac]\n" +
              "cloudtest + [full] + [nodestroy] + [cc7] + [cc8] + [container]\n" +
              "all\n"
@@ -102,6 +102,24 @@ void cpplintCommand(args) {
     if (errorText.length() > 0) {
         postComment("linter finished with errors:\n\n```\n" + errorText + "```")
         currentBuild.result = lintResult.getResult()
+    }
+}
+
+void tidyCommand(args) {
+    setCommitStatus("clang-tidy", GHCommitState.PENDING, "", getNextBuildUrl('CvmfsTidy'))
+    def tidyResult = build job: 'CvmfsTidy',
+        parameters: [
+            string(name: 'CVMFS_GIT_REVISION', value: env.sha1)],
+        propagate: false
+    def status = tidyResult.getResult() == 'SUCCESS' ? GHCommitState.SUCCESS : GHCommitState.FAILURE
+    setCommitStatus("clang-tidy", status, "", tidyResult.getAbsoluteUrl())
+
+    def errorFile = tidyResult.rawBuild.getArtifactManager().root().child("tidy.out").open();
+    def errorText = errorFile.getText('utf-8')
+
+    if (status != GHCommitState.SUCCESS) {
+        postComment("clang-tidy finished with errors:\n\n```\n" + errorText + "```")
+        currentBuild.result = tidyResult.getResult()
     }
 }
 
@@ -214,6 +232,9 @@ void allCommand(args) {
         'Cpplint': {
             cpplintCommand([])
         },
+        'Tidy': {
+            tidyCommand([])
+        },
         'Unittest': {
             unittestCommand([])
         },
@@ -240,6 +261,9 @@ void commitHandler() {
     parallel(
         'Cpplint': {
             cpplintCommand([])
+        },
+        'Tidy': {
+            tidyCommand([])
         },
         'Unittest': {
             unittestCommand([])
