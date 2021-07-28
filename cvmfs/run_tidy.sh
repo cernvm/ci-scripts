@@ -35,7 +35,7 @@ if is_docker_host; then
   command_tmpl="${CERNVM_CI_SCRIPT_LOCATION}/docker/run_on_docker.sh \
     ${WORKSPACE}                                                     \
     ${docker_image_name}                                             \
-    ${TIDY_SCRIPT}
+    ${TIDY_SCRIPT}"
 else
   echo "running clang-tidy bare metal for ${desired_architecture}..."
   command_tmpl="${TIDY_SCRIPT}"
