@@ -381,7 +381,7 @@ if [ x"$gateway_package" != "x" ]; then
   args="$args -w $gateway_package"
 fi
 if [ "x$(uname -s)" != "xDarwin" ]; then
-  args="$args -w http://ecsft.cern.ch/dist/cvmfs/cvmfs-gateway-1.2.0/cvmfs-gateway-1.2.0-1.el7.x86_64.rpm"
+  args="$args -w http://ecsft.cern.ch/dist/cvmfs/cvmfs-gateway-1.2.0/"
 fi
 echo "  --> calling $platform_script_abs $args"
 sudo -H -E -u $test_username bash $platform_script_abs $args
