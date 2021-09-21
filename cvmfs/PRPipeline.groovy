@@ -21,7 +21,6 @@ void setCommitStatus(context, status, text, url) {
     def triggerJob = manager.hudson.getJob(currentBuild.projectName)
     def prbTrigger = triggerJob.getTriggers().get(GhprbTrigger.getDscp())
     prbTrigger.getGitHub().getRepository(env.ghprbGhRepository).createCommitStatus(env.ghprbActualCommit, status, url, text, context)
-
 }
 
 void getNextBuildUrl(String job) {
@@ -49,6 +48,7 @@ cloudTestingBuildCombinations = [
                                 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=ubuntu1804',
                                 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=ubuntu2004',
                                 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=container',
+                                'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=snapshotter',
                                 'CVMFS_BUILD_ARCH=osx10-x86_64,CVMFS_BUILD_PLATFORM=mac'
                                 ]
 
@@ -68,7 +68,8 @@ cloudTestingcc8TestCombinations = [
                                   ]
 
 cloudTestingContainerTestCombinations = [
-                                  'CVMFS_PLATFORM=el8,CVMFS_PLATFORM_CONFIG=x86_64_container,label=trampoline'
+                                  'CVMFS_PLATFORM=el8,CVMFS_PLATFORM_CONFIG=x86_64_container,label=trampoline',
+                                  'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=snapshotter'
                                   ]
 
 
@@ -77,6 +78,7 @@ helpString = "Syntax: " + mention + " subcommand + [args]\n" +
              "Available commands:\n" +
              "help\n" +
              "cpplint\n" +
+             "tidy\n" +
              "unittest + [full] + [ducc] + [linux] + [mac]\n" +
              "cloudtest + [full] + [nodestroy] + [cc7] + [cc8] + [container]\n" +
              "all\n"
@@ -100,6 +102,24 @@ void cpplintCommand(args) {
     if (errorText.length() > 0) {
         postComment("linter finished with errors:\n\n```\n" + errorText + "```")
         currentBuild.result = lintResult.getResult()
+    }
+}
+
+void tidyCommand(args) {
+    setCommitStatus("clang-tidy", GHCommitState.PENDING, "", getNextBuildUrl('CvmfsTidy'))
+    def tidyResult = build job: 'CvmfsTidy',
+        parameters: [
+            string(name: 'CVMFS_GIT_REVISION', value: env.sha1)],
+        propagate: false
+    def status = tidyResult.getResult() == 'SUCCESS' ? GHCommitState.SUCCESS : GHCommitState.FAILURE
+    setCommitStatus("clang-tidy", status, "", tidyResult.getAbsoluteUrl())
+
+    def errorFile = tidyResult.rawBuild.getArtifactManager().root().child("tidy.out").open();
+    def errorText = errorFile.getText('utf-8')
+
+    if (status != GHCommitState.SUCCESS) {
+        postComment("clang-tidy finished with errors:\n\n```\n" + errorText + "```")
+        currentBuild.result = tidyResult.getResult()
     }
 }
 
@@ -161,7 +181,9 @@ void cloudtestCommand(args) {
             break
             case "container":
             testParams.add([$class: 'MatrixCombinationsParameterValue', name: 'CVMFS_TEST_PLATFORMS', combinations: cloudTestingContainerTestCombinations, description: null])
-            buildCombs = ['CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=cc8', 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=container']
+            buildCombs = ['CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=cc8',
+                          'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=container',
+                          'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=snapshotter']
             break
         }
     }
@@ -210,6 +232,9 @@ void allCommand(args) {
         'Cpplint': {
             cpplintCommand([])
         },
+        'Tidy': {
+            tidyCommand([])
+        },
         'Unittest': {
             unittestCommand([])
         },
@@ -226,6 +251,7 @@ void commentHandler() {
 
     def command = words[1];
     if (command == "cpplint") cpplintCommand(words[2..-1]);
+    else if (command == "tidy") tidyCommand(words[2..-1]);
     else if (command == "unittest") unittestCommand(words[2..-1]);
     else if (command == "cloudtest") cloudtestCommand(words[2..-1]);
     else if (command == "all") allCommand(words[2..-1]);
@@ -236,6 +262,9 @@ void commitHandler() {
     parallel(
         'Cpplint': {
             cpplintCommand([])
+        },
+        'Tidy': {
+            tidyCommand([])
         },
         'Unittest': {
             unittestCommand([])
