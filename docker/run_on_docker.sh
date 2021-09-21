@@ -67,6 +67,10 @@ case ${CVMFS_DOCKER_IMAGE} in
     image_name="gitlab-registry.cern.ch/cernvm/build-images/sles_x86_64:15"
     docker pull $image_name
     ;;
+  "fedora34_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/fedora_x86_64:34"
+    docker pull $image_name
+    ;;
   "fedora32_x86_64")
     image_name="gitlab-registry.cern.ch/cernvm/build-images/fedora_x86_64:32"
     docker pull $image_name
