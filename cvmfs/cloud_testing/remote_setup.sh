@@ -272,6 +272,8 @@ if [ $? -ne 0 ]; then
   echo "search cern.ch" | sudo tee /etc/resolv.conf
   echo "nameserver 137.138.16.5" | sudo tee -a /etc/resolv.conf
   echo "nameserver 2001:1458:201:1100::5" | sudo tee -a /etc/resolv.conf
+  sudo sed -i -e 's/\(.*\)\[!UNAVAIL=return\]\(.*\)/\1\2/' /etc/nsswitch.conf
+  cat /etc/nsswitch.conf
   sudo mkdir -p /etc/NetworkManager/conf.d
   echo "[main]" | sudo tee /etc/NetworkManager/conf.d/dns.conf
   echo "dns=none" | sudo tee -a /etc/NetworkManager/conf.d/dns.conf
