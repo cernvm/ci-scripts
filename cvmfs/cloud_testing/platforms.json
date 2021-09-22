@@ -198,6 +198,15 @@
     "user": "fedora"
   },
   {
+    "dist": "fedora34",
+    "config": "x86_64",
+    "ami": "ami-36dae683",
+    "label": "fedora34_x86_64",
+    "setup": "fedora_setup.sh",
+    "test": "fedora_test.sh",
+    "user": "fedora"
+  },
+  {
     "dist": "macos",
     "config": "x86_64",
     "ami": "cernvm-mac-mini-1",
