@@ -382,5 +382,8 @@ fi
 if [ x"$gateway_package" != "x" ]; then
   args="$args -w $gateway_package"
 fi
+if [ x"$ducc_package" != "x" ]; then
+  args="$args -D $ducc_package"
+fi
 echo "  --> calling $platform_script_abs $args"
 sudo -H -E -u $test_username bash $platform_script_abs $args
