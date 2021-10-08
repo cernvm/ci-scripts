@@ -160,6 +160,9 @@ setup_virtual_machine() {
   if [ "x$gateway_package" != "x" ]; then
     args="$args -w $gateway_package"
   fi
+  if [ "x$ducc_package" != "x" ]; then
+    args="$args -D $ducc_package"
+  fi
   run_script_on_virtual_machine $args
 
   check_retcode $?
