@@ -180,22 +180,13 @@
     "user": "ubuntu"
   },
   {
-    "dist": "fedora31",
+    "dist": "debian11",
     "config": "x86_64",
-    "ami": "ami-ff72c6ed",
-    "label": "fedora31_x86_64",
-    "setup": "fedora_setup.sh",
-    "test": "fedora_test.sh",
-    "user": "fedora"
-  },
-  {
-    "dist": "fedora32",
-    "config": "x86_64",
-    "ami": "ami-95048c88",
-    "label": "fedora32_x86_64",
-    "setup": "fedora_setup.sh",
-    "test": "fedora_test.sh",
-    "user": "fedora"
+    "ami": "ami-acff7bde",
+    "label": "debian11_x86_64",
+    "setup": "debian_setup.sh",
+    "test": "debian_test.sh",
+    "user": "debian"
   },
   {
     "dist": "fedora34",
