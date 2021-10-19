@@ -46,6 +46,7 @@ cloudTestingBuildCombinations = [
                                 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=ubuntu1604',
                                 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=ubuntu1804',
                                 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=ubuntu2004',
+                                'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=debian11',
                                 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=container',
                                 'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=snapshotter',
                                 'CVMFS_BUILD_ARCH=osx10-x86_64,CVMFS_BUILD_PLATFORM=mac'
