@@ -60,16 +60,6 @@
     "context": "#!/bin/sh \n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
   },
   {
-    "dist": "el7",
-    "config": "x86_64_overlayfs_metacopy",
-    "ami": "ami-89dd37d0",
-    "label": "cc7_x86_64",
-    "setup": "centos7_x86_64-overlayfs_metacopy_setup.sh",
-    "test": "centos7_x86_64_test.sh",
-    "user": "root",
-    "context": "#!/bin/sh \n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
-  },
-  {
     "dist": "el8",
     "config": "x86_64",
     "ami": "ami-76ec14ad",
