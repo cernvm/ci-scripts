@@ -47,5 +47,5 @@ get_platform_parameter() {
 # @return       the desired architecture string
 extract_arch() {
   local label="$1"
-  echo "$label" | sed -e 's/^[^-]\+-\(.*\)$/\1/'
+  echo "$label" | cut -d\- -f2
 }
