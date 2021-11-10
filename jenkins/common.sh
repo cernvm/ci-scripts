@@ -19,7 +19,7 @@ is_macos() {
 }
 
 is_docker_host() {
-  docker --version
+  [ x"$CVMFS_CI_PLATFORM_LABEL" = x"docker" ]
 }
 
 get_package_type() {
