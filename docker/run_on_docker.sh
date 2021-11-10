@@ -160,13 +160,9 @@ uid=$(id -u)
 gid=$(id -g)
 mkdir -p $WORKSPACE
 
-# Use the host's docker for building images as long as we cannot use
-# buildah (host kernel too old)
-sudo chown root:$(id -g) /var/run/docker.sock
-
 set -x
 if is_macos; then
-  sudo docker run \
+  docker run \
                   --volume="$WORKSPACE":"$WORKSPACE"                 \
                   --user=${uid}:${gid}                               \
                   --rm=true                                          \
@@ -174,6 +170,10 @@ if is_macos; then
                   $args $image_name                                  \
                   "$@"
 else
+  # Use the host's docker for building images as long as we cannot use
+  # buildah (host kernel too old)
+  sudo chown root:$(id -g) /var/run/docker.sock
+
   docker run \
                   --volume="$WORKSPACE":"$WORKSPACE"                 \
                   --volume=/var/run/docker.sock:/var/run/docker.sock \
