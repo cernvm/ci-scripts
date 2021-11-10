@@ -107,8 +107,16 @@ case ${CVMFS_DOCKER_IMAGE} in
     image_name="gitlab-registry.cern.ch/cernvm/build-images/centos_x86_64:8"
     docker pull $image_name
     ;;
+  "cc8_aarch64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/centos_aarch64:8"
+    docker pull $image_name
+    ;;
   "cc7_x86_64")
     image_name="gitlab-registry.cern.ch/cernvm/build-images/centos_x86_64:7"
+    docker pull $image_name
+    ;;
+  "cc7_aarch64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/centos_aarch64:7"
     docker pull $image_name
     ;;
   "slc6_x86_64")
@@ -125,10 +133,6 @@ case ${CVMFS_DOCKER_IMAGE} in
     ;;
   "snapshotter_x86_64")
     image_name="gitlab-registry.cern.ch/cernvm/build-images/snapshotter_x86_64:el8"
-    docker pull $image_name
-    ;;
-  "cc8-aarch64_docker-aarch64")
-    image_name="gitlab-registry.cern.ch/cernvm/build-images/centos_aarch64:8"
     docker pull $image_name
     ;;
   *)
