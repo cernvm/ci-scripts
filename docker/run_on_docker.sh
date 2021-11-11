@@ -171,7 +171,7 @@ mkdir -p $WORKSPACE
 set -x
 if is_macos; then
   docker run \
-                  --volume="$WORKSPACE":"$WORKSPACE"                 \
+                  --volume="$WORKSPACE":"$WORKSPACE":delegated       \
                   --user=${uid}:${gid}                               \
                   --rm=true                                          \
                   --privileged=true                                  \
