@@ -70,8 +70,12 @@ sign_rpm() {
          --silent                      \
          "$rpm_signing_server" > $rpm || return 3
 
-    echo "validating ${rpm}..."
-    rpm -K $rpm || return 4
+    if ! is_macos; then
+      echo "validating ${rpm}..."
+      rpm -K $rpm || return 4
+    else
+      echo "skip package validation"
+    fi
 
     echo "removing ${unsigned_rpm}..."
     rm -f $unsigned_rpm || return 5
@@ -98,8 +102,12 @@ sign_deb() {
          --silent                          \
          "$deb_signing_server" > $deb || return 3
 
-    echo "validating ${deb}..."
-    dpkg-sig -c $deb | grep -q GOODSIG || return 4
+    if ! is_macos; then
+      echo "validating ${deb}..."
+      dpkg-sig -c $deb | grep -q GOODSIG || return 4
+    else
+      echo "skip package validation"
+    fi
 
     echo "removing ${unsigned_deb}..."
     rm -f $unsigned_deb || return 5
