@@ -126,13 +126,13 @@ wait_for_virtual_machine() {
   local port=${CLOUD_TESTING_SSH_PORT:-22}
 
   # wait for the virtual machine to respond to pings
-  echo -n "waiting for IP ($ip) to become reachable... "
-  local timeout=$reachability_timeout
-  while [ $timeout -gt 0 ] && ! ping -c 1 $ip > /dev/null 2>&1; do
-    sleep 10
-    timeout=$(( $timeout - 10 ))
-  done
-  if ! check_timeout $timeout $reachability_timeout; then return 1; fi
+  # echo -n "waiting for IP ($ip) to become reachable... "
+  # local timeout=$reachability_timeout
+  # while [ $timeout -gt 0 ] && ! ping -c 1 $ip > /dev/null 2>&1; do
+  #   sleep 10
+  #   timeout=$(( $timeout - 10 ))
+  # done
+  # if ! check_timeout $timeout $reachability_timeout; then return 1; fi
 
   # wait for the virtual machine to become accessible via ssh
   echo -n "waiting for VM ($ip) to become accessible... "
