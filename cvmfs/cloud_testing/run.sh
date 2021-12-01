@@ -98,7 +98,7 @@ spawn_my_virtual_machine() {
   local retcode
 
   # special case for macos and yubikey testing node
-  if [ x"$platform" = "xosx_x86_64" ] || [ x"$ami" = "xcvm-yubikey01" ] || [ x"$platform" = x"cc7_aarch64" ]; then
+  if [ x"$platform" = "xosx_x86_64" ] || [ x"$ami" = "xcvm-yubikey01" ] || [ x"$platform" = x"cc8_aarch64" ]; then
     ip_address=$(getent ahostsv4 $ami | head -n1 | awk '{ print $1}')
     retcode=$?
     [ $retcode -eq 0 ] || return $retcode
@@ -263,7 +263,7 @@ tear_down_yubikey_vm() {
 }
 
 tear_down() {
-  if [ "x$platform" = "xosx_x86_64" ] || [ x"$platform" = x"cc7_aarch64" ]; then
+  if [ "x$platform" = "xosx_x86_64" ] || [ x"$platform" = x"cc8_aarch64" ]; then
     cleanup_test_machine $ip_address $username        || die "Cleanup of test machine failed!"
   elif [ x"$ami_name" = "xcvm-yubikey01" ]; then
     tear_down_yubikey_vm $ip_address                  || die "Teardown of Yubikey VM failed!"

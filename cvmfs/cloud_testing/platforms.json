@@ -60,15 +60,6 @@
     "context": "#!/bin/sh \n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
   },
   {
-    "dist": "el7",
-    "config": "aarch64",
-    "ami": "ec2-3-70-25-69.eu-central-1.compute.amazonaws.com",
-    "label": "cc7_aarch64",
-    "setup": "centos7_aarch64_AWS_setup.sh",
-    "test": "centos7_aarch64_AWS_test.sh",
-    "user": "centos"
-  },
-  {
     "dist": "el8",
     "config": "x86_64",
     "ami": "ami-76ec14ad",
@@ -107,6 +98,15 @@
     "test": "centos8_x86_64_test.sh",
     "user": "root",
     "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
+  },
+  {
+    "dist": "el8",
+    "config": "aarch64",
+    "ami": "ec2-3-70-25-69.eu-central-1.compute.amazonaws.com",
+    "label": "cc8_aarch64",
+    "setup": "centos8_aarch64_AWS_setup.sh",
+    "test": "centos8_aarch64_AWS_test.sh",
+    "user": "centos"
   },
   {
     "dist": "ubuntu1404",
