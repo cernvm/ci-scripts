@@ -111,6 +111,10 @@ case ${CVMFS_DOCKER_IMAGE} in
     image_name="gitlab-registry.cern.ch/cernvm/build-images/centos_x86_64:9"
     docker pull $image_name
     ;;
+  "cc9_aarch64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/centos_aarch64:9"
+    docker pull $image_name
+    ;;
   "cc8_x86_64")
     image_name="gitlab-registry.cern.ch/cernvm/build-images/centos_x86_64:8"
     docker pull $image_name
