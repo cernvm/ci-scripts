@@ -179,8 +179,7 @@ mkdir -p $WORKSPACE
 set -x
 if is_macos; then
   docker run \
-                  --volume="$WORKSPACE":"$WORKSPACE":delegated       \
-                  --user=${uid}:${gid}                               \
+                  --volume="$WORKSPACE":"$WORKSPACE"                 \
                   --rm=true                                          \
                   --privileged=true                                  \
                   $args $image_name                                  \
