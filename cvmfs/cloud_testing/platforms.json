@@ -100,6 +100,16 @@
     "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
   },
   {
+    "dist": "el9",
+    "config": "x86_64",
+    "ami": "ami-24860081",
+    "label": "cc9_x86_64",
+    "setup": "centos9_x86_64_setup.sh",
+    "test": "centos9_x86_64_test.sh",
+    "user": "root",
+    "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
+  },
+  {
     "dist": "ubuntu1404",
     "config": "x86_64",
     "ami": "ami-6f304f09",
