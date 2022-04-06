@@ -184,6 +184,7 @@ set -x
 if is_macos; then
   docker run \
                   --volume="$WORKSPACE":"$WORKSPACE"                 \
+                  --volume=/var/run/docker.sock:/var/run/docker.sock \
                   --rm=true                                          \
                   --privileged=true                                  \
                   $args $image_name                                  \
