@@ -22,8 +22,15 @@ echo "tidy script: $TIDY_SCRIPT"
 
 # setup a fresh build workspace on first execution or on request
 if [ ! -d "$CVMFS_BUILD_LOCATION" ] || [ x"$CVMFS_BUILD_CLEAN" = x"true" ]; then
+  echo "recreating build location: $CVMFS_BUILD_LOCATION"
   rm -fR "$CVMFS_BUILD_LOCATION"
   mkdir -p "$CVMFS_BUILD_LOCATION"
+fi
+
+if [ x"$CVMFS_EXTERNALS_CLEAN" = x"true" ]; then
+  echo "recreating externals in: $CVMFS_SOURCE_LOCATION/externals_[build|install]"
+  rm -fR "$CVMFS_SOURCE_LOCATION/externals_build"
+  rm -fR "$CVMFS_SOURCE_LOCATION/externals_install"
 fi
 
 # run the build
