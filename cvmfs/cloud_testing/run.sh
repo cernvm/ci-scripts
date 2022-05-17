@@ -309,6 +309,8 @@ get_test_results() {
 #
 
 
+echo "Running cloud tests as $0 $@"
+
 while getopts "r:b:u:p:e:a:d:m:c:l:s:D:G:F" option; do
   case $option in
     r)
