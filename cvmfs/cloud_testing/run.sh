@@ -388,6 +388,18 @@ gateway_package=$(read_package_map    ${otu}/pkgmap "$platform" 'gateway'   )
 ducc_package=$(read_package_map       ${otu}/pkgmap "$platform" 'ducc'      )
 config_packages="$(read_package_map   ${otu}/pkgmap "$platform" 'config'    )"
 service_container="$(read_package_map ${ctu}/pkgmap "container_x86_64" 'client')"
+echo "--- Packages used: "
+echo "  client:     $client_package"
+echo "  fuse3:      $fuse3_package"
+echo "  server:     $server_package"
+echo "  devel:      $devel_package"
+echo "  unittest:   $unittest_package"
+echo "  shrinkwrap: $shrinkwrap_package"
+echo "  gateway:    $gateway_package"
+echo "  ducc:       $ducc_package"
+echo "  config:     $config_packages"
+echo "  container:  $service_container"
+echo "---"
 
 if [ x"$platform" != "xosx_x86_64" ]; then
   # check if all necessary packages were found
