@@ -62,6 +62,7 @@ def spawn_instance(connection, ami, key_name, flavor, userdata, max_retries = 5)
 
 def spawn_instance_on_openstack(connection, ami, key_name, flavor, userdata):
   try:
+    print_error("RADU: SPAWNING VM: " + ami)
     reservation = connection.run_instances(ami,
                                            key_name=key_name,
                                            instance_type=flavor,
@@ -79,6 +80,8 @@ def spawn_instance_on_openstack(connection, ami, key_name, flavor, userdata):
     if instance.state != "running":
       print_error("Failed to boot up instance (State: " + instance.state + ")")
       return instance
+
+    print_error("RADU: SPAWNED VM: " + ami)
 
     return instance
 
