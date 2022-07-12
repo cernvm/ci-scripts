@@ -45,8 +45,6 @@ if [ x"$CVMFS_RUN_UNITTESTS" = x"true" ]; then
   [ ! -z "$CVMFS_LIBRARY_PATH" ]          && command_tmpl="$command_tmpl -l $CVMFS_LIBRARY_PATH"
   [ x"$CVMFS_UNITTESTS_QUICK" = x"true" ] && command_tmpl="$command_tmpl -q"
   [ ! -z "$CVMFS_UNITTESTS_CACHEPLUGINS" ] && command_tmpl="$command_tmpl -c $CVMFS_UNITTESTS_CACHEPLUGINS"
-  [ x"$CVMFS_UNITTESTS_DUCC" = x"true" ] && command_tmpl="$command_tmpl -d"
-  [ x"$CVMFS_UNITTESTS_GATEWAY" = x"true" ] && command_tmpl="$command_tmpl -G"
   command_tmpl="$command_tmpl -g $CVMFS_SOURCE_LOCATION/cvmfs/webapi"
   [ -x "$(dirname $CVMFS_UNITTESTS_BINARY)/cvmfs_test_publish" ] && command_tmpl="$command_tmpl -p"  # publish unittests
   command_tmpl="$command_tmpl ${CVMFS_UNITTESTS_BINARY} ${CVMFS_UNITTESTS_RESULT_LOCATION}"

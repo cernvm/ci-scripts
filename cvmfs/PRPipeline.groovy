@@ -80,7 +80,7 @@ helpString = "Syntax: " + mention + " subcommand + [args]\n" +
              "help\n" +
              "cpplint\n" +
              "tidy\n" +
-             "unittest + [full] + [gw] + [ducc] + [linux] + [mac]\n" +
+             "unittest + [full] + [linux] + [mac]\n" +
              "cloudtest + [full] + [nodestroy] + [cc7] + [cc8] + [container]\n" +
              "all\n"
 
@@ -131,12 +131,6 @@ void unittestCommand(args) {
         switch(it) {
             case "full":
             params.add(booleanParam(name: 'CVMFS_UNITTESTS_QUICK', value: false))
-            break
-            case "gw":
-            params.add(booleanParam(name: 'CVMFS_UNITTESTS_GATEWAY', value: true))
-            break
-            case "ducc":
-            params.add(booleanParam(name: 'CVMFS_UNITTESTS_DUCC', value: true))
             break
             case "linux":
             combs.add('CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=cc7')
