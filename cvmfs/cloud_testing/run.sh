@@ -136,6 +136,9 @@ setup_virtual_machine() {
   if [ "x$server_package" != "x" ]; then
     args="$args -s $server_package"
   fi
+  if [ "x$libs_package" != "x" ]; then
+    args="$args -l $libs_package"
+  fi
   if [ "x$client_package" != "x" ]; then
     args="$args -c $client_package"
   fi
@@ -378,6 +381,7 @@ fi
 # figure out which packages need to be downloaded
 ctu="$client_testee_url"
 otu="$testee_url"
+libs_package=$(read_package_map       ${ctu}/pkgmap "$platform" 'libs'      )
 client_package=$(read_package_map     ${ctu}/pkgmap "$platform" 'client'    )
 fuse3_package=$(read_package_map      ${ctu}/pkgmap "$platform" 'fuse3'     )
 server_package=$(read_package_map     ${otu}/pkgmap "$platform" 'server'    )
@@ -389,6 +393,7 @@ ducc_package=$(read_package_map       ${otu}/pkgmap "$platform" 'ducc'      )
 config_packages="$(read_package_map   ${otu}/pkgmap "$platform" 'config'    )"
 service_container="$(read_package_map ${ctu}/pkgmap "container_x86_64" 'client')"
 echo "--- Packages used: "
+echo "  libs:       $libs_package"
 echo "  client:     $client_package"
 echo "  fuse3:      $fuse3_package"
 echo "  server:     $server_package"
@@ -410,6 +415,11 @@ if [ x"$platform" != "xosx_x86_64" ]; then
     [ x"$unittest_package"      = "x" ] ||
     [ x"$shrinkwrap_package"    = "x" ]; then
     usage "Incomplete pkgmap file"
+  fi
+
+  # TODO(jblomer) make it mandatory
+  if [ "x$libs_package" != "x" ]; then
+    libs_package="${ctu}/${libs_package}"
   fi
 
   if [ "x$fuse3_package" != "x" ]; then

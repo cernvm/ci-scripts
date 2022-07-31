@@ -13,6 +13,7 @@ usage() {
   echo "$error_msg"
   echo
   echo "Mandatory options:"
+  echo "-l <cvmfs libs package>    CernVM-FS libs package to be tested"
   echo "-s <cvmfs server package>  CernVM-FS server package to be tested (Linux only)"
   echo "-c <cvmfs client package>  CernVM-FS client package to be tested"
   echo "-f <cvmfs_fuse3 package>   cvmfs_libfuse3 package to be tested"
@@ -111,6 +112,7 @@ cvmfs_log_directory="${cvmfs_workspace}/logs"
 platform_script=""
 platform_script_path=""
 server_package=""
+libs_package=""
 client_package=""
 fuse3_package=""
 devel_package=""
@@ -174,10 +176,13 @@ exec &> ${cvmfs_log_directory}/setup.log
 echo "*** Called remote_setup.sh with options $@"
 
 # read parameters
-while getopts "r:s:c:d:t:g:k:w:p:u:e:f:D:C:" option; do
+while getopts "r:s:c:d:t:g:k:w:p:u:e:f:D:C:l:" option; do
   case $option in
     r)
       platform_script=$OPTARG
+      ;;
+    l)
+      libs_package=$OPTARG
       ;;
     s)
       server_package=$OPTARG
@@ -284,6 +289,7 @@ fi
 # download the needed packages
 echo "downloading packages..."
 download_if_used $server_package
+download_if_used $libs_package
 download_if_used $client_package
 download_if_used $fuse3_package
 download_if_used $devel_package
@@ -296,6 +302,9 @@ download_if_used $config_package
 download_if_used $service_container
 
 # get local file path of downloaded files
+if [ "x$libs_package" != "x" ]; then
+  libs_package=$(canonicalize_path $libs_package)
+fi
 if [ "x$server_package" != "x" ]; then
   server_package=$(canonicalize_path $server_package)
 fi
@@ -372,6 +381,10 @@ args="-t $cvmfs_source_directory \
       -c $client_package"
 if [ "x$(uname -s)" != "xDarwin" ]; then
   args="$args -s $server_package -d $devel_package -g $unittest_package -p $shrinkwrap_package -k $config_package"
+fi
+# TODO(jblomer): make it mandatory
+if [ x"$libs_package" != "x" ]; then
+  args="$args -L $libs_package"
 fi
 if [ x"$fuse3_package" != "x" ]; then
   args="$args -f $fuse3_package"
