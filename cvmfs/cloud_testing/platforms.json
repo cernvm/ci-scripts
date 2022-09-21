@@ -102,7 +102,7 @@
   {
     "dist": "el9",
     "config": "x86_64",
-    "ami": "ami-24860081",
+    "ami": "ami-a8186f9d",
     "label": "cc9_x86_64",
     "setup": "centos9_x86_64_setup.sh",
     "test": "centos9_x86_64_test.sh",
