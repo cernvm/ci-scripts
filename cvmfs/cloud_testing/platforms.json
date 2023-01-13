@@ -81,16 +81,6 @@
   },
   {
     "dist": "el8",
-    "config": "x86_64_container",
-    "ami": "ami-76ec14ad",
-    "label": "cc8_x86_64",
-    "setup": "centos8_x86_64-CONTAINER_setup.sh",
-    "test": "centos8_x86_64-CONTAINER_test.sh",
-    "user": "root",
-    "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
-  },
-  {
-    "dist": "el8",
     "config": "x86_64_overlayfs_metacopy",
     "ami": "ami-76ec14ad",
     "label": "cc8_x86_64",
@@ -106,6 +96,16 @@
     "label": "cc9_x86_64",
     "setup": "centos9_x86_64_setup.sh",
     "test": "centos9_x86_64_test.sh",
+    "user": "root",
+    "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
+  },
+  {
+    "dist": "el9",
+    "config": "x86_64_container",
+    "ami": "ami-a8186f9d",
+    "label": "cc9_x86_64",
+    "setup": "el9_x86_64-CONTAINER_setup.sh",
+    "test": "el9_x86_64-CONTAINER_test.sh",
     "user": "root",
     "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
   },
