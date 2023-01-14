@@ -68,7 +68,7 @@ cloudTestingcc8TestCombinations = [
                                   ]
 
 cloudTestingContainerTestCombinations = [
-                                  'CVMFS_PLATFORM=el8,CVMFS_PLATFORM_CONFIG=x86_64_container,label=trampoline',
+                                  'CVMFS_PLATFORM=el9,CVMFS_PLATFORM_CONFIG=x86_64_container,label=trampoline',
                                   'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=snapshotter'
                                   ]
 
@@ -178,7 +178,7 @@ void cloudtestCommand(args) {
             break
             case "container":
             testParams.add([$class: 'MatrixCombinationsParameterValue', name: 'CVMFS_TEST_PLATFORMS', combinations: cloudTestingContainerTestCombinations, description: null])
-            buildCombs = ['CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=cc8',
+            buildCombs = ['CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=cc9',
                           'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=container',
                           'CVMFS_BUILD_ARCH=docker-x86_64,CVMFS_BUILD_PLATFORM=snapshotter']
             break
