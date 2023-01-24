@@ -101,6 +101,16 @@
   },
   {
     "dist": "el9",
+    "config": "x86_64_fuse3",
+    "ami": "ami-a8186f9d",
+    "label": "cc9_x86_64",
+    "setup": "centos9_x86_64-FUSE3_setup.sh",
+    "test": "centos9_x86_64-FUSE3_test.sh",
+    "user": "root",
+    "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
+  },
+  {
+    "dist": "el9",
     "config": "x86_64_container",
     "ami": "ami-a8186f9d",
     "label": "cc9_x86_64",
