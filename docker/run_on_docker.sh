@@ -159,6 +159,10 @@ case ${CVMFS_DOCKER_IMAGE} in
     image_name="gitlab-registry.cern.ch/cernvm/build-images/snapshotter_x86_64:el8"
     docker pull $image_name
     ;;
+  "coverage_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/centos_x86_64_coverage:9"
+    docker pull $image_name
+    ;;
   *)
     die "Unknown platform: ${CVMFS_DOCKER_IMAGE}"
     ;;
