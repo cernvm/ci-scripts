@@ -62,7 +62,7 @@
   {
     "dist": "el8",
     "config": "x86_64",
-    "ami": "ami-76ec14ad",
+    "ami": "ami-4f85fd03",
     "label": "cc8_x86_64",
     "setup": "centos8_x86_64_setup.sh",
     "test": "centos8_x86_64_test.sh",
@@ -72,7 +72,7 @@
   {
     "dist": "el8",
     "config": "x86_64_fuse3",
-    "ami": "ami-76ec14ad",
+    "ami": "ami-4f85fd03",
     "label": "cc8_x86_64",
     "setup": "centos8_x86_64-FUSE3_setup.sh",
     "test": "centos8_x86_64-FUSE3_test.sh",
@@ -82,7 +82,7 @@
   {
     "dist": "el8",
     "config": "x86_64_overlayfs_metacopy",
-    "ami": "ami-76ec14ad",
+    "ami": "ami-4f85fd03",
     "label": "cc8_x86_64",
     "setup": "centos8_x86_64-overlayfs_metacopy_setup.sh",
     "test": "centos8_x86_64_test.sh",
@@ -92,7 +92,7 @@
   {
     "dist": "el9",
     "config": "x86_64",
-    "ami": "ami-a8186f9d",
+    "ami": "ami-c9ba488f",
     "label": "cc9_x86_64",
     "setup": "centos9_x86_64_setup.sh",
     "test": "centos9_x86_64_test.sh",
@@ -102,7 +102,7 @@
   {
     "dist": "el9",
     "config": "x86_64_fuse3",
-    "ami": "ami-a8186f9d",
+    "ami": "ami-c9ba488f",
     "label": "cc9_x86_64",
     "setup": "centos9_x86_64-FUSE3_setup.sh",
     "test": "centos9_x86_64-FUSE3_test.sh",
@@ -112,7 +112,7 @@
   {
     "dist": "el9",
     "config": "x86_64_container",
-    "ami": "ami-a8186f9d",
+    "ami": "ami-c9ba488f",
     "label": "cc9_x86_64",
     "setup": "el9_x86_64-CONTAINER_setup.sh",
     "test": "el9_x86_64-CONTAINER_test.sh",
