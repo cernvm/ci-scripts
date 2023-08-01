@@ -44,6 +44,14 @@ if [ "x${CVMFS_DESTROY_FAILED_VMS}" = "xtrue" ]; then
   destroy_failed='-F'
 fi
 
+if [ "x$CVMFS_PLATFORM" == "xmacos" ]; then
+   echo "Waiting to get lock for macos machine ..."
+  _cleanup_lock() { flock -u 999;}
+  exec 999>/tmp/mac-mini-1.lock; trap _cleanup_lock EXIT
+  flock 999
+  echo "... lock aquired."
+fi
+
 
 echo "Running cloud tests for $CVMFS_PLATFORM / $CVMFS_PLATFORM_CONFIG ..."
 ${SCRIPT_LOCATION}/cloud_testing/run.sh                    \
