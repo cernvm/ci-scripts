@@ -137,7 +137,7 @@ setup_virtual_machine() {
     args="$args -s $server_package"
   fi
   if [ "x$libs_package" != "x" ]; then
-    args="$args -l $libs_package"
+    args="$args -L $libs_package"
   fi
   if [ "x$client_package" != "x" ]; then
     args="$args -c $client_package"
