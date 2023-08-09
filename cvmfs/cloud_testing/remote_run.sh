@@ -52,6 +52,7 @@ test_username="sftnight"
 server_package=""
 client_package=""
 devel_package=""
+libs_package=""
 config_package=""
 suites=""
 geoip_key=""
@@ -107,6 +108,8 @@ while getopts "r:s:c:d:g:k:L:p:u:S:G:" option; do
       ;;
   esac
 done
+
+echo "libs_package: $libs_package"
 
 if [ "x$(uname -s)" != "xDarwin" ]; then
 # check if we have all bits and pieces

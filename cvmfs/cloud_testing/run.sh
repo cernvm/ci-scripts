@@ -452,6 +452,8 @@ else
   service_container=
 fi
 
+echo "libs_package: $libs_package"
+
 # special case: yubikey testing node runs a VM accesible by port 2222
 if [ x"$ami_name" = "xcvm-yubikey01" ]; then
   export CLOUD_TESTING_SSH_PORT=$YUBIKEY_SSH_PORT
