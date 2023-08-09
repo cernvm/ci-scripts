@@ -85,6 +85,9 @@ while getopts "r:s:c:d:g:k:p:u:S:G:" option; do
     k)
       config_package=$(canonicalize_path $OPTARG)
       ;;
+    L)
+      libs_package=$(canonicalize_path $OPTARG)
+      ;;
     p)
       platform_script_path=$OPTARG
       ;;
@@ -110,6 +113,7 @@ if [ "x$(uname -s)" != "xDarwin" ]; then
     [ x"$client_package"   = "x" ] ||
     [ x"$devel_package"    = "x" ] ||
     [ x"$server_package"   = "x" ] ||
+    [ x"$libs_package"   = "x" ] ||
     [ x"$config_package"  = "x" ]; then
     usage "Missing parameter(s)"
   fi
@@ -136,6 +140,7 @@ fi
 
 # export the location of the client, server and config packages
 export CVMFS_CLIENT_PACKAGE=$client_package
+export CVMFS_LIBS_PACKAGE=$libs_package
 export CVMFS_DEVEL_PACKAGE=$devel_package
 export CVMFS_SERVER_PACKAGE=$server_package
 export CVMFS_CONFIG_PACKAGES="$config_package"
