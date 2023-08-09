@@ -13,7 +13,7 @@ usage() {
   echo "$error_msg"
   echo
   echo "Mandatory options:"
-  echo "-l <cvmfs libs package>    CernVM-FS libs package to be tested"
+  echo "-L <cvmfs libs package>    CernVM-FS libs package to be tested"
   echo "-s <cvmfs server package>  CernVM-FS server package to be tested (Linux only)"
   echo "-c <cvmfs client package>  CernVM-FS client package to be tested"
   echo "-f <cvmfs_fuse3 package>   cvmfs_libfuse3 package to be tested"
@@ -176,12 +176,12 @@ exec &> ${cvmfs_log_directory}/setup.log
 echo "*** Called remote_setup.sh with options $@"
 
 # read parameters
-while getopts "r:s:c:d:t:g:k:w:p:u:e:f:D:C:l:" option; do
+while getopts "r:s:c:d:t:g:k:w:p:u:e:f:D:C:L:" option; do
   case $option in
     r)
       platform_script=$OPTARG
       ;;
-    l)
+    L)
       libs_package=$OPTARG
       ;;
     s)
@@ -380,7 +380,7 @@ args="-t $cvmfs_source_directory \
       -l $cvmfs_log_directory    \
       -c $client_package"
 if [ "x$(uname -s)" != "xDarwin" ]; then
-  args="$args -s $server_package -d $devel_package -g $unittest_package -p $shrinkwrap_package -k $config_package -l $libs_package"
+  args="$args -s $server_package -d $devel_package -g $unittest_package -p $shrinkwrap_package -k $config_package -L $libs_package"
 fi
 if [ x"$fuse3_package" != "x" ]; then
   args="$args -f $fuse3_package"

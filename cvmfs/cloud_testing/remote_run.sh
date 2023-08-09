@@ -17,7 +17,7 @@ usage() {
   echo "-c <client package>   CernVM-FS client package to be tested"
   echo "-d <devel package>    CernVM-FS devel package to be tested"
   echo "-k <config package>   CernVM-FS configuration package to be used"
-  echo "-l <libs package>     CernVM-FS libs package to be used"
+  echo "-L <libs package>     CernVM-FS libs package to be used"
   echo
   echo "Optional parameters:"
   echo "-p <platform path>      custom search path for platform specific script"
@@ -69,7 +69,7 @@ exec &>                                  $RUN_LOGFILE
 cd $cvmfs_workspace
 
 # read parameters
-while getopts "r:s:c:d:g:k:l:p:u:S:G:" option; do
+while getopts "r:s:c:d:g:k:L:p:u:S:G:" option; do
   case $option in
     r)
       platform_script=$OPTARG
@@ -86,7 +86,7 @@ while getopts "r:s:c:d:g:k:l:p:u:S:G:" option; do
     k)
       config_package=$(canonicalize_path $OPTARG)
       ;;
-    l)
+    L)
       libs_package=$(canonicalize_path $OPTARG)
       ;;
     p)
