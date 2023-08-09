@@ -413,14 +413,11 @@ if [ x"$platform" != "xosx_x86_64" ]; then
     [ x"$devel_package"         = "x" ] ||
     [ x"$config_packages"       = "x" ] ||
     [ x"$unittest_package"      = "x" ] ||
+    [ x"$libs_package"      = "x" ] ||
     [ x"$shrinkwrap_package"    = "x" ]; then
     usage "Incomplete pkgmap file"
   fi
 
-  # TODO(jblomer) make it mandatory
-  if [ "x$libs_package" != "x" ]; then
-    libs_package="${ctu}/${libs_package}"
-  fi
 
   if [ "x$fuse3_package" != "x" ]; then
     fuse3_package="${ctu}/${fuse3_package}"
@@ -438,6 +435,7 @@ if [ x"$platform" != "xosx_x86_64" ]; then
   devel_package="${ctu}/${devel_package}"
   unittest_package="${otu}/${unittest_package}"
   shrinkwrap_package="${otu}/${shrinkwrap_package}"
+  libs_package="${ctu}/${libs_package}"
   config_package_urls=""
   for config_package in $config_packages; do
     config_package_urls="${config_package_base_url}/${config_package} $config_package_urls"
