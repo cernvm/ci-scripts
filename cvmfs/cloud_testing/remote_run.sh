@@ -138,7 +138,7 @@ fi
 export CVMFS_CLIENT_PACKAGE=$client_package
 export CVMFS_DEVEL_PACKAGE=$devel_package
 export CVMFS_SERVER_PACKAGE=$server_package
-export CVMFS_CONFIG_PACKAGES="$config_package"
+export CVMFS_CONFIG_PACKAGE=$config_package
 
 # change working directory to test workspace
 cd $cvmfs_workspace
