@@ -204,6 +204,9 @@ run_test_cases() {
   if [ "x$config_packages" != "x" ]; then
     args="$args -k $config_packages"
   fi
+  if [ "x$libs_package" != "x" ]; then
+    args="$args -L $libs_package"
+  fi
   if [ "x$suites" != "x" ]; then
     args="$args -S $suites"
   fi
