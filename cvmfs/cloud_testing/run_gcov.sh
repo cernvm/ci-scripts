@@ -27,8 +27,8 @@ cvmfs_log_directory="${cvmfs_workspace}/logs"
 platform=""
 platform_run_script=""
 platform_setup_script=""
-ec2_config=""
-ami_name=""
+openstack_config=""
+image_id=""
 log_destination="."
 username="root"
 userdata=""
@@ -58,7 +58,7 @@ usage() {
   echo " -a <AMI name>              the virtual machine image to spawn"
   echo
   echo "Optional parameters:"
-  echo " -e <EC2 config file>       local location of the ec2_config.sh file"
+  echo " -e <Openstack config file>       local location of the openstack_config.sh file"
   echo " -d <results destination>   Directory to store final test session logs"
   echo " -m <ssh user name>         User name to be used for VM login (default: root)"
   echo " -c <cloud init userdata>   User data string to be passed to the new instance"
@@ -70,14 +70,14 @@ usage() {
 
 
 spawn_my_virtual_machine() {
-  local ami=$1
+  local image_id=$1
   local userdata="$2"
 
   local retcode
 
-  echo -n "spawning virtual machine from $ami... "
+  echo -n "spawning virtual machine from image $image_id... "
   local spawn_results
-  spawn_results="$(spawn_virtual_machine $ami "$userdata")"
+  spawn_results="$(spawn_virtual_machine $image_id "$userdata")"
   retcode=$?
   instance_id=$(echo $spawn_results | awk '{print $1}')
   ip_address=$(echo $spawn_results | awk '{print $2}')
@@ -173,10 +173,10 @@ while getopts "p:x:r:a:e:d:m:c:s:b:" option; do
       platform_run_script=$OPTARG
       ;;
     a)
-      ami_name=$OPTARG
+      instance_name=$OPTARG
       ;;
     e)
-      ec2_config=$OPTARG
+      openstack_config=$OPTARG
       ;;
     d)
       log_destination=$OPTARG
@@ -204,17 +204,17 @@ done
 if [ x$platform_run_script   = "x" ] ||
    [ x$platform_setup_script = "x" ] ||
    [ x$platform              = "x" ] ||
-   [ x$ami_name              = "x" ]; then
+   [ x$image_id              = "x" ]; then
   usage "Missing parameter(s)"
 fi
 
 # load EC2 configuration
-. $ec2_config
+. $openstack_config
 
 # spawn the virtual machine image, run the platform specific setup script
 # on it, wait for the spawning and setup to be complete and run the actual
 # test suite on the VM.
-spawn_my_virtual_machine  $ami_name   "$userdata" || die "Aborting..."
+spawn_my_virtual_machine  $image_id   "$userdata" || die "Aborting..."
 wait_for_virtual_machine  $ip_address  $username  || die "Aborting..."
 setup_virtual_machine     $ip_address  $username  || die "Aborting..."
 wait_for_virtual_machine  $ip_address  $username  || die "Aborting..."

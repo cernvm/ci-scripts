@@ -1,55 +1,73 @@
-#!/usr/bin/python
+#!/bin/env python3
 
-import boto.ec2
 import time
 import argparse
 import sys
+import os
+import uuid
+
+from keystoneauth1 import session
+from keystoneauth1.identity import v3
+from novaclient import client
 
 
 def print_error(msg):
-  print >> sys.stderr , "[Error]" , msg
+  print( "[Error]" , msg, file=sys.stderr)
 
 
 def is_running(instance):
-  return instance != None and instance.state == "running"
+  return instance != None and instance.status == "ACTIVE"
 
 
-def wait_for_instance(instance, timeout = 900):
+def wait_for_instance(connection, instance_name, timeout = 900):
   start = time.time()
   counter = 0
   polling_interval = 15
-  while instance.state == "pending" and counter < timeout:
-    instance.update()
+  instance, = connection.servers.list(search_opts={'name': instance_name})
+  while instance.status == "BUILD" and counter < timeout:
+    instance, = connection.servers.list(search_opts={'name': instance_name})
     time.sleep(polling_interval)
     counter += polling_interval
   end = time.time()
   return end - start
 
 
-def connect_to_openstack(access_key, secret_key, endpoint):
-  return boto.connect_ec2_endpoint(endpoint,
-                                   aws_access_key_id     = access_key,
-                                   aws_secret_access_key = secret_key)
+def connect_to_openstack():
+
+  application_credential = v3.ApplicationCredentialMethod(
+              application_credential_secret=os.environ["OS_APPLICATION_CREDENTIAL_SECRET"],
+              application_credential_id=os.environ["OS_APPLICATION_CREDENTIAL_ID"],
+              )
+  
+  auth = v3.Auth(auth_url=os.environ["OS_AUTH_URL"],
+                 auth_methods=[application_credential],
+                )
+  
+  sess = session.Session(auth=auth)
+  nova = client.Client(2, session=sess)
+  return nova
 
 
-def spawn_instance(connection, ami, key_name, flavor, userdata, max_retries = 5):
+def spawn_instance(connection, instance_name, image, key_name, flavor, userdata,  max_retries = 1):
   instance     = None
   time_backoff = 20
   retries      = 0
+  meta = {'cern-waitdns': 'false', 'description': instance_name, 'cern-activedirectory': 'false', 'cern-checkdns': 'false'}
+  flavor_id = connection.flavors.find(name=flavor)
+  
 
   while not is_running(instance) and retries < max_retries:
-    instance = spawn_instance_on_openstack(connection,
-                                           ami,
-                                           key_name,
-                                           flavor,
-                                           userdata)
+    instance = connection.servers.create(name=instance_name, image=image,
+            flavor=flavor_id, key_name=key_name, meta=meta)
+    wait_for_instance(connection, instance_name)
+
     retries += 1
     if not is_running(instance):
       instance_id    = "unknown"
       instance_state = "unknown"
       if instance != None:
         instance_id    = str(instance.id)
-        instance_state = str(instance.state)
+        instance_state = str(instance.status)
         kill_instance(connection, instance_id)
       print_error("Failed spawning instance " + instance_id +
                   " (#: " + str(retries) + " | state: " + instance_state + ")")
@@ -60,61 +78,40 @@ def spawn_instance(connection, ami, key_name, flavor, userdata, max_retries = 5)
   return instance
 
 
-def spawn_instance_on_openstack(connection, ami, key_name, flavor, userdata):
-  try:
-    reservation = connection.run_instances(ami,
-                                           key_name=key_name,
-                                           instance_type=flavor,
-                                           user_data=userdata)
-    if len(reservation.instances) != 1:
-      print_error("Failed to start instance (#: " + reservation.instances + ")")
-      return None
-
-    instance = reservation.instances[0]
-    if instance.state != "pending":
-      print_error("Instance failed at startup (State: " + instance.state + ")")
-      return instance
-
-    waiting_time = wait_for_instance(instance)
-    if instance.state != "running":
-      print_error("Failed to boot up instance (State: " + instance.state + ")")
-      return instance
-
-    return instance
-
-  except Exception, e:
-    print_error("Exception: " + str(e))
-    return None
-
-
 def kill_instance(connection, instance_id):
-  terminated_instances = []
-  try:
-    terminated_instances = connection.terminate_instances(instance_id)
-  except Exception, e:
-    print_error("Exception: " + str(e))
-  return len(terminated_instances) == 1
+  instance, = connection.servers.list(search_opts={'name': instance_id})
+  instance.delete()
+  return True
 
 
 def create_instance(parent_parser, argv):
   parser = argparse.ArgumentParser(parents=[parent_parser])
-  parser.add_argument("--ami",
+  parser.add_argument("--instance-name",
                          nargs    = 1,
-                         metavar  = "<ami_name>",
+                         metavar  = "<instance_name>",
+                         required = False,
+                         dest     = "instance_name",
+                         default  = "cvmtestserver",
+                         help     = "name of the instance to boot")
+  parser.add_argument("--image",
+                         nargs    = 1,
+                         metavar  = "<image_name>",
                          required = True,
-                         dest     = "ami",
-                         help     = "AMI identifier of the image to boot")
+                         dest     = "image",
+                         help     = "Image identifier of the image to boot")
   parser.add_argument("--key",
                          nargs    = 1,
                          metavar  = "<key_name>",
-                         required = True,
+                         required = False,
                          dest     = "key",
+                         default  = "cvmfs-testing-v2",
                          help     = "Name of the access key to use")
   parser.add_argument("--instance-type",
                          nargs    = 1,
                          metavar  = "<instance_type>",
-                         required = True,
+                         required = False,
                          dest     = "flavor",
+                         default  = "m2.large",
                          help     = "VM flavor to use")
   parser.add_argument("--userdata",
                          nargs    = 1,
@@ -125,19 +122,27 @@ def create_instance(parent_parser, argv):
                          help     = "Cloud-init user data string")
   arguments = parser.parse_args(argv)
 
-  access_key = arguments.access_key[0]
-  secret_key = arguments.secret_key[0]
-  endpoint   = arguments.cloud_endpoint[0]
-  ami        = arguments.ami[0]
-  key_name   = arguments.key[0]
-  flavor     = arguments.flavor[0]
-  userdata   = arguments.userdata[0]
+  image,      = arguments.image
+  key_name   = arguments.key
+  flavor     = arguments.flavor
+  userdata   = arguments.userdata
+  instance_name = arguments.instance_name
+  random_suffix = str(uuid.uuid1())[:8]
+  build_number = os.environ.get("BUILD_NUMBER", "")
+  if build_number:
+    instance_name = instance_name + "-jenkins" + str(build_number)
+  instance_name = instance_name + "-" + random_suffix
 
-  connection = connect_to_openstack(access_key, secret_key, endpoint)
-  instance   = spawn_instance(connection, ami, key_name, flavor, userdata)
+  connection = connect_to_openstack()
+  instance   = spawn_instance(connection, instance_name, image, key_name, flavor, userdata)
+  wait_for_instance(connection, instance_name)
 
+  instance, = connection.servers.list(search_opts={'name': instance_name})
+  instance_ip4 = instance.addresses["CERN_NETWORK"][0]['addr']  
+
+  
   if is_running(instance):
-    print instance.id , instance.private_ip_address
+    print(instance_name , instance_ip4)
   else:
     print_error("Failed to start instance")
     exit(2)
@@ -153,12 +158,9 @@ def terminate_instance(parent_parser, argv):
                          help     = "Instance ID of the instance to terminate")
   arguments = parser.parse_args(argv)
 
-  access_key  = arguments.access_key[0]
-  secret_key  = arguments.secret_key[0]
-  endpoint    = arguments.cloud_endpoint[0]
   instance_id = arguments.instance_id[0]
 
-  connection = connect_to_openstack(access_key, secret_key, endpoint)
+  connection = connect_to_openstack()
   successful = kill_instance(connection, instance_id)
 
   if not successful:
@@ -171,25 +173,7 @@ def terminate_instance(parent_parser, argv):
 #
 
 parser = argparse.ArgumentParser(add_help    = False,
-                                 description = "Start an Ibex instance")
-parser.add_argument("--access-key",
-                       nargs    = 1,
-                       metavar  = "<aws_access_key_id>",
-                       required = True,
-                       dest     = "access_key",
-                       help     = "EC2 Access Key String")
-parser.add_argument("--secret-key",
-                       nargs    = 1,
-                       metavar  = "<aws_secret_access_key>",
-                       required = True,
-                       dest     = "secret_key",
-                       help     = "EC2 Secret Key String")
-parser.add_argument("--cloud-endpoint",
-                       nargs    = 1,
-                       metavar  = "<url to cloud controller endpoint>",
-                       required = True,
-                       dest     = "cloud_endpoint",
-                       help     = "URL to the cloud controller")
+                                 description = "Start an Openstack instance")
 
 if len(sys.argv) < 2:
     print_error("please provide 'spawn' or 'terminate' as a subcommand...")
