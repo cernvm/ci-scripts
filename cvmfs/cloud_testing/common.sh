@@ -104,18 +104,11 @@ read_package_map() {
 
 
 spawn_virtual_machine() {
-  local ami=$1
+  local l_image_id="$1"
   local userdata="$2"
 
   local spawn_results
-  ${script_location}/instance_handler.py spawn                 \
-                         --access-key       $EC2_ACCESS_KEY    \
-                         --secret-key       $EC2_SECRET_KEY    \
-                         --cloud-endpoint   $EC2_ENDPOINT      \
-                         --key              $EC2_KEY           \
-                         --instance-type    $EC2_INSTANCE_TYPE \
-                         --userdata         "$userdata"        \
-                         --ami              $ami
+  ${script_location}/instance_handler.py spawn  --image  $l_image_id
   check_retcode $?
 }
 
@@ -138,7 +131,7 @@ wait_for_virtual_machine() {
   echo -n "waiting for VM ($ip) to become accessible... "
   timeout=$accessibility_timeout
   while [ $timeout -gt 0 ] &&                                      \
-        ! ssh -i $EC2_KEY_LOCATION -o StrictHostKeyChecking=no     \
+        ! ssh -i $OPENSTACK_KEY_LOCATION -o StrictHostKeyChecking=no     \
                                    -o UserKnownHostsFile=/dev/null \
                                    -o LogLevel=ERROR               \
                                    -o BatchMode=yes                \
@@ -156,9 +149,6 @@ tear_down_virtual_machine() {
   echo -n "tearing down virtual machine instance $instance... "
   local teardown_results
   teardown_results=$(${script_location}/instance_handler.py terminate          \
-                                         --access-key       $EC2_ACCESS_KEY    \
-                                         --secret-key       $EC2_SECRET_KEY    \
-                                         --cloud-endpoint   $EC2_ENDPOINT      \
                                          --instance-id      $instance)
   check_retcode $?
 }
@@ -182,7 +172,7 @@ run_script_on_virtual_machine() {
     shift 1
   done
 
-  ssh -i $EC2_KEY_LOCATION -o StrictHostKeyChecking=no     \
+  ssh -i $OPENSTACK_KEY_LOCATION -o StrictHostKeyChecking=no     \
                            -o UserKnownHostsFile=/dev/null \
                            -o LogLevel=ERROR               \
                            -o BatchMode=yes                \
@@ -197,6 +187,6 @@ retrieve_file_from_virtual_machine() {
   local dest_path=$4
   local port=${CLOUD_TESTING_SSH_PORT:-22}
 
-  scp -i $EC2_KEY_LOCATION -o StrictHostKeyChecking=no -P $port\
+  scp -i $OPENSTACK_KEY_LOCATION -o StrictHostKeyChecking=no -P $port\
       $username@${ip}:${file_path} ${dest_path} > /dev/null 2>&1
 }

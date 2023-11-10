@@ -1,16 +1,8 @@
 #!/bin/sh
 
-# This script spawns a virtual machine of a specific platform type on ibex and
+# This script spawns a virtual machine of a specific platform type on openstack and
 # runs the associated test cases on this machine
 
-# Configuration for cloud access
-# Example:
-# EC2_ACCESS_KEY="..."
-# EC2_SECRET_KEY="..."
-# EC2_ENDPOINT="..."
-# EC2_KEY="..."
-# EC2_INSTANCE_TYPE="..."
-# EC2_KEY_LOCATION="/home/.../ibex_key.pem"
 
 # internal script configuration
 script_location=$(cd "$(dirname "$0")"; pwd)
@@ -34,8 +26,8 @@ client_testee_url=""
 platform=""
 platform_run_script=""
 platform_setup_script=""
-ec2_config=""
-ami_name=""
+openstack_config=""
+image_id=""
 log_destination="."
 username="root"
 userdata=""
@@ -73,10 +65,10 @@ usage() {
   echo " -p <platform name>           name of the platform to be tested"
   echo " -b <setup script>            platform specific setup script (inside the tarball)"
   echo " -r <run script>              platform specific test script (inside the tarball)"
-  echo " -a <AMI name>                the virtual machine image to spawn"
+  echo " -a <image id>                the virtual machine image id to spawn"
   echo
   echo "Optional parameters:"
-  echo " -e <EC2 config file>         local location of the ec2_config.sh file"
+  echo " -e <Openstack config file>   local location of the openstack_config.sh file"
   echo " -d <results destination>     Directory to store final test session logs"
   echo " -m <ssh user name>           User name to be used for VM login (default: root)"
   echo " -c <cloud init userdata>     User data string to be passed to the new instance"
@@ -92,32 +84,34 @@ usage() {
 
 
 spawn_my_virtual_machine() {
-  local ami=$1
+  local image_id=$1
   local userdata="$2"
 
   local retcode
 
   # special case for macos and yubikey testing node
-  if [ x"$platform" = "xosx_x86_64" ] || [ x"$ami" = "xcvm-yubikey01" ]; then
-    ip_address=$(getent ahostsv4 $ami | head -n1 | awk '{ print $1}')
+  if [ x"$platform" = "xosx_x86_64" ] || [ x"$image_id" = "xcvm-yubikey01" ]; then
+    ip_address=$(getent ahostsv4 $image_id | head -n1 | awk '{ print $1}')
     retcode=$?
     [ $retcode -eq 0 ] || return $retcode
 
     # need to set up the VM on yubikey testing node
     # run a script prepared by Ansible in root home directory
-    if [ x"$ami" = "xcvm-yubikey01" ]; then
+    if [ x"$image_id" = "xcvm-yubikey01" ]; then
       start_yubikey_vm $ip_address || retcode=$?
     fi
 
     return $retcode
   fi
 
-  echo -n "spawning virtual machine from $ami... "
+  echo -n "spawning virtual machine from image $image_id... "
+  set -x
   local spawn_results
-  spawn_results="$(spawn_virtual_machine $ami "$userdata")"
+  spawn_results="$(spawn_virtual_machine $image_id "$userdata")"
   retcode=$?
   instance_id=$(echo $spawn_results | awk '{print $1}')
   ip_address=$(echo $spawn_results | awk '{print $2}')
+  set +x
 
   check_retcode $retcode
 }
@@ -247,7 +241,7 @@ cleanup_test_machine() {
 start_yubikey_vm() {
   local ip_address=$1
   echo -n "Setting up VM on cvm-yubikey01 node... "
-  ssh -i $EC2_KEY_LOCATION -o StrictHostKeyChecking=no     \
+  ssh -i $OPENSTACK_KEY_LOCATION -o StrictHostKeyChecking=no     \
                            -o UserKnownHostsFile=/dev/null \
                            -o LogLevel=ERROR               \
                            -o BatchMode=yes                \
@@ -259,7 +253,7 @@ start_yubikey_vm() {
 tear_down_yubikey_vm() {
   local ip_address=$1
   echo -n "Tearing down VM on cvm-yubikey01 node... "
-  ssh -i $EC2_KEY_LOCATION -o StrictHostKeyChecking=no     \
+  ssh -i $OPENSTACK_KEY_LOCATION -o StrictHostKeyChecking=no     \
                            -o UserKnownHostsFile=/dev/null \
                            -o LogLevel=ERROR               \
                            -o BatchMode=yes                \
@@ -271,7 +265,7 @@ tear_down_yubikey_vm() {
 tear_down() {
   if [ "x$platform" = "xosx_x86_64" ]; then
     cleanup_test_machine $ip_address $username        || die "Cleanup of OSX machine failed!"
-  elif [ x"$ami_name" = "xcvm-yubikey01" ]; then
+  elif [ x"$image_id" = "xcvm-yubikey01" ]; then
     tear_down_yubikey_vm $ip_address                  || die "Teardown of Yubikey VM failed!"
   else
     tear_down_virtual_machine $instance_id            || die "Teardown of VM failed!"
@@ -332,10 +326,10 @@ while getopts "r:b:u:p:e:a:d:m:c:l:s:D:G:F" option; do
       platform=$OPTARG
       ;;
     e)
-      ec2_config=$OPTARG
+      openstack_config=$OPTARG
       ;;
     a)
-      ami_name=$OPTARG
+      image_id=$OPTARG
       ;;
     d)
       log_destination=$OPTARG
@@ -370,7 +364,7 @@ if [ x$platform_run_script   = "x" ] ||
    [ x$platform_setup_script = "x" ] ||
    [ x$platform              = "x" ] ||
    [ x$testee_url            = "x" ] ||
-   [ x$ami_name              = "x" ]; then
+   [ x$image_id              = "x" ]; then
   usage "Missing parameter(s)"
 fi
 
@@ -458,13 +452,13 @@ fi
 echo "libs_package: $libs_package"
 
 # special case: yubikey testing node runs a VM accesible by port 2222
-if [ x"$ami_name" = "xcvm-yubikey01" ]; then
+if [ x"$image_id" = "xcvm-yubikey01" ]; then
   export CLOUD_TESTING_SSH_PORT=$YUBIKEY_SSH_PORT
   echo "Setting custom port for ssh $CLOUD_TESTING_SSH_PORT"
 fi
 
-# load EC2 configuration
-. $ec2_config
+# load Openstack configuration
+. $openstack_config
 
 # construct the full package URLs
 client_package="${ctu}/${client_package}"
@@ -474,7 +468,7 @@ source_tarball="${otu}/${source_tarball}"
 # spawn the virtual machine image, run the platform specific setup script
 # on it, wait for the spawning and setup to be complete and run the actual
 # test suite on the VM.
-spawn_my_virtual_machine  $ami_name   "$userdata"   || die "Aborting..."
+spawn_my_virtual_machine  $image_id   "$userdata"   || die "Aborting..."
 wait_for_virtual_machine  $ip_address  $username    || die "Aborting..."
 setup_virtual_machine     $ip_address  $username    || die "Aborting..."
 wait_for_virtual_machine  $ip_address  $username    || die "Aborting..."
