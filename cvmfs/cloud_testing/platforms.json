@@ -203,7 +203,7 @@
   {
     "dist": "ubuntu2004",
     "config": "x86_64",
-    "image_id": "141b4b18-1a97-4228-b399-63f2b5fe9e10",
+    "image_id": "c7c6b23e-4047-4f0a-8712-b8f4980f5332",
     "label": "ubuntu2004_x86_64",
     "setup": "ubuntu_setup.sh",
     "test": "ubuntu_test.sh",
@@ -212,7 +212,7 @@
   {
     "dist": "ubuntu2004",
     "config": "x86_64_s3",
-    "image_id": "141b4b18-1a97-4228-b399-63f2b5fe9e10",
+    "image_id": "c7c6b23e-4047-4f0a-8712-b8f4980f5332",
     "label": "ubuntu2004_x86_64",
     "setup": "ubuntu_setup.sh",
     "test": "ubuntu_s3_test.sh",
@@ -221,10 +221,28 @@
   {
     "dist": "ubuntu2004",
     "config": "x86_64_overlayfs_metacopy",
-    "image_id": "141b4b18-1a97-4228-b399-63f2b5fe9e10",
+    "image_id": "c7c6b23e-4047-4f0a-8712-b8f4980f5332",
     "label": "ubuntu2004_x86_64",
     "setup": "ubuntu-overlayfs_metacopy_setup.sh",
     "test": "ubuntu_test.sh",
+    "user": "ubuntu"
+  },
+  {
+    "dist": "ubuntu2204",
+    "config": "x86_64",
+    "image_id": "141b4b18-1a97-4228-b399-63f2b5fe9e10",
+    "label": "ubuntu2204_x86_64",
+    "setup": "ubuntu_setup.sh",
+    "test": "ubuntu_test.sh",
+    "user": "ubuntu"
+  },
+  {
+    "dist": "ubuntu2204",
+    "config": "x86_64_s3",
+    "image_id": "141b4b18-1a97-4228-b399-63f2b5fe9e10",
+    "label": "ubuntu2204_x86_64",
+    "setup": "ubuntu_setup.sh",
+    "test": "ubuntu_s3_test.sh",
     "user": "ubuntu"
   },
   {
@@ -237,10 +255,28 @@
     "user": "debian"
   },
   {
+    "dist": "debian12",
+    "config": "x86_64",
+    "image_id": "fbde7f09-209a-4ad0-a870-a4a9902e40f7",
+    "label": "debian12_x86_64",
+    "setup": "debian_setup.sh",
+    "test": "debian_test.sh",
+    "user": "debian"
+  },
+  {
     "dist": "fedora34",
     "config": "x86_64",
     "image_id": "a64e527b-d534-4f0e-a1d5-c0cc42538f0c",
     "label": "fedora34_x86_64",
+    "setup": "fedora_setup.sh",
+    "test": "fedora_test.sh",
+    "user": "fedora"
+  },
+  {
+    "dist": "fedora38",
+    "config": "x86_64",
+    "image_id": "8748ecee-8928-470c-9bf0-2791c2350eb5",
+    "label": "fedora38_x86_64",
     "setup": "fedora_setup.sh",
     "test": "fedora_test.sh",
     "user": "fedora"
