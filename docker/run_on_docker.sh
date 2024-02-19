@@ -27,6 +27,10 @@ shift 2
 which docker > /dev/null 2>&1 || die "docker is not installed"
 
 case ${CVMFS_DOCKER_IMAGE} in
+  "debian12_aarch64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/debian_aarch64:12"
+    docker pull $image_name
+    ;;
   "ubuntu2204_aarch64")
     image_name="gitlab-registry.cern.ch/cernvm/build-images/ubuntu_aarch64:22.04"
     docker pull $image_name
