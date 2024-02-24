@@ -90,7 +90,7 @@ spawn_my_virtual_machine() {
   local retcode
 
   # special case for macos and yubikey testing node
-  if [ x"$platform" = "xosx_x86_64" ] || [ x"$image_id" = "xcvm-yubikey01" ]; then
+  if [ x"$platform" = "xosx_x86_64" ] || [ x"$platform" = "xosx_aarch64" ] || [ x"$image_id" = "xcvm-yubikey01" ]; then
     ip_address=$(getent ahostsv4 $image_id | head -n1 | awk '{ print $1}')
     retcode=$?
     [ $retcode -eq 0 ] || return $retcode
@@ -263,7 +263,7 @@ tear_down_yubikey_vm() {
 }
 
 tear_down() {
-  if [ "x$platform" = "xosx_x86_64" ]; then
+  if [ "x$platform" = "xosx_x86_64" ] || [  "x$platform" = "xosx_aarch64" ]; then
     cleanup_test_machine $ip_address $username        || die "Cleanup of OSX machine failed!"
   elif [ x"$image_id" = "xcvm-yubikey01" ]; then
     tear_down_yubikey_vm $ip_address                  || die "Teardown of Yubikey VM failed!"
@@ -403,7 +403,7 @@ echo "  config:     $config_packages"
 echo "  container:  $service_container"
 echo "---"
 
-if [ x"$platform" != "xosx_x86_64" ]; then
+if [ x"${platform:0:3}" != "xosx" ]; then
   # check if all necessary packages were found
   if [ x"$server_package"        = "x" ] ||
     [ x"$client_package"        = "x" ] ||

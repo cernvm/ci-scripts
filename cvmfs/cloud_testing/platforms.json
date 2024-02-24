@@ -291,6 +291,15 @@
     "user": "sftnight"
   },
   {
+    "dist": "macos",
+    "config": "aarch64",
+    "image_id": "cernvm-mac-m1-3",
+    "label": "osx_aarch64",
+    "setup": "macos_setup.sh",
+    "test": "macos_test.sh",
+    "user": "sftnight"
+  },
+  {
     "dist": "el7",
     "config": "x86_64_yubikey",
     "image_id": "cvm-yubikey01",
