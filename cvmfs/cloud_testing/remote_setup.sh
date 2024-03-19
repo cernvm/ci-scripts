@@ -177,7 +177,7 @@ exec &> ${cvmfs_log_directory}/setup.log
 echo "*** Called remote_setup.sh with options $@"
 
 # read parameters
-while getopts "r:s:c:d:t:g:k:w:p:u:e:f:D:C:L:" option; do
+while getopts "r:s:c:d:t:g:k:w:p:u:e:f:D:C:L:Z:" option; do
   case $option in
     r)
       platform_script=$OPTARG
