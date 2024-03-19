@@ -379,20 +379,6 @@ if [ ! -f $platform_script_abs ]; then
   exit 7
 fi
 
-echo "Checking if download of local geodb is needed... $geoip_local_url"
-# url for local download of geodb
-if [ x$geoip_local_url != "x" ]; then
-  dbfile="/var/lib/cvmfs-server/geo/GeoLite2-City-test.mmdb"
-  sudo mkdir -p /var/lib/cvmfs-server/geo/
-  echo "Downloading $geoip_local_url ..."
-  curl  $geoip_local_url -o /tmp/testgeo.mmdb
-  sudo mv /tmp/testgeo.mmdb $dbfile
-  if ! [ -f $dbfile ]; then
-    echo "failed to download geodb!"
-    exit 300
-  fi
-  echo "CVMFS_GEO_DB_FILE=$dbfile" | sudo tee -a /etc/cvmfs/server.local > /dev/null
-fi
 
 
 # run the platform specific script to perform platform specific test setups
@@ -418,3 +404,18 @@ fi
 echo "  --> calling $platform_script_abs $args"
 sudo -H -E -u $test_username bash $platform_script_abs $args
 
+echo "Checking if download of local geodb is needed... $geoip_local_url"
+# url for local download of geodb
+if [ x$geoip_local_url != "x" ]; then
+  dbfile="/var/lib/cvmfs-server/geo/GeoLite2-City-test.mmdb"
+  sudo mkdir -p /var/lib/cvmfs-server/geo/
+  echo "Downloading $geoip_local_url ..."
+  curl  $geoip_local_url -o /tmp/testgeo.mmdb
+  sudo mv /tmp/testgeo.mmdb $dbfile
+  if ! [ -f $dbfile ]; then
+    echo "failed to download geodb!"
+    exit 300
+  fi
+  sudo mkdir -p /etc/cvmfs
+  echo "CVMFS_GEO_DB_FILE=$dbfile" | sudo tee -a /etc/cvmfs/server.local > /dev/null
+fi
