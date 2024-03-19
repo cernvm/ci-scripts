@@ -125,6 +125,7 @@ gateway_package=""
 ducc_package=""
 service_container=""
 test_username="sftnight"
+geoip_local_url=""
 
 # RHEL (SLC) requires a tty for sudo... work around that
 sudo_fix="Defaults:root !requiretty"
@@ -378,6 +379,21 @@ if [ ! -f $platform_script_abs ]; then
   exit 7
 fi
 
+echo "Checking if download of local geodb is needed... $geoip_local_url"
+# url for local download of geodb
+if [ x$geoip_local_url != "x" ]; then
+  local dbfile="/var/lib/cvmfs-server/geo/GeoLite2-City-test.mmdb"
+  sudo mkdir -P /var/lib/cvmfs-server/geo/
+  echo "Downloading $geoip_local_url ..."
+  curl  $geoip_local_url -o /tmp/testgeo.mmdb
+  sudo mv /tmp/testgeo.mmdb $dbfile
+  if ! [ -f $dbfile ]; then
+    echo "failed to download geodb!"
+    exit 300
+  fi
+  echo "CVMFS_GEO_DB_FILE=$dbfile" | sudo tee -a /etc/cvmfs/server.local > /dev/null
+fi
+
 
 # run the platform specific script to perform platform specific test setups
 echo "running platform specific script $platform_script... "
@@ -402,15 +418,3 @@ fi
 echo "  --> calling $platform_script_abs $args"
 sudo -H -E -u $test_username bash $platform_script_abs $args
 
-# url for local download of geodb
-if [ x$geoip_local_url != "x" ]; then
-  local dbfile="/var/lib/cvmfs-server/geo/GeoLite2-City-test.mmdb"
-  echo "Downloading $geoip_local_url ..."
-  curl  $geoip_local_url -o /tmp/testgeo.mmdb
-  sudo mv /tmp/testgeo.mmdb $dbfile
-  if ! [ -f $dbfile ]; then
-    echo "failed to download geodb!"
-    exit 300
-  fi
-  echo "CVMFS_GEO_DB_FILE=$dbfile" | sudo tee -a /etc/cvmfs/server.local > /dev/null
-fi
