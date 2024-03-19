@@ -382,8 +382,8 @@ fi
 echo "Checking if download of local geodb is needed... $geoip_local_url"
 # url for local download of geodb
 if [ x$geoip_local_url != "x" ]; then
-  local dbfile="/var/lib/cvmfs-server/geo/GeoLite2-City-test.mmdb"
-  sudo mkdir -P /var/lib/cvmfs-server/geo/
+  dbfile="/var/lib/cvmfs-server/geo/GeoLite2-City-test.mmdb"
+  sudo mkdir -p /var/lib/cvmfs-server/geo/
   echo "Downloading $geoip_local_url ..."
   curl  $geoip_local_url -o /tmp/testgeo.mmdb
   sudo mv /tmp/testgeo.mmdb $dbfile
