@@ -29,6 +29,7 @@ usage() {
   echo "Optional parameters:"
   echo "-p <platform path>         custom search path for platform specific script"
   echo "-u <user name>             user name to use for test run"
+  echo "-Z <geoip local url>       Local url for geoip db download"
   echo
   echo "You must provide http addresses for all packages and tar balls. They will"
   echo "be downloaded and executed to test CVMFS on various platforms"
@@ -220,6 +221,9 @@ while getopts "r:s:c:d:t:g:k:w:p:u:e:f:D:C:L:" option; do
     p)
       platform_script_path=$OPTARG
       ;;
+    Z)
+      geoip_local_url=$OPTARG
+      ;;
     u)
       test_username=$OPTARG
       ;;
@@ -374,6 +378,7 @@ if [ ! -f $platform_script_abs ]; then
   exit 7
 fi
 
+
 # run the platform specific script to perform platform specific test setups
 echo "running platform specific script $platform_script... "
 args="-t $cvmfs_source_directory \
@@ -396,3 +401,16 @@ if [ x"$ducc_package" != "x" ]; then
 fi
 echo "  --> calling $platform_script_abs $args"
 sudo -H -E -u $test_username bash $platform_script_abs $args
+
+# url for local download of geodb
+if [ x$geoip_local_url != "x" ]; then
+  local dbfile="/var/lib/cvmfs-server/geo/GeoLite2-City-test.mmdb"
+  echo "Downloading $geoip_local_url ..."
+  curl  $geoip_local_url -o /tmp/testgeo.mmdb
+  sudo mv /tmp/testgeo.mmdb $dbfile
+  if ! [ -f $dbfile ]; then
+    echo "failed to download geodb!"
+    exit 300
+  fi
+  echo "CVMFS_GEO_DB_FILE=$dbfile" | sudo tee -a /etc/cvmfs/server.local > /dev/null
+fi

@@ -43,6 +43,7 @@ source_tarball="source.tar.gz" # will be prepended by ${testee_url} later
 
 suites=""
 geoip_key=""
+geoip_local_url=""
 
 # global variables (get filled by spawn_virtual_machine)
 ip_address=""
@@ -76,6 +77,7 @@ usage() {
   echo " -l <custom client URL>       URL to a nightly build for a custom CVMFS client"
   echo " -s <test suite labels>       Restrict tests to given suite names"
   echo " -G <geoip key>               Download key for GeoIP database"
+  echo " -Z <geoip local url>         Local URL for GeoIP database"
   echo " -F <destroy failed VMs>      Destroy VMs with failed tests"
 
 
@@ -159,6 +161,9 @@ setup_virtual_machine() {
   fi
   if [ "x$ducc_package" != "x" ]; then
     args="$args -D $ducc_package"
+  fi
+  if [ "x$geoip_local_url" != "x" ]; then
+    args="$args -Z $geoip_local_url"
   fi
   run_script_on_virtual_machine $args
 
@@ -348,6 +353,9 @@ while getopts "r:b:u:p:e:a:d:m:c:l:s:D:G:F" option; do
       ;;
     G)
       geoip_key="$OPTARG"
+      ;;
+    Z)
+      geoip_local_url="$OPTARG"
       ;;
     F)
       destroy_failed="yes"

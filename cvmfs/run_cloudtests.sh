@@ -39,6 +39,10 @@ geoip_key=
 if [ "x$CVMFS_TEST_GEO_LICENSE_KEY" != x ]; then
   geoip_key="-G $CVMFS_TEST_GEO_LICENSE_KEY"
 fi
+geoip_local_url=
+if [ "x$CVMFS_TEST_GEO_DB_URL" != x ]; then
+  geoip_local_url="-Z $CVMFS_TEST_GEO_DB_URL"
+fi
 destroy_failed=
 if [ "x${CVMFS_DESTROY_FAILED_VMS}" = "xtrue" ]; then
   destroy_failed='-F'
@@ -64,5 +68,5 @@ ${SCRIPT_LOCATION}/cloud_testing/run.sh                        \
         -m  $(get_platform_parameter 'user'    "$vm_desc")     \
         -c "$(get_platform_parameter 'context' "$vm_desc")"    \
         -l "$CVMFS_CLIENT_TESTEE_URL"                          \
-        $suites $geoip_key $destroy_failed
+        $suites $geoip_key $geoip_local_url $destroy_failed
 
