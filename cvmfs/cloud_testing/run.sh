@@ -43,6 +43,7 @@ source_tarball="source.tar.gz" # will be prepended by ${testee_url} later
 
 suites=""
 geoip_key=""
+geoip_account_id=""
 geoip_local_url=""
 
 # global variables (get filled by spawn_virtual_machine)
@@ -77,6 +78,7 @@ usage() {
   echo " -l <custom client URL>       URL to a nightly build for a custom CVMFS client"
   echo " -s <test suite labels>       Restrict tests to given suite names"
   echo " -G <geoip key>               Download key for GeoIP database"
+  echo " -K <geoip account id>        Account ID for GeoIP database"
   echo " -Z <geoip local url>         Local URL for GeoIP database"
   echo " -F <destroy failed VMs>      Destroy VMs with failed tests"
 
@@ -212,6 +214,9 @@ run_test_cases() {
   if [ "x$geoip_key" != "x" ]; then
     args="$args -G $geoip_key"
   fi
+  if [ "x$geoip_account_id" != "x" ]; then
+    args="$args -K $geoip_account_id"
+  fi
 
   run_script_on_virtual_machine $args
 
@@ -316,7 +321,7 @@ get_test_results() {
 
 echo "Running cloud tests as $0 $@"
 
-while getopts "r:b:u:p:e:a:d:m:c:l:s:D:G:FZ::" option; do
+while getopts "r:b:u:p:e:a:d:m:c:l:s:D:G:K:FZ::" option; do
   case $option in
     r)
       platform_run_script=$OPTARG
@@ -353,6 +358,9 @@ while getopts "r:b:u:p:e:a:d:m:c:l:s:D:G:FZ::" option; do
       ;;
     G)
       geoip_key="$OPTARG"
+      ;;
+    K)
+      geoip_account_id="$OPTARG"
       ;;
     Z)
       geoip_local_url="$OPTARG"

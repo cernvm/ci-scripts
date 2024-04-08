@@ -39,6 +39,10 @@ geoip_key=
 if [ "x$CVMFS_TEST_GEO_LICENSE_KEY" != x ]; then
   geoip_key="-G $CVMFS_TEST_GEO_LICENSE_KEY"
 fi
+geoip_account_id=
+if [ "x$CVMFS_TEST_GEO_ACCOUNT_ID" != x ]; then
+  geoip_account_id="-K $CVMFS_TEST_GEO_ACCOUNT_ID"
+fi
 geoip_local_url=
 if [ "x$CVMFS_TEST_GEO_DB_URL" != x ]; then
   geoip_local_url="-Z $CVMFS_TEST_GEO_DB_URL"

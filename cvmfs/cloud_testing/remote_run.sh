@@ -24,6 +24,7 @@ usage() {
   echo "-u <user name>          user name to use for test run"
   echo "-S <test suite labels>  Restrict tests to given suite names"
   echo "-G <geoip download key> Dowload key for geoip database"
+  echo "-K <geoip account id>   Account ID for geoip database"
 
   exit 1
 }
@@ -56,6 +57,7 @@ libs_package=""
 config_package=""
 suites=""
 geoip_key=""
+geoip_account_id=""
 
 # from now on everything is logged to the logfile
 # Note: the only output of this script is the absolute path to the generated
@@ -70,7 +72,7 @@ exec &>                                  $RUN_LOGFILE
 cd $cvmfs_workspace
 
 # read parameters
-while getopts "r:s:c:d:g:k:L:p:u:S:G:" option; do
+while getopts "r:s:c:d:g:k:L:p:u:S:G:K:" option; do
   case $option in
     r)
       platform_script=$OPTARG
@@ -101,6 +103,9 @@ while getopts "r:s:c:d:g:k:L:p:u:S:G:" option; do
       ;;
     G)
       geoip_key="$OPTARG"
+      ;;
+    K)
+      geoip_account_id="$OPTARG"
       ;;
     ?)
       shift $(($OPTIND-2))
@@ -176,6 +181,9 @@ if [ "x$suites" != "x" ]; then
 fi
 if [ "x$geoip_key" != "x" ]; then
   args="$args -G $geoip_key"
+fi
+if [ "x$geoip_account_id" != "x" ]; then
+  args="$args -K $geoip_account_id"
 fi
 
 sudo -H -E -u $test_username bash $platform_script_abs $args
