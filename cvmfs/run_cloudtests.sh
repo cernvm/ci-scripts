@@ -72,5 +72,5 @@ ${SCRIPT_LOCATION}/cloud_testing/run.sh                        \
         -m  $(get_platform_parameter 'user'    "$vm_desc")     \
         -c "$(get_platform_parameter 'context' "$vm_desc")"    \
         -l "$CVMFS_CLIENT_TESTEE_URL"                          \
-        $suites $geoip_key $geoip_local_url $destroy_failed
+        $suites $geoip_key $geoip_account_id $geoip_local_url $destroy_failed
 
