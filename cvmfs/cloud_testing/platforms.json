@@ -246,6 +246,24 @@
     "user": "ubuntu"
   },
   {
+    "dist": "ubuntu2404",
+    "config": "x86_64",
+    "image_id": "f2bb57d2-0af7-4b83-852d-9224720cf120",
+    "label": "ubuntu2404_x86_64",
+    "setup": "ubuntu_setup.sh",
+    "test": "ubuntu_test.sh",
+    "user": "ubuntu"
+  },
+  {
+    "dist": "ubuntu2404",
+    "config": "x86_64_s3",
+    "image_id": "f2bb57d2-0af7-4b83-852d-9224720cf120",
+    "label": "ubuntu2404_x86_64",
+    "setup": "ubuntu_setup.sh",
+    "test": "ubuntu_s3_test.sh",
+    "user": "ubuntu"
+  },
+  {
     "dist": "debian11",
     "config": "x86_64",
     "image_id": "3dd855f5-071b-4454-916a-eebabb6b011e",
@@ -277,6 +295,15 @@
     "config": "x86_64",
     "image_id": "8748ecee-8928-470c-9bf0-2791c2350eb5",
     "label": "fedora38_x86_64",
+    "setup": "fedora_setup.sh",
+    "test": "fedora_test.sh",
+    "user": "fedora"
+  },
+  {
+    "dist": "fedora40",
+    "config": "x86_64",
+    "image_id": "57f54a48-dd2e-48c8-8e34-d07ef0ea7e10",
+    "label": "fedora40_x86_64",
     "setup": "fedora_setup.sh",
     "test": "fedora_test.sh",
     "user": "fedora"
