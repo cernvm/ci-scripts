@@ -402,7 +402,7 @@ if [ x"$ducc_package" != "x" ]; then
   args="$args -D $ducc_package"
 fi
 echo "  --> calling $platform_script_abs $args"
-sudo -H -E -u $test_username bash $platform_script_abs $args
+sudo -H -E -u $test_username bash $platform_script_abs $args || exit 8
 
 echo "Checking if download of local geodb is needed... $geoip_local_url"
 # url for local download of geodb
