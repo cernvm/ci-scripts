@@ -327,10 +327,10 @@
     "user": "sftnight"
   },
   {
-    "dist": "el7",
+    "dist": "el9",
     "config": "x86_64_yubikey",
     "image_id": "cvm-yubikey01",
-    "label": "cc7_x86_64",
+    "label": "cc9_x86_64",
     "setup": "yubikey_setup.sh",
     "test": "yubikey_test.sh",
     "user": "sftnight"
