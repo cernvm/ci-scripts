@@ -60,6 +60,14 @@ if [ "x$CVMFS_PLATFORM" == "xmacos" ]; then
   echo "... lock aquired."
 fi
 
+if [ "x$CVMFS_PLATFORM_CONFIG" == "x86_64_yubikey" ]; then
+   echo "Waiting to get lock for yubikey machine ..."
+  _cleanup_lock() { flock -u 999;}
+  exec 999>/tmp/cvm-yubikey01.lock; trap _cleanup_lock EXIT
+  flock 999
+  echo "... lock aquired."
+fi
+
 
 echo "Running cloud tests for $CVMFS_PLATFORM / $CVMFS_PLATFORM_CONFIG ..."
 ${SCRIPT_LOCATION}/cloud_testing/run.sh                        \
