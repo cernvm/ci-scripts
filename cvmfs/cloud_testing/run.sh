@@ -15,10 +15,6 @@ cvmfs_workspace="/tmp/cvmfs-test-workspace"
 cvmfs_source_directory="${cvmfs_workspace}/cvmfs-source"
 cvmfs_log_directory="${cvmfs_workspace}/logs"
 
-# yubikey test node specific information
-YUBIKEY_SSH_PORT=2222
-YUBIKEY_VM_STARTUP_SCRIPT='/root/centos7-cloudtesting_start.sh'
-YUBIKEY_VM_TEARDOWN_SCRIPT='/root/centos7-cloudtesting_teardown.sh'
 
 # global variables for external script parameters
 testee_url=""
@@ -98,12 +94,6 @@ spawn_my_virtual_machine() {
     ip_address=$(getent ahostsv4 $image_id | head -n1 | awk '{ print $1}')
     retcode=$?
     [ $retcode -eq 0 ] || return $retcode
-
-    # need to set up the VM on yubikey testing node
-    # run a script prepared by Ansible in root home directory
-    if [ x"$image_id" = "xcvm-yubikey01" ]; then
-      start_yubikey_vm $ip_address || retcode=$?
-    fi
 
     return $retcode
   fi
@@ -248,35 +238,11 @@ cleanup_test_machine() {
   fi
 }
 
-start_yubikey_vm() {
-  local ip_address=$1
-  echo -n "Setting up VM on cvm-yubikey01 node... "
-  ssh -i $OPENSTACK_KEY_LOCATION -o StrictHostKeyChecking=no     \
-                           -o UserKnownHostsFile=/dev/null \
-                           -o LogLevel=ERROR               \
-                           -o BatchMode=yes                \
-      root@${ip_address} $YUBIKEY_VM_STARTUP_SCRIPT > /dev/null 2>&1
-  retcode=$?
-  check_retcode $retcode || return $retcode
-}
 
-tear_down_yubikey_vm() {
-  local ip_address=$1
-  echo -n "Tearing down VM on cvm-yubikey01 node... "
-  ssh -i $OPENSTACK_KEY_LOCATION -o StrictHostKeyChecking=no     \
-                           -o UserKnownHostsFile=/dev/null \
-                           -o LogLevel=ERROR               \
-                           -o BatchMode=yes                \
-      root@${ip_address} $YUBIKEY_VM_TEARDOWN_SCRIPT > /dev/null 2>&1
-  retcode=$?
-  check_retcode $retcode || return $retcode
-}
 
 tear_down() {
   if [ "x$platform" = "xosx_x86_64" ] || [  "x$platform" = "xosx_aarch64" ]; then
     cleanup_test_machine $ip_address $username        || die "Cleanup of OSX machine failed!"
-  elif [ x"$image_id" = "xcvm-yubikey01" ]; then
-    tear_down_yubikey_vm $ip_address                  || die "Teardown of Yubikey VM failed!"
   else
     tear_down_virtual_machine $instance_id            || die "Teardown of VM failed!"
   fi
@@ -467,11 +433,6 @@ fi
 
 echo "libs_package: $libs_package"
 
-# special case: yubikey testing node runs a VM accesible by port 2222
-if [ x"$image_id" = "xcvm-yubikey01" ]; then
-  export CLOUD_TESTING_SSH_PORT=$YUBIKEY_SSH_PORT
-  echo "Setting custom port for ssh $CLOUD_TESTING_SSH_PORT"
-fi
 
 # load Openstack configuration
 . $openstack_config
