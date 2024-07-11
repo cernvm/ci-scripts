@@ -243,6 +243,8 @@ cleanup_test_machine() {
 tear_down() {
   if [ "x$platform" = "xosx_x86_64" ] || [  "x$platform" = "xosx_aarch64" ]; then
     cleanup_test_machine $ip_address $username        || die "Cleanup of OSX machine failed!"
+  elif [ x"$image_id" = "xcvm-yubikey01" ]; then
+    echo "No tear down needed for yubikey machine"     || die "Cleanup of Yubikey machine failed!"
   else
     tear_down_virtual_machine $instance_id            || die "Teardown of VM failed!"
   fi
