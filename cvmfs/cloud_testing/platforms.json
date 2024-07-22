@@ -120,6 +120,16 @@
     "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
   },
   {
+    "dist": "el9",
+    "config": "x86_64_streamingcache",
+    "image_id": "cdaa32a3-e67a-4e45-821c-51856fbaaebc",
+    "label": "cc9_x86_64",
+    "setup": "el9_x86_64-STREAMINGCACHE_setup.sh",
+    "test": "el9_x86_64-STREAMINGCACHE_test.sh",
+    "user": "root",
+    "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
+  },
+  {
     "dist": "ubuntu1404",
     "config": "x86_64",
     "image_id": "3c7a1747-8529-411a-8d0f-ccb6b7102221",
