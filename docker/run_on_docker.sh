@@ -228,7 +228,7 @@ if is_macos; then
 else
   # Use the host's docker for building images as long as we cannot use
   # buildah (host kernel too old)
-  sudo chown root:$(id -g) /var/run/docker.sock
+  sudo chown root:$(id -g) /var/run/docker.sock || true
 
   docker run \
                   --volume="$WORKSPACE":"$WORKSPACE"                 \
