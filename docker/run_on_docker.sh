@@ -229,6 +229,7 @@ else
   # buildah (host kernel too old)
 
   docker run \
+                  --userns=keep-id                                   \
                   --volume="$WORKSPACE":"$WORKSPACE"                 \
                   --volume=/usr/bin/docker:/usr/bin/docker           \
                   --user=${uid}:${gid}                               \
