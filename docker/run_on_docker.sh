@@ -220,7 +220,6 @@ set -x
 if is_macos; then
   docker run \
                   --volume="$WORKSPACE":"$WORKSPACE"                 \
-                  --volume=/var/run/docker.sock:/var/run/docker.sock \
                   --rm=true                                          \
                   --privileged=true                                  \
                   $args $image_name                                  \
@@ -228,11 +227,9 @@ if is_macos; then
 else
   # Use the host's docker for building images as long as we cannot use
   # buildah (host kernel too old)
-  sudo chown root:$(id -g) /var/run/docker.sock || true
 
   docker run \
                   --volume="$WORKSPACE":"$WORKSPACE"                 \
-                  --volume=/var/run/docker.sock:/var/run/docker.sock \
                   --volume=/usr/bin/docker:/usr/bin/docker           \
                   --user=${uid}:${gid}                               \
                   --rm=true                                          \
