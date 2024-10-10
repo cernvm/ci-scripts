@@ -212,6 +212,8 @@ for var in $(env | grep -ohe "^\(CVMFS\|CERNVM\)_[^=]*"); do
 done
 args="--env GOCACHE=$WORKSPACE/.gocache $args"
 
+
+
 uid=$(id -u)
 gid=$(id -g)
 mkdir -p $WORKSPACE
@@ -225,11 +227,14 @@ if is_macos; then
                   $args $image_name                                  \
                   "$@"
 else
+
+if [ "snapshotter_x86_64" != "$CVMFS_DOCKER_IMAGE" ]; do
+  args="--userns=keep-id $args"
+done
   # Use the host's docker for building images as long as we cannot use
   # buildah (host kernel too old)
 
   docker run \
-                  --userns=keep-id                                   \
                   --volume="$WORKSPACE":"$WORKSPACE"                 \
                   --volume=/usr/bin/docker:/usr/bin/docker           \
                   --user=${uid}:${gid}                               \
