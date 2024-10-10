@@ -228,7 +228,7 @@ if is_macos; then
                   "$@"
 else
 
-if [ "snapshotter_x86_64" != "$CVMFS_DOCKER_IMAGE" ]; do
+if [ "snapshotter_x86_64" != "$CVMFS_DOCKER_IMAGE" ] && [ "container_x86_64" != "$CVMFS_DOCKER_IMAGE" ]; do
   args="--userns=keep-id $args"
 done
   # Use the host's docker for building images as long as we cannot use
