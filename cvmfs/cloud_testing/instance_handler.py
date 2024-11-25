@@ -68,6 +68,7 @@ def spawn_instance(connection, instance_name, image, key_name, flavor, userdata,
       if instance != None:
         instance_id    = str(instance.id)
         instance_state = str(instance.status)
+        print("Removing failed instance: ", instance_id, instance_state)
         kill_instance(connection, instance_id)
       print_error("Failed spawning instance " + instance_id +
                   " (#: " + str(retries) + " | state: " + instance_state + ")")
