@@ -92,7 +92,7 @@
   {
     "dist": "el9",
     "config": "x86_64",
-    "image_id": "cdaa32a3-e67a-4e45-821c-51856fbaaebc",
+    "image_id": "a66d983a-95e9-46b9-a9de-d67dfe5e2031",
     "label": "cc9_x86_64",
     "setup": "centos9_x86_64_setup.sh",
     "test": "centos9_x86_64_test.sh",
@@ -102,7 +102,7 @@
   {
     "dist": "el9",
     "config": "x86_64_fuse3",
-    "image_id": "cdaa32a3-e67a-4e45-821c-51856fbaaebc",
+    "image_id": "a66d983a-95e9-46b9-a9de-d67dfe5e2031",
     "label": "cc9_x86_64",
     "setup": "centos9_x86_64-FUSE3_setup.sh",
     "test": "centos9_x86_64-FUSE3_test.sh",
@@ -112,7 +112,7 @@
   {
     "dist": "el9",
     "config": "x86_64_container",
-    "image_id": "cdaa32a3-e67a-4e45-821c-51856fbaaebc",
+    "image_id": "a66d983a-95e9-46b9-a9de-d67dfe5e2031",
     "label": "cc9_x86_64",
     "setup": "el9_x86_64-CONTAINER_setup.sh",
     "test": "el9_x86_64-CONTAINER_test.sh",
@@ -122,7 +122,7 @@
   {
     "dist": "el9",
     "config": "x86_64_streamingcache",
-    "image_id": "cdaa32a3-e67a-4e45-821c-51856fbaaebc",
+    "image_id": "a66d983a-95e9-46b9-a9de-d67dfe5e2031",
     "label": "cc9_x86_64",
     "setup": "centos9_x86_64-STREAMINGCACHE_setup.sh",
     "test": "centos9_x86_64-STREAMINGCACHE_test.sh",
