@@ -31,6 +31,10 @@ case ${CVMFS_DOCKER_IMAGE} in
     image_name="gitlab-registry.cern.ch/cernvm/build-images/debian_aarch64:12"
     docker pull $image_name
     ;;
+  "debian11_aarch64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/debian_aarch64:11"
+    docker pull $image_name
+    ;;
   "ubuntu2404_aarch64")
     image_name="gitlab-registry.cern.ch/cernvm/build-images/ubuntu_aarch64:24.04"
     docker pull $image_name
@@ -89,6 +93,18 @@ case ${CVMFS_DOCKER_IMAGE} in
     ;;
   "sles15_x86_64")
     image_name="gitlab-registry.cern.ch/cernvm/build-images/sles_x86_64:15"
+    docker pull $image_name
+    ;;
+  "fedora41_aarch64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/fedora_aarch64:41"
+    docker pull $image_name
+    ;;
+  "fedora40_aarch64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/fedora_aarch64:40"
+    docker pull $image_name
+    ;;
+  "fedora41_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/fedora_x86_64:41"
     docker pull $image_name
     ;;
   "fedora40_x86_64")
