@@ -130,6 +130,16 @@
     "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
   },
   {
+    "dist": "el10",
+    "config": "x86_64",
+    "image_id": "26def8e0-0326-4ff0-ac21-8bf0eed9c2c5",
+    "label": "cc10_x86_64",
+    "setup": "centos10_x86_64_setup.sh",
+    "test": "centos10_x86_64_test.sh",
+    "user": "root",
+    "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
+  },
+  {
     "dist": "ubuntu1404",
     "config": "x86_64",
     "image_id": "3c7a1747-8529-411a-8d0f-ccb6b7102221",
