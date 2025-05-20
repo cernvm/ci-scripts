@@ -11,16 +11,6 @@
   },
   {
     "dist": "el7",
-    "config": "x86_64_s3",
-    "image_id": "f8c3779d-10e7-4b6b-bd9b-7365401a7902",
-    "label": "cc7_x86_64",
-    "setup": "centos7_x86_64_setup.sh",
-    "test": "centos7_x86_64_s3_test.sh",
-    "user": "root",
-    "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
-  },
-  {
-    "dist": "el7",
     "config": "x86_64_exlcache",
     "image_id": "f8c3779d-10e7-4b6b-bd9b-7365401a7902",
     "label": "cc7_x86_64",
@@ -126,6 +116,16 @@
     "label": "cc9_x86_64",
     "setup": "centos9_x86_64-STREAMINGCACHE_setup.sh",
     "test": "centos9_x86_64-STREAMINGCACHE_test.sh",
+    "user": "root",
+    "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
+  },
+  {
+    "dist": "el9",
+    "config": "x86_64_s3",
+    "image_id": "a66d983a-95e9-46b9-a9de-d67dfe5e2031",
+    "label": "cc9_x86_64",
+    "setup": "centos9_x86_64_setup.sh",
+    "test": "centos9_x86_64_s3_test.sh",
     "user": "root",
     "context": "#!/bin/sh\n echo 'Defaults !requiretty' | tee --append /etc/sudoers \n echo 'Defaults visiblepw' | tee --append /etc/sudoers"
   },
