@@ -27,6 +27,10 @@ shift 2
 which docker > /dev/null 2>&1 || die "docker is not installed"
 
 case ${CVMFS_DOCKER_IMAGE} in
+  "debian13_aarch64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/debian_aarch64:13"
+    docker pull $image_name
+    ;;
   "debian12_aarch64")
     image_name="gitlab-registry.cern.ch/cernvm/build-images/debian_aarch64:12"
     docker pull $image_name
@@ -137,6 +141,10 @@ case ${CVMFS_DOCKER_IMAGE} in
     ;;
   "fedora30_i386")
     image_name="gitlab-registry.cern.ch/cernvm/build-images/fedora_i386:30"
+    docker pull $image_name
+    ;;
+  "debian13_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/debian_x86_64:12"
     docker pull $image_name
     ;;
   "debian12_x86_64")
