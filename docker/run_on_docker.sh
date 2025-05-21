@@ -144,7 +144,7 @@ case ${CVMFS_DOCKER_IMAGE} in
     docker pull $image_name
     ;;
   "debian13_x86_64")
-    image_name="gitlab-registry.cern.ch/cernvm/build-images/debian_x86_64:12"
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/debian_x86_64:13"
     docker pull $image_name
     ;;
   "debian12_x86_64")
