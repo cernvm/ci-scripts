@@ -49,7 +49,7 @@ echo "Commits unique to ${feature_branch}: ${#feature_commits[@]}"
 
 # 3. Check each commit title against main branch history
 echo
-printf '%-12s | %-8s | %s\n' "Commit SHA" "In main?" "Title"
+printf '%-12s | %-8s | %s\n' "Commit SHA" "In devel?" "Title"
 printf '%.0s-' {1..80}
 echo
 
