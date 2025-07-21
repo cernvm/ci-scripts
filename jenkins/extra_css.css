@@ -1,10 +1,30 @@
+
+
+/* matrix view: align icon on left, otherwise no proper alignment of icons */
 td.matrix-cell {
   border: 1px var(--medium-grey) solid;
   text-align: left;
 }
 
+/* coverage report: use background colors that don't burn the eyes */
 table.source tr.coverFull {
-	background-color: hsla(135, 65.5%, 21.6%, 0.53);
+	background-color: hsla(135, 65.5%, 21.6%, 0.53) !important;
 	color: var(--white);
 	font-weight: bold;
+}
+
+table.source tr.coverPart {
+    background-color: rgba(174, 117, 7, 0.84) !important;
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+table.source tr.coverNone {
+    background-color: hsla(0, 88.9%, 31.8%, 0.69) !important;
+    color: var(--white);
+    font-weight: bold;
+}
+
+table.source tr.noCover {
+  color: rgba(var(--textcolor), 0.7) !important;
 }
