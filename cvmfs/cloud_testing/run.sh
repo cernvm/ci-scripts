@@ -34,7 +34,6 @@ server_package=""
 client_package=""
 devel_package=""
 config_packages=""  # might be more than one... BEWARE OF SPACES!!
-unittest_package=""
 source_tarball="source.tar.gz" # will be prepended by ${testee_url} later
 
 suites=""
@@ -135,9 +134,6 @@ setup_virtual_machine() {
   fi
   if [ "x$devel_package" != "x" ]; then
     args="$args -d $devel_package"
-  fi
-  if [ "x$unittest_package" != "x" ]; then
-    args="$args -g $unittest_package"
   fi
   if [ "x$shrinkwrap_package" != "x" ]; then
     args="$args -e $shrinkwrap_package"
@@ -367,7 +363,6 @@ client_package=$(read_package_map     ${ctu}/pkgmap "$platform" 'client'    )
 fuse3_package=$(read_package_map      ${ctu}/pkgmap "$platform" 'fuse3'     )
 server_package=$(read_package_map     ${otu}/pkgmap "$platform" 'server'    )
 devel_package=$(read_package_map      ${ctu}/pkgmap "$platform" 'devel'     )
-unittest_package=$(read_package_map   ${otu}/pkgmap "$platform" 'unittests' )
 shrinkwrap_package=$(read_package_map ${otu}/pkgmap "$platform" 'shrinkwrap')
 gateway_package=$(read_package_map    ${otu}/pkgmap "$platform" 'gateway'   )
 ducc_package=$(read_package_map       ${otu}/pkgmap "$platform" 'ducc'      )
@@ -379,7 +374,6 @@ echo "  client:     $client_package"
 echo "  fuse3:      $fuse3_package"
 echo "  server:     $server_package"
 echo "  devel:      $devel_package"
-echo "  unittest:   $unittest_package"
 echo "  shrinkwrap: $shrinkwrap_package"
 echo "  gateway:    $gateway_package"
 echo "  ducc:       $ducc_package"
@@ -393,10 +387,9 @@ if [ x"${platform:0:3}" != "xosx" ]; then
     [ x"$client_package"        = "x" ] ||
     [ x"$devel_package"         = "x" ] ||
     [ x"$config_packages"       = "x" ] ||
-    [ x"$unittest_package"      = "x" ] ||
     [ x"$libs_package"      = "x" ] ||
     [ x"$shrinkwrap_package"    = "x" ]; then
-    usage "Incomplete pkgmap file"
+    echo  "warning: Incomplete pkgmap file"
   fi
 
 
@@ -414,7 +407,6 @@ if [ x"${platform:0:3}" != "xosx" ]; then
 
   server_package="${otu}/${server_package}"
   devel_package="${ctu}/${devel_package}"
-  unittest_package="${otu}/${unittest_package}"
   shrinkwrap_package="${otu}/${shrinkwrap_package}"
   libs_package="${ctu}/${libs_package}"
   config_package_urls=""
