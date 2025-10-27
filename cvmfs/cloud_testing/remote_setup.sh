@@ -19,7 +19,6 @@ usage() {
   echo "-f <cvmfs_fuse3 package>   cvmfs_libfuse3 package to be tested"
   echo "-d <cvmfs devel package>   CernVM-FS devel package to be tested (Linux only)"
   echo "-t <cvmfs source tarball>  CernVM-FS sources containing associated tests"
-  echo "-g <cvmfs tests package>   CernVM-FS unit tests package (Linux only)"
   echo "-e <shrinkwrap package>    CernVM-FS shrinkwrap package (Linux only)"
   echo "-k <cvmfs config package>  CernVM-FS config package (Linux only)"
   echo "-C <service container>     CernVM-FS service container"
@@ -119,7 +118,6 @@ fuse3_package=""
 devel_package=""
 config_package=""
 source_tarball=""
-unittest_package=""
 shrinkwrap_package=""
 gateway_package=""
 ducc_package=""
@@ -201,9 +199,6 @@ while getopts "r:s:c:d:t:g:k:w:p:u:e:f:D:C:L:Z::" option; do
     t)
       source_tarball=$OPTARG
       ;;
-    g)
-      unittest_package=$OPTARG
-      ;;
     e)
       shrinkwrap_package=$OPTARG
       ;;
@@ -250,7 +245,6 @@ if [ "x$(uname -s)" != "xDarwin" ]; then
     [ "x$devel_package"      = "x" ] ||
     [ "x$config_package"     = "x" ] ||
     [ "x$source_tarball"     = "x" ] ||
-    [ "x$unittest_package"   = "x" ] ||
     [ "x$shrinkwrap_package" = "x" ]; then
     usage "Missing parameter(s)"
   fi
@@ -299,7 +293,6 @@ download_if_used $client_package
 download_if_used $fuse3_package
 download_if_used $devel_package
 download_if_used $source_tarball
-download_if_used $unittest_package
 download_if_used $shrinkwrap_package
 download_if_used $gateway_package
 download_if_used $ducc_package
@@ -324,9 +317,6 @@ if [ "x$devel_package" != "x" ]; then
 fi
 if [ "x$source_tarball" != "x" ]; then
   source_tarball=$(canonicalize_path $source_tarball)
-fi
-if [ "x$unittest_package" != "x" ]; then
-  unittest_package=$(canonicalize_path $unittest_package)
 fi
 if [ "x$gateway_package" != "x" ]; then
   gateway_package=$(canonicalize_path $gateway_package)
@@ -387,7 +377,7 @@ args="-t $cvmfs_source_directory \
       -l $cvmfs_log_directory    \
       -c $client_package"
 if [ "x$(uname -s)" != "xDarwin" ]; then
-  args="$args -s $server_package -d $devel_package -g $unittest_package -p $shrinkwrap_package -k $config_package -L $libs_package"
+  args="$args -s $server_package -d $devel_package  -p $shrinkwrap_package -k $config_package -L $libs_package"
 fi
 if [ x"$fuse3_package" != "x" ]; then
   args="$args -f $fuse3_package"
