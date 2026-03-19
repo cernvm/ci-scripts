@@ -271,6 +271,7 @@ for var in $(env | grep -ohe "^\(CVMFS\|CERNVM\)_[^=]*"); do
   args="--env $var=$(eval "echo \$$var") $args"
 done
 args="--env GOCACHE=$WORKSPACE/.gocache $args"
+args="--env GOPROXY=http://cvm-gomod-proxy1.cern.ch:3000 $args"
 
 
 
