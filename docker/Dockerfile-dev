@@ -1,0 +1,80 @@
+# Stage 1: Builder
+FROM almalinux:9 AS builder
+
+USER root
+# This is a workaround for a sudo error that started after an 
+# upgrade to the build image. Similar to https://github.com/apptainer/apptainer/issues/2756 but not quite clear
+RUN chmod 0400 /etc/shadow
+
+
+
+RUN mkdir -p /home/sftnight/buildpackage /home/sftnight/buildpackage_config /home/sftnight/cvmfs /tmp/packaging/rpm/ /tmp/ci
+
+ENV CVMFS_EXTERNALS_PREFIX=$HOME/.cache/cvmfs_externals_install
+ENV CMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+# Install build dependencies
+RUN dnf -y install dnf-utils && dnf config-manager --set-enabled crb && dnf install -y epel-release && dnf -y install ccache && dnf clean all
+
+
+COPY ./ci/build_install_builddeps.sh /tmp/ci
+COPY ./packaging/rpm/cvmfs-universal.spec /tmp/packaging/rpm
+RUN --mount=type=cache,target=/var/cache/dnf \
+    cd /tmp/ && ./ci/build_install_builddeps.sh --install
+
+RUN --mount=type=bind,source=.,target=/home/sftnight/cvmfs \
+    cd /home/sftnight/cvmfs && ./ci/build_package.sh /home/sftnight/cvmfs /home/sftnight/buildpackage_config/ cvmfs-config
+
+RUN --mount=type=bind,source=.,target=/home/sftnight/cvmfs \
+    --mount=type=cache,target=/root/.cache/ccache \
+    --mount=type=cache,target=/root/.cache/cvmfs_externals_install \
+    cd /home/sftnight/cvmfs && ./ci/build_package.sh /home/sftnight/cvmfs /home/sftnight/buildpackage/ cvmfs
+
+
+# Stage 2: Final
+FROM almalinux:9
+
+USER root
+
+# This is a workaround for a sudo error that started after an 
+# upgrade to the build image. Similar to https://github.com/apptainer/apptainer/issues/2756 but not quite clear
+RUN chmod 0400 /etc/shadow
+
+
+# cloudtest dependencies
+RUN dnf install -y \
+    attr \
+    autofs \
+    bind-utils \
+    e2fsprogs \
+    fuse \
+    fuse3 \
+    gcc \
+    httpd \
+    iproute \
+    jq \
+    lsof \
+    nc \
+    python \
+    python3-mod_wsgi \
+    python3-pip \
+    sqlite \
+    sudo \
+    usbutils \
+    wget \
+    ;
+
+# Create the sftnight user
+RUN useradd -m -s /bin/bash sftnight
+RUN echo '%sftnight ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+# Copy and install binaries from the builder stage
+COPY --from=builder /home/sftnight/cvmfs /home/sftnight
+COPY --from=builder /home/sftnight/buildpackage/RPMS/x86_64/ /tmp/.
+COPY --from=builder /home/sftnight/buildpackage_config/RPMS/noarch/ /tmp/.
+RUN dnf -y install /tmp/*.rpm
+
+ENV USER sftnight
+
+CMD ["/usr/sbin/init"]
+

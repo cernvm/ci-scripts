@@ -1,0 +1,36 @@
+# syntax=docker/dockerfile:1
+# Builds a CVMFS build-dependencies image for Debian/Ubuntu-based platforms.
+# The BASE_IMAGE arg lets you inject any supported distro image, e.g.:
+#   amd64/debian:11, amd64/ubuntu:24.04, arm64v8/debian:12, …
+#
+# Usage (run from the cvmfs source tree):
+#   DOCKER_BUILDKIT=1 docker build \
+#       --build-arg BASE_IMAGE=amd64/debian:11 \
+#       -t debian11-x86_64-cvmfs-builddeps \
+#       -f <ci-scripts>/docker/Dockerfile-builddeps-deb \
+#       .
+
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Minimal prerequisites needed before running build_install_builddeps.sh
+RUN apt-get -y update && apt-get -y install --no-install-recommends \
+        ca-certificates \
+        ccache \
+        curl
+
+# Copy only what build_install_builddeps.sh needs so that unrelated source
+# changes do not invalidate this (expensive) layer.
+COPY ./ci/build_install_builddeps.sh /tmp/ci/
+COPY ./ci/bootstrap_cmake.sh        /tmp/ci/
+COPY ./ci/bootstrap_golang.sh       /tmp/ci/
+COPY ./packaging/                    /tmp/packaging/
+
+# Install all CVMFS build dependencies.
+# The apt cache mounts speed up repeated image builds without bloating layers.
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get -y update && \
+    cd /tmp && ./ci/build_install_builddeps.sh --install

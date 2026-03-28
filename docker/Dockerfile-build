@@ -1,0 +1,55 @@
+# syntax=docker/dockerfile:1
+# Builds CVMFS packages inside a pre-built builddeps image and exports them.
+#
+# Requires BuildKit. Typical invocation (from the cvmfs source tree):
+#
+#   DOCKER_BUILDKIT=1 docker build \
+#       --build-arg BUILDDEPS_IMAGE=debian11-x86_64-cvmfs-builddeps \
+#       --build-arg PLATFORM_TAG=debian11-x86_64-42 \
+#       --build-arg NIGHTLY_NUMBER=42 \
+#       --output type=local,dest=./build/debian11_x86_64 \
+#       --target export \
+#       -f <ci-scripts>/docker/Dockerfile-build \
+#       .
+#
+# Omit --build-arg NIGHTLY_NUMBER for a release build.
+#
+# Caches are keyed on PLATFORM_TAG so that parallel platform builds on the
+# same host use separate ccache and externals stores without interference.
+
+ARG BUILDDEPS_IMAGE
+FROM ${BUILDDEPS_IMAGE} AS builder
+
+ARG PLATFORM_TAG
+ARG NIGHTLY_NUMBER=
+
+ENV CMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+RUN mkdir -p /home/sftnight/buildpackage /home/sftnight/buildpackage_config
+
+# Build the architecture/distro-independent cvmfs-config package.
+# No compiler caches needed here.
+RUN --mount=type=bind,source=.,target=/cvmfs,readonly \
+    /cvmfs/ci/build_package.sh \
+        /cvmfs \
+        /home/sftnight/buildpackage_config \
+        cvmfs-config
+
+# Build the main cvmfs package.
+# ccache and externals caches are persisted on the host between builds and
+# keyed on PLATFORM_TAG to prevent cross-platform interference.
+RUN --mount=type=bind,source=.,target=/cvmfs,readonly \
+    --mount=type=cache,target=/root/.cache/ccache,id=ccache-${PLATFORM_TAG},sharing=locked \
+    --mount=type=cache,target=/root/.cache/cvmfs_externals_install,id=externals-${PLATFORM_TAG},sharing=locked \
+    /cvmfs/ci/build_package.sh \
+        /cvmfs \
+        /home/sftnight/buildpackage \
+        cvmfs \
+        ${NIGHTLY_NUMBER}
+
+# ── Export stage ──────────────────────────────────────────────────────────────
+# Copy packages into a scratch image so that --output extracts only the
+# build artifacts, nothing else.
+FROM scratch AS export
+COPY --from=builder /home/sftnight/buildpackage/        /packages/
+COPY --from=builder /home/sftnight/buildpackage_config/ /packages-config/

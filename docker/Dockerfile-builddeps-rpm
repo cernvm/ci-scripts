@@ -1,0 +1,50 @@
+# syntax=docker/dockerfile:1
+# Builds a CVMFS build-dependencies image for RPM-based platforms:
+#   CentOS / AlmaLinux / Rocky Linux, Fedora, openSUSE Leap.
+# The BASE_IMAGE arg lets you inject any supported distro image, e.g.:
+#   gitlab-registry.cern.ch/linuxsupport/alma9-base, opensuse/leap:15.5,
+#   amd64/fedora:43, almalinux:9, …
+#
+# Usage (run from the cvmfs source tree):
+#   DOCKER_BUILDKIT=1 docker build \
+#       --build-arg BASE_IMAGE=opensuse/leap:15.5 \
+#       -t sles15-x86_64-cvmfs-builddeps \
+#       -f <ci-scripts>/docker/Dockerfile-builddeps-rpm \
+#       .
+
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+# Copy only what build_install_builddeps.sh needs.
+COPY ./ci/build_install_builddeps.sh      /tmp/ci/
+COPY ./ci/bootstrap_cmake.sh             /tmp/ci/
+COPY ./ci/bootstrap_golang.sh            /tmp/ci/
+COPY ./packaging/rpm/cvmfs-universal.spec /tmp/packaging/rpm/
+
+# Set up extra repositories, install ccache, then install all CVMFS build
+# dependencies via build_install_builddeps.sh.
+#
+# Detection logic:
+#   openSUSE Leap  → zypper
+#   CentOS/Alma/Rocky → dnf; enable CRB + EPEL where applicable
+#   Fedora         → dnf; no extra repos needed
+#
+# Both dnf and zypper cache mounts are declared; BuildKit silently ignores the
+# one that does not exist on the target distro.
+RUN --mount=type=cache,target=/var/cache/dnf,sharing=locked \
+    --mount=type=cache,target=/var/cache/zypp,sharing=locked \
+    set -e && \
+    . /etc/os-release && \
+    if echo "${ID} ${ID_LIKE-}" | grep -qi "suse"; then \
+        zypper --non-interactive refresh && \
+        zypper --non-interactive install ccache; \
+    else \
+        # CentOS / AlmaLinux / Rocky: enable CodeReady Builder and EPEL
+        # where available (harmless no-ops on Fedora).
+        dnf install -y dnf-utils 2>/dev/null || true; \
+        dnf config-manager --set-enabled crb 2>/dev/null || \
+        dnf config-manager --set-enabled powertools 2>/dev/null || true; \
+        dnf install -y epel-release 2>/dev/null || true; \
+        dnf install -y ccache; \
+    fi && \
+    cd /tmp && ./ci/build_install_builddeps.sh --install
