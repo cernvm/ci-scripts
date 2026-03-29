@@ -25,15 +25,7 @@ ARG NIGHTLY_NUMBER=
 
 ENV CMAKE_CXX_COMPILER_LAUNCHER=ccache
 
-RUN mkdir -p /home/sftnight/buildpackage /home/sftnight/buildpackage_config
-
-# Build the architecture/distro-independent cvmfs-config package.
-# No compiler caches needed here.
-RUN --mount=type=bind,source=.,target=/cvmfs,readonly \
-    /cvmfs/ci/build_package.sh \
-        /cvmfs \
-        /home/sftnight/buildpackage_config \
-        cvmfs-config
+RUN mkdir -p /home/sftnight/buildpackage
 
 # Build the main cvmfs package.
 # ccache and externals caches are persisted on the host between builds and
@@ -52,4 +44,3 @@ RUN --mount=type=bind,source=.,target=/cvmfs,readonly \
 # build artifacts, nothing else.
 FROM scratch AS export
 COPY --from=builder /home/sftnight/buildpackage/        /packages/
-COPY --from=builder /home/sftnight/buildpackage_config/ /packages-config/

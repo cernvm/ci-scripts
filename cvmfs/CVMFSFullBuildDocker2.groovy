@@ -263,13 +263,14 @@ stage('Publish') {
                 transfers: [
                     sshTransfer(
                         sourceFiles:     '**/cvmfs*.rpm,**/cvmfs*.deb,**/cvmfs*.pkg,**/cvmfs*.docker.tar.gz,**/cvmfs*.oci.tar',
+                        excludes:        '**/cvmfs-config*',
                         remoteDirectory: targetDir,
-                        removePrefix:    'build',
-                        flatten:         false,
+                        removePrefix:    '',
+                        flatten:         true,
                         cleanRemote:     false,
                     ),
                     sshTransfer(
-                        sourceFiles:     '**/source.tar.gz,**/cvmfs-*.tar.gz',
+                        sourceFiles:     'build/cvmfs_source_tarball/**/source.tar.gz,build/cvmfs_source_tarball/**/cvmfs-*.tar.gz',
                         remoteDirectory: targetDir,
                         removePrefix:    'build/cvmfs_source_tarball',
                         flatten:         false,
