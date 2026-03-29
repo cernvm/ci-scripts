@@ -27,6 +27,25 @@ ENV CMAKE_CXX_COMPILER_LAUNCHER=ccache
 
 RUN mkdir -p /home/sftnight/buildpackage
 
+# The builddeps image bootstraps a recent cmake into
+# /root/.cache/cvmfs_externals_install/.  The build step below cache-mounts
+# that directory (to persist compiled C++ externals between builds), which
+# shadows the bootstrapped cmake.  Copy it to /usr/local/bin so it stays
+# available regardless of the cache mount contents.
+RUN cmake_bin="$(find /root/.cache/cvmfs_externals_install \
+        -name cmake -type f -executable 2>/dev/null | head -1)" && \
+    if [ -n "$cmake_bin" ]; then \
+        cp "$cmake_bin" /usr/local/bin/cmake; \
+    fi && \
+    go_bin="$(find /root/.cache/cvmfs_externals_install \
+        -name go -type f -executable 2>/dev/null | head -1)" && \
+    if [ -n "$go_bin" ]; then \
+        go_root="$(dirname "$go_bin")/.."; \
+        cp -a "$go_root" /usr/local/go; \
+        ln -sf /usr/local/go/bin/go /usr/local/bin/go; \
+        ln -sf /usr/local/go/bin/gofmt /usr/local/bin/gofmt; \
+    fi
+
 # Build the main cvmfs package.
 # ccache and externals caches are persisted on the host between builds and
 # keyed on PLATFORM_TAG to prevent cross-platform interference.
