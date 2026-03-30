@@ -14,6 +14,7 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG DEBIAN_FRONTEND=noninteractive
+ENV CVMFS_EXTERNALS_PREFIX=/root/.cache/cvmfs_builddeps_install
 
 # Minimal prerequisites needed before running build_install_builddeps.sh
 RUN apt-get -y update && apt-get -y install --no-install-recommends \
@@ -34,3 +35,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get -y update && \
     cd /tmp && ./ci/build_install_builddeps.sh --install
+
+# Save bootstrapped cmake/go to a seed directory so Dockerfile-build can
+# restore them into the (initially empty) BuildKit cache volume.
+RUN cp -a /root/.cache/cvmfs_builddeps_install /opt/cvmfs_builddeps_seed

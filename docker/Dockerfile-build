@@ -23,35 +23,24 @@ FROM ${BUILDDEPS_IMAGE} AS builder
 ARG PLATFORM_TAG
 ARG NIGHTLY_NUMBER=
 
+ENV CVMFS_EXTERNALS_PREFIX=/root/.cache/cvmfs_builddeps_install
 ENV CMAKE_CXX_COMPILER_LAUNCHER=ccache
 
 RUN mkdir -p /home/sftnight/buildpackage
 
-# The builddeps image bootstraps a recent cmake into
-# /root/.cache/cvmfs_externals_install/.  The build step below cache-mounts
-# that directory (to persist compiled C++ externals between builds), which
-# shadows the bootstrapped cmake.  Copy it to /usr/local/bin so it stays
-# available regardless of the cache mount contents.
-RUN cmake_bin="$(find /root/.cache/cvmfs_externals_install \
-        -name cmake -type f -executable 2>/dev/null | head -1)" && \
-    if [ -n "$cmake_bin" ]; then \
-        cp "$cmake_bin" /usr/local/bin/cmake; \
-    fi && \
-    go_bin="$(find /root/.cache/cvmfs_externals_install \
-        -name go -type f -executable 2>/dev/null | head -1)" && \
-    if [ -n "$go_bin" ]; then \
-        go_root="$(dirname "$go_bin")/.."; \
-        cp -a "$go_root" /usr/local/go; \
-        ln -sf /usr/local/go/bin/go /usr/local/bin/go; \
-        ln -sf /usr/local/go/bin/gofmt /usr/local/bin/gofmt; \
-    fi
-
 # Build the main cvmfs package.
-# ccache and externals caches are persisted on the host between builds and
+# ccache and builddeps caches are persisted on the host between builds and
 # keyed on PLATFORM_TAG to prevent cross-platform interference.
+#
+# The cache mount on cvmfs_builddeps_install shadows the cmake/go that the
+# builddeps image bootstrapped there.  Before building, we seed the cache
+# from /opt/cvmfs_builddeps_seed (baked into the builddeps image).
+# "cp -a -n" (no-clobber) keeps any content already present from earlier runs
+# while restoring cmake/go if the cache was pruned.
 RUN --mount=type=bind,source=.,target=/cvmfs,readonly \
     --mount=type=cache,target=/root/.cache/ccache,id=ccache-${PLATFORM_TAG},sharing=locked \
-    --mount=type=cache,target=/root/.cache/cvmfs_externals_install,id=externals-${PLATFORM_TAG},sharing=locked \
+    --mount=type=cache,target=/root/.cache/cvmfs_builddeps_install,id=builddeps-${PLATFORM_TAG},sharing=locked \
+    cp -a -n /opt/cvmfs_builddeps_seed/. /root/.cache/cvmfs_builddeps_install/ && \
     /cvmfs/ci/build_package.sh \
         /cvmfs \
         /home/sftnight/buildpackage \

@@ -10,7 +10,7 @@ RUN chmod 0400 /etc/shadow
 
 RUN mkdir -p /home/sftnight/buildpackage /home/sftnight/buildpackage_config /home/sftnight/cvmfs /tmp/packaging/rpm/ /tmp/ci
 
-ENV CVMFS_EXTERNALS_PREFIX=$HOME/.cache/cvmfs_externals_install
+ENV CVMFS_EXTERNALS_PREFIX=$HOME/.cache/cvmfs_builddeps_install
 ENV CMAKE_CXX_COMPILER_LAUNCHER=ccache
 
 # Install build dependencies
@@ -27,7 +27,7 @@ RUN --mount=type=bind,source=.,target=/home/sftnight/cvmfs \
 
 RUN --mount=type=bind,source=.,target=/home/sftnight/cvmfs \
     --mount=type=cache,target=/root/.cache/ccache \
-    --mount=type=cache,target=/root/.cache/cvmfs_externals_install \
+    --mount=type=cache,target=/root/.cache/cvmfs_builddeps_install \
     cd /home/sftnight/cvmfs && ./ci/build_package.sh /home/sftnight/cvmfs /home/sftnight/buildpackage/ cvmfs
 
 

@@ -59,6 +59,11 @@ properties([
             defaultValue: false,
             description:  'Remove builddeps Docker images after the build (frees disk but slows down subsequent builds).',
         ),
+        booleanParam(
+            name:         'CVMFS_CLEAN_BUILDKIT_CACHE',
+            defaultValue: false,
+            description:  'Remove BuildKit cache volumes (ccache, externals) and intermediate builddeps images. Full clean slate for the next build.',
+        ),
         string(
             name:         'CVMFS_TARGET_DIR',
             defaultValue: 'nightlies/cvmfs-git',
@@ -148,7 +153,7 @@ def makeBuildClosure(String baseImage, String arch, String ciScriptRevision,
                         ${cvmfsSrc}
                 """
             } finally {
-                if (params.CVMFS_CLEAN_BUILDDEPS) {
+                if (params.CVMFS_CLEAN_BUILDDEPS || params.CVMFS_CLEAN_BUILDKIT_CACHE) {
                     sh "docker rmi ${builddepsTag} || true"
                 }
             }
@@ -279,5 +284,20 @@ stage('Publish') {
                 ],
             ),
         ])
+    }
+}
+
+if (params.CVMFS_CLEAN_BUILDKIT_CACHE) {
+    stage('Clean BuildKit Cache') {
+        def cleanBranches = [:]
+        ['x86_64', 'aarch64'].each { arch ->
+            cleanBranches["clean-${arch}"] = {
+                node("docker-${arch}") {
+                    echo "Pruning BuildKit cache on ${env.NODE_NAME}"
+                    sh 'docker builder prune --all --force'
+                }
+            }
+        }
+        parallel cleanBranches
     }
 }
