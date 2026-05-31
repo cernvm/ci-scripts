@@ -39,6 +39,14 @@ case ${CVMFS_DOCKER_IMAGE} in
     image_name="gitlab-registry.cern.ch/cernvm/build-images/debian_aarch64:11"
     docker pull $image_name
     ;;
+  "ubuntu2604_aarch64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/ubuntu_aarch64:26.04"
+    docker pull $image_name
+    ;;
+  "ubuntu2604_x86_64")
+    image_name="gitlab-registry.cern.ch/cernvm/build-images/ubuntu_x86_64:26.04"
+    docker pull $image_name
+    ;;
   "ubuntu2510_aarch64")
     image_name="gitlab-registry.cern.ch/cernvm/build-images/ubuntu_aarch64:25.10"
     docker pull $image_name
